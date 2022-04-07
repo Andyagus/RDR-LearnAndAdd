@@ -11,8 +11,6 @@ public class ShooterController : MonoBehaviour
 
     [Space]
 
-
-
     [Header("Gun")]
     public Transform gun;
     private Vector3 gunIdlePosition;
@@ -29,14 +27,13 @@ public class ShooterController : MonoBehaviour
         gunIdlePosition = gun.localPosition;
         gunIdleRotation = gun.localEulerAngles;
 
-        anim.SetBool("aiming", true);
         gun.localPosition = gunAimPosition;
         gun.localEulerAngles = gunAimRotation;
     }
 
     void Update()
     {
-        anim.SetFloat("Speed", input.Speed);
+        anim.SetFloat("speed", input.Speed);
 
     }
 }
