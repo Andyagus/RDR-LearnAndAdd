@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Cinemachine;
-
+using DG.Tweening;
 using UnityEngine.UI;
 
 public class ShooterController : MonoBehaviour
@@ -17,9 +17,9 @@ public class ShooterController : MonoBehaviour
     [Header("Camera Settings")]
     public float originalOffsetAmount;
     public float zoomOffsetAmount;
+    public float aimTime;
     private float originalFov;
     private float zoomFov = 20;
-    private float aimTime;
 
     [Space]
 
@@ -51,7 +51,7 @@ public class ShooterController : MonoBehaviour
     void Update()
     {
         anim.SetFloat("speed", input.Speed);
-
+        
         if (Input.GetMouseButtonDown(1))
         {
             Aim(true);
@@ -66,14 +66,30 @@ public class ShooterController : MonoBehaviour
     private void Aim(bool state)
     {
         anim.SetBool("aiming", state);
-        thirdPersonCam.m_Lens.FieldOfView = state ? zoomFov : originalFov;
+
+
+        float originalOffset = state ? originalOffsetAmount : zoomOffsetAmount;
+        float targetOffset = state ? zoomOffsetAmount : originalOffsetAmount;
+        float zoom = state ? zoomFov : originalFov;
+
+        DOVirtual.Float(originalOffset, targetOffset, aimTime, HorizontalOffset);
+        DOVirtual.Float(originalFov, zoom, aimTime, CameraZoom);
         var xOffset = state ? zoomOffsetAmount : originalOffsetAmount;
+        //DOVirtual.Float(originalOffsetAmount, zoomOffsetAmount, aimTime, HorizontalOffset);
+
+
 
         HorizontalOffset(xOffset);
     }
 
+    private void CameraZoom(float zoomAmt)
+    {
+        thirdPersonCam.m_Lens.FieldOfView = zoomAmt;
+    }
+
     private void HorizontalOffset(float xOffset)
     {
+        Debug.Log(xOffset);
         for(var i = 0; i < 3; i++)
         {
             CinemachineComposer c = thirdPersonCam.GetRig(i).GetCinemachineComponent<CinemachineComposer>();

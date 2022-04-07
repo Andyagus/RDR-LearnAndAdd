@@ -1377,7 +1377,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   thirdPersonCam: {fileID: 107641428}
   originalOffsetAmount: 0.1
-  zoomOffsetAmount: 0.3
+  zoomOffsetAmount: 0.5
+  aimTime: 0.2
   gun: {fileID: 491702435}
 --- !u!114 &1173127123
 MonoBehaviour:
@@ -1871,7 +1872,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1254204284}
-  m_LocalRotation: {x: 0.08912417, y: 0.04337982, z: -0.0038853642, w: 0.9950679}
+  m_LocalRotation: {x: 0.08912417, y: 0.043379817, z: -0.0038853637, w: 0.9950679}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -2453,7 +2454,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1700486477}
-  m_LocalRotation: {x: 0.07105753, y: 0.043443166, z: -0.0030977405, w: 0.996521}
+  m_LocalRotation: {x: 0.07105753, y: 0.04344317, z: -0.0030977393, w: 0.99652094}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
