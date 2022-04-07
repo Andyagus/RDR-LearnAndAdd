@@ -122,7 +122,6 @@ GameObject:
   m_Component:
   - component: {fileID: 107641429}
   - component: {fileID: 107641428}
-  - component: {fileID: 107641430}
   m_Layer: 0
   m_Name: CM_ThirdPersonCam
   m_TagString: Untagged
@@ -148,8 +147,8 @@ MonoBehaviour:
   m_StreamingVersion: 20170927
   m_Priority: 10
   m_StandbyUpdate: 2
-  m_LookAt: {fileID: 0}
-  m_Follow: {fileID: 0}
+  m_LookAt: {fileID: 1173127126}
+  m_Follow: {fileID: 1173127126}
   m_CommonLens: 1
   m_Lens:
     FieldOfView: 40
@@ -248,36 +247,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &107641430
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 107641427}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e501d18bb52cf8c40b1853ca4904654f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_CollideAgainst:
-    serializedVersion: 2
-    m_Bits: 1
-  m_IgnoreTag: Player
-  m_TransparentLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_MinimumDistanceFromTarget: 0.1
-  m_AvoidObstacles: 1
-  m_DistanceLimit: 0
-  m_MinimumOcclusionTime: 0
-  m_CameraRadius: 0.1
-  m_Strategy: 1
-  m_MaximumEffort: 4
-  m_SmoothingTime: 0
-  m_Damping: 5.33
-  m_DampingWhenOccluded: 0
-  m_OptimalTargetDistance: 0
 --- !u!1 &112091635
 GameObject:
   m_ObjectHideFlags: 0
@@ -512,7 +481,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 419099223}
-  m_LocalRotation: {x: 0.0891886, y: 0.032173406, z: -0.002882489, w: 0.99549085}
+  m_LocalRotation: {x: 0.08918859, y: 0.032173406, z: -0.0028824983, w: 0.99549085}
   m_LocalPosition: {x: 0, y: 1.97, z: -4.44}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
@@ -624,7 +593,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 460102724}
-  m_LocalRotation: {x: 0.10728131, y: 0.032115642, z: -0.0034671705, w: 0.99370384}
+  m_LocalRotation: {x: 0.107281305, y: 0.032115642, z: -0.0034671703, w: 0.99370384}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -1417,6 +1386,12 @@ MonoBehaviour:
 --- !u!4 &1173127124 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 400080, guid: 135a1298564e741868a48d8b99da2fc6,
+    type: 3}
+  m_PrefabInstance: {fileID: 1173127120}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1173127126 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 400138, guid: 135a1298564e741868a48d8b99da2fc6,
     type: 3}
   m_PrefabInstance: {fileID: 1173127120}
   m_PrefabAsset: {fileID: 0}
