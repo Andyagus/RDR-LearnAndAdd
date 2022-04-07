@@ -2,12 +2,24 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Cinemachine;
+
 using UnityEngine.UI;
 
 public class ShooterController : MonoBehaviour
 {
     private MovementInput input;
     private Animator anim;
+
+    [Header("Cinemachine")]
+    public CinemachineFreeLook thirdPersonCam;
+
+    [Header("Camera Settings")]
+    public float originalOffsetAmount;
+    public float zoomOffsetAmount;
+    private float originalFov;
+    private float zoomFov = 20;
+    private float aimTime;
 
     [Space]
 
@@ -24,6 +36,10 @@ public class ShooterController : MonoBehaviour
         input = GetComponent<MovementInput>();
         anim = GetComponent<Animator>();
 
+        //access cinemachine components
+        originalFov = thirdPersonCam.m_Lens.FieldOfView;
+
+
         gunIdlePosition = gun.localPosition;
         gunIdleRotation = gun.localEulerAngles;
 
@@ -31,9 +47,38 @@ public class ShooterController : MonoBehaviour
         gun.localEulerAngles = gunAimRotation;
     }
 
+    
     void Update()
     {
         anim.SetFloat("speed", input.Speed);
 
+        if (Input.GetMouseButtonDown(1))
+        {
+            Aim(true);
+        }
+
+        if (Input.GetMouseButtonUp(1))
+        {
+            Aim(false);
+        }
     }
+
+    private void Aim(bool state)
+    {
+        anim.SetBool("aiming", state);
+        thirdPersonCam.m_Lens.FieldOfView = state ? zoomFov : originalFov;
+        var xOffset = state ? zoomOffsetAmount : originalOffsetAmount;
+
+        HorizontalOffset(xOffset);
+    }
+
+    private void HorizontalOffset(float xOffset)
+    {
+        for(var i = 0; i < 3; i++)
+        {
+            CinemachineComposer c = thirdPersonCam.GetRig(i).GetCinemachineComponent<CinemachineComposer>();
+            c.m_TrackedObjectOffset.x = xOffset;
+        }
+    }
+
 }
