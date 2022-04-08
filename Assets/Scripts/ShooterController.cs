@@ -26,9 +26,11 @@ public class ShooterController : MonoBehaviour
     private float originalFov;
     private float zoomFov = 20;
 
+    [Header("Targets")]
+    public List<Transform> targets = new List<Transform>(); 
+
     [Header("UI")]
     public Image reticle;
-
 
     [Space]
 
@@ -84,8 +86,23 @@ public class ShooterController : MonoBehaviour
     private void AddTargets()
     {
         input.LookAt(mainCamera.transform.forward + (mainCamera.transform.right * .1f));
-        Debug.Log(mainCamera.transform.forward);
-        //Debug.DrawRay(mainCamera.transform.position, mainCamera.transform.forward * 1000, Color.green);
+
+        RaycastHit hit;
+        Physics.Raycast(mainCamera.transform.position, mainCamera.transform.forward, out hit);
+
+
+        if (hit.transform == null)
+        {
+            Debug.Log("NULL");
+            return;
+        }
+
+        if (hit.transform.CompareTag("Cube") && !targets.Contains(hit.transform))
+        {
+            hit.transform.GetComponent<CubeController>().OnAim();
+            targets.Add(hit.transform);
+           
+        }
     }
 
     private void Aim(bool state)
