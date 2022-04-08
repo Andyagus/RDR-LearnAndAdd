@@ -67,19 +67,13 @@ public class ShooterController : MonoBehaviour
     {
         anim.SetBool("aiming", state);
 
-
         float originalOffset = state ? originalOffsetAmount : zoomOffsetAmount;
         float targetOffset = state ? zoomOffsetAmount : originalOffsetAmount;
-        float zoom = state ? zoomFov : originalFov;
-
         DOVirtual.Float(originalOffset, targetOffset, aimTime, HorizontalOffset);
+
+        float zoom = state ? zoomFov : originalFov;
         DOVirtual.Float(originalFov, zoom, aimTime, CameraZoom);
-        var xOffset = state ? zoomOffsetAmount : originalOffsetAmount;
-        //DOVirtual.Float(originalOffsetAmount, zoomOffsetAmount, aimTime, HorizontalOffset);
 
-
-
-        HorizontalOffset(xOffset);
     }
 
     private void CameraZoom(float zoomAmt)
@@ -89,7 +83,6 @@ public class ShooterController : MonoBehaviour
 
     private void HorizontalOffset(float xOffset)
     {
-        Debug.Log(xOffset);
         for(var i = 0; i < 3; i++)
         {
             CinemachineComposer c = thirdPersonCam.GetRig(i).GetCinemachineComponent<CinemachineComposer>();
