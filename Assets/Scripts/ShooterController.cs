@@ -21,6 +21,10 @@ public class ShooterController : MonoBehaviour
     private float originalFov;
     private float zoomFov = 20;
 
+    [Header("UI")]
+    public Image reticle;
+
+
     [Space]
 
     [Header("Gun")]
@@ -45,6 +49,8 @@ public class ShooterController : MonoBehaviour
 
         gun.localPosition = gunAimPosition;
         gun.localEulerAngles = gunAimRotation;
+
+        Aim(false);
     }
 
     
@@ -73,6 +79,10 @@ public class ShooterController : MonoBehaviour
 
         float zoom = state ? zoomFov : originalFov;
         DOVirtual.Float(originalFov, zoom, aimTime, CameraZoom);
+
+        //reticle color
+        Color reticleColor = state ? Color.white : Color.clear;
+        reticle.color = reticleColor;
 
     }
 
