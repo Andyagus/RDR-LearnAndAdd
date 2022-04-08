@@ -16,7 +16,7 @@ public class ShooterController : MonoBehaviour
 
     [Header("Booleans")]
     public bool aiming = false;
-
+    public bool deadEye = false;
 
     [Header("Camera Settings")]
     private Camera mainCamera;
@@ -66,7 +66,12 @@ public class ShooterController : MonoBehaviour
 
 
         anim.SetFloat("speed", input.Speed);
-        
+
+        if (deadEye)
+        {
+            return;
+        }
+
         if (Input.GetMouseButtonDown(1))
         {
             Aim(true);
@@ -85,6 +90,8 @@ public class ShooterController : MonoBehaviour
 
     private void AddTargets()
     {
+
+        Debug.Log("ADD TARGETS CALLED");
         input.LookAt(mainCamera.transform.forward + (mainCamera.transform.right * .1f));
 
         RaycastHit hit;
@@ -92,7 +99,6 @@ public class ShooterController : MonoBehaviour
 
         if (hit.transform == null)
         {
-            Debug.Log("NULL");
             return;
         }
 
@@ -107,16 +113,19 @@ public class ShooterController : MonoBehaviour
 
     private void ShotSequence()
     {
-
+        Debug.Log("SHOT SEQUENCE CALLED");
         if (targets.Count > 0)
         {
+            DeadEye(true);            
+
             Sequence sequence = DOTween.Sequence();
 
             for (var i = 0; i < targets.Count; i++) 
             {
                 sequence.Append(transform.DOLookAt(targets[i].position, .2f));
                 sequence.AppendCallback(() => anim.SetTrigger("fire"));
-                sequence.AppendInterval(2);
+                sequence.AppendInterval(1);
+
             }
 
             sequence.AppendCallback(() => Aim(false));
@@ -144,6 +153,12 @@ public class ShooterController : MonoBehaviour
         Color reticleColor = state ? Color.white : Color.clear;
         reticle.color = reticleColor;
 
+    }
+
+    private void DeadEye(bool state)
+    {
+        deadEye = state;
+        input.enabled = !deadEye;
     }
 
     private void CameraZoom(float zoomAmt)

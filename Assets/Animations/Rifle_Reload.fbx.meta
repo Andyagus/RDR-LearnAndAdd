@@ -177,7 +177,7 @@ ModelImporter:
     - serializedVersion: 16
       name: Rifle_Reload
       takeName: mixamo.com
-      firstFrame: 0
+      firstFrame: 49
       lastFrame: 99
       wrapMode: 0
       orientationOffsetY: 0
@@ -190,7 +190,7 @@ ModelImporter:
       loopBlendOrientation: 0
       loopBlendPositionY: 0
       loopBlendPositionXZ: 0
-      keepOriginalOrientation: 0
+      keepOriginalOrientation: 1
       keepOriginalPositionY: 1
       keepOriginalPositionXZ: 0
       heightFromFeet: 0
