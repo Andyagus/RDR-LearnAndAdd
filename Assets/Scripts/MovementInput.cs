@@ -69,9 +69,9 @@ public class MovementInput : MonoBehaviour
         }
     }
 
-    public void LookAt()
+    public void LookAt(Vector3 pos)
     {
-
+        transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(pos), desiredRotationSpeed);
     }
 
     public void RotateToCamera()

@@ -14,7 +14,12 @@ public class ShooterController : MonoBehaviour
     [Header("Cinemachine")]
     public CinemachineFreeLook thirdPersonCam;
 
+    [Header("Booleans")]
+    public bool aiming = false;
+
+
     [Header("Camera Settings")]
+    private Camera mainCamera;
     public float originalOffsetAmount;
     public float zoomOffsetAmount;
     public float aimTime;
@@ -39,7 +44,7 @@ public class ShooterController : MonoBehaviour
     {
         input = GetComponent<MovementInput>();
         anim = GetComponent<Animator>();
-
+        mainCamera = Camera.main;
         //access cinemachine components
         originalFov = thirdPersonCam.m_Lens.FieldOfView;
 
@@ -56,6 +61,8 @@ public class ShooterController : MonoBehaviour
     
     void Update()
     {
+
+
         anim.SetFloat("speed", input.Speed);
         
         if (Input.GetMouseButtonDown(1))
@@ -67,10 +74,23 @@ public class ShooterController : MonoBehaviour
         {
             Aim(false);
         }
+
+        if (aiming)
+        {
+            AddTargets();
+        }
+    }
+
+    private void AddTargets()
+    {
+        input.LookAt(mainCamera.transform.forward + (mainCamera.transform.right * .1f));
+        Debug.Log(mainCamera.transform.forward);
+        //Debug.DrawRay(mainCamera.transform.position, mainCamera.transform.forward * 1000, Color.green);
     }
 
     private void Aim(bool state)
     {
+        aiming = state;
         anim.SetBool("aiming", state);
 
         float originalOffset = state ? originalOffsetAmount : zoomOffsetAmount;
