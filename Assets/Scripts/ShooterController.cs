@@ -72,9 +72,9 @@ public class ShooterController : MonoBehaviour
             Aim(true);
         }
 
-        if (Input.GetMouseButtonUp(1))
+        if (Input.GetMouseButtonUp(1) && aiming)
         {
-            Aim(false);
+            ShotSequence();
         }
 
         if (aiming)
@@ -90,19 +90,42 @@ public class ShooterController : MonoBehaviour
         RaycastHit hit;
         Physics.Raycast(mainCamera.transform.position, mainCamera.transform.forward, out hit);
 
-
         if (hit.transform == null)
         {
             Debug.Log("NULL");
             return;
         }
 
+        //Debug.Log(hit.transform.GetComponentInParent<Environment>());
+
         if (hit.transform.CompareTag("Cube") && !targets.Contains(hit.transform))
         {
             hit.transform.GetComponent<CubeController>().OnAim();
             targets.Add(hit.transform);
-           
         }
+    }
+
+    private void ShotSequence()
+    {
+
+        if (targets.Count > 0)
+        {
+            Sequence sequence = DOTween.Sequence();
+
+            for (var i = 0; i < targets.Count; i++) 
+            {
+                sequence.Append(transform.DOLookAt(targets[i].position, .2f));
+                sequence.AppendCallback(() => anim.SetTrigger("fire"));
+                sequence.AppendInterval(2);
+            }
+
+            sequence.AppendCallback(() => Aim(false));
+        }
+        else
+        {
+            Aim(false); 
+        }
+
     }
 
     private void Aim(bool state)
