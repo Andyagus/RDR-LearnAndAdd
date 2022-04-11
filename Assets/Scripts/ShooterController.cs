@@ -91,7 +91,6 @@ public class ShooterController : MonoBehaviour
     private void AddTargets()
     {
 
-        Debug.Log("ADD TARGETS CALLED");
         input.LookAt(mainCamera.transform.forward + (mainCamera.transform.right * .1f));
 
         RaycastHit hit;
@@ -125,6 +124,7 @@ public class ShooterController : MonoBehaviour
                 sequence.Append(transform.DOLookAt(targets[i].position, .2f));
                 sequence.AppendCallback(() => anim.SetTrigger("fire"));
                 sequence.AppendInterval(1);
+                sequence.AppendCallback(() => Debug.Log("NEXT ROUND"));
 
             }
 

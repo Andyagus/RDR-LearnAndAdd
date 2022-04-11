@@ -31,7 +31,6 @@ public class MovementInput : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Debug.Log("still calling update");
 
         InputMagnitude();
         isGrounded = controller.isGrounded;
