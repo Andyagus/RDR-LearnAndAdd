@@ -5,6 +5,10 @@ using UnityEngine;
 using Cinemachine;
 using DG.Tweening;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
+
+
+//andy script
 
 public class ShooterController : MonoBehaviour
 {
@@ -66,11 +70,17 @@ public class ShooterController : MonoBehaviour
     {
 
 
-        anim.SetFloat("speed", input.Speed);
-
         if (deadEye)
         {
             return;
+        }
+
+
+        anim.SetFloat("speed", input.Speed);
+
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().name);
         }
 
         if (Input.GetMouseButtonDown(1))
@@ -102,18 +112,18 @@ public class ShooterController : MonoBehaviour
             return;
         }
 
+        //Debug.Log(hit.transform);
         //Debug.Log(hit.transform.GetComponentInParent<Environment>());
 
-        if (hit.transform.CompareTag("Cube") && !targets.Contains(hit.transform))
-        {
-            hit.transform.GetComponent<CubeController>().OnAim();
-            targets.Add(hit.transform);
-        }
+        //if (hit.transform.CompareTag("Cube") && !targets.Contains(hit.transform))
+        //{
+        //    hit.transform.GetComponent<CubeController>().OnAim();
+        //    targets.Add(hit.transform);
+        //}
     }
 
     private void ShotSequence()
     {
-        Debug.Log("SHOT SEQUENCE CALLED");
         if (targets.Count > 0)
         {
             DeadEye(true);            
@@ -125,7 +135,7 @@ public class ShooterController : MonoBehaviour
                 sequence.AppendInterval(0.4f);
                 sequence.Append(transform.DOLookAt(targets[i].position, .2f));
                 sequence.AppendCallback(() => anim.SetTrigger("fire"));
-                sequence.AppendInterval(1.8f);
+                sequence.AppendInterval(1.6f);
             }
 
             sequence.AppendCallback(() => Aim(false));
@@ -151,10 +161,9 @@ public class ShooterController : MonoBehaviour
         float zoom = state ? zoomFov : originalFov;
         DOVirtual.Float(originalFov, zoom, aimTime, CameraZoom);
 
-
-        float originalTimeScale = state ? 1 : 0.3f;
-        float postTimeScale = state ? 0.3f : 1;
-        DOVirtual.Float(originalTimeScale, postTimeScale, 0.2f, SetTimeScale);
+        float originalTimeScale = state ? 1 : 0.7f;
+        float postTimeScale = state ? 0.7f : 1;
+        DOVirtual.Float(originalTimeScale, postTimeScale, 3f, SetTimeScale);
 
         //reticle color
         Color reticleColor = state ? Color.white : Color.clear;
