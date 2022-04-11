@@ -20,6 +20,7 @@ public class EnemyController : MonoBehaviour
 
     public void Ragdoll(bool state, Transform point)
     {
+        Debug.Log("CALLED Ragdoll state:  " + state);
         anim.enabled = !state;
 
         foreach(Rigidbody rb in rbs)
@@ -29,7 +30,7 @@ public class EnemyController : MonoBehaviour
 
         if(state == true)
         {
-            //add point force functionality here…
+            point.GetComponent<Rigidbody>().AddForce(shooter.transform.forward * 30, ForceMode.Impulse);
         }
     }
 }

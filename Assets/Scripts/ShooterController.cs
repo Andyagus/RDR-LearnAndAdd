@@ -143,9 +143,12 @@ public class ShooterController : MonoBehaviour
 
             for (var i = 0; i < targets.Count; i++) 
             {
-                sequence.AppendInterval(0.4f);
-                sequence.Append(transform.DOLookAt(targets[i].position, .2f));
+                sequence.Append(transform.DOLookAt(targets[i].GetComponentInParent<EnemyController>().transform.position, .2f));
                 sequence.AppendCallback(() => anim.SetTrigger("fire"));
+                //unsure why assigning i to x makes a difference…?
+                int x = i;
+                sequence.AppendInterval(0.2f);
+                sequence.AppendCallback(() => targets[x].GetComponentInParent<EnemyController>().Ragdoll(true, targets[x]));
                 sequence.AppendInterval(1.6f);
             }
 
