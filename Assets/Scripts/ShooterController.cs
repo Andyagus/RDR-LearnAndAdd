@@ -58,6 +58,7 @@ public class ShooterController : MonoBehaviour
         gun.localEulerAngles = gunAimRotation;
 
         Aim(false);
+        SetTimeScale(0.1f);
     }
 
     
@@ -121,9 +122,10 @@ public class ShooterController : MonoBehaviour
 
             for (var i = 0; i < targets.Count; i++) 
             {
+                sequence.AppendInterval(0.4f);
                 sequence.Append(transform.DOLookAt(targets[i].position, .2f));
                 sequence.AppendCallback(() => anim.SetTrigger("fire"));
-                sequence.AppendInterval(2.2f);
+                sequence.AppendInterval(1.8f);
             }
 
             sequence.AppendCallback(() => Aim(false));
@@ -149,6 +151,11 @@ public class ShooterController : MonoBehaviour
         float zoom = state ? zoomFov : originalFov;
         DOVirtual.Float(originalFov, zoom, aimTime, CameraZoom);
 
+
+        float originalTimeScale = state ? 1 : 0.3f;
+        float postTimeScale = state ? 0.3f : 1;
+        DOVirtual.Float(originalTimeScale, postTimeScale, 0.2f, SetTimeScale);
+
         //reticle color
         Color reticleColor = state ? Color.white : Color.clear;
         reticle.color = reticleColor;
@@ -173,6 +180,11 @@ public class ShooterController : MonoBehaviour
             CinemachineComposer c = thirdPersonCam.GetRig(i).GetCinemachineComponent<CinemachineComposer>();
             c.m_TrackedObjectOffset.x = xOffset;
         }
+    }
+
+    private void SetTimeScale(float x)
+    {
+        Time.timeScale = x;
     }
 
 }

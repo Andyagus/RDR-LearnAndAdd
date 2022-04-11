@@ -681,7 +681,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_ShowDebugText: 0
   m_ShowCameraFrustum: 0
-  m_IgnoreTimeScale: 0
+  m_IgnoreTimeScale: 1
   m_WorldUpOverride: {fileID: 0}
   m_UpdateMethod: 2
   m_DefaultBlend:
@@ -772,7 +772,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 460102724}
-  m_LocalRotation: {x: -0.21532246, y: 0.040658828, z: 0.008973164, w: 0.97565496}
+  m_LocalRotation: {x: -0.21532246, y: 0.040658828, z: 0.0089731645, w: 0.97565496}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -1669,6 +1669,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   thirdPersonCam: {fileID: 107641428}
   aiming: 0
+  deadEye: 0
   originalOffsetAmount: 0.2
   zoomOffsetAmount: 0.45
   aimTime: 0.2
@@ -1803,7 +1804,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1254204284}
-  m_LocalRotation: {x: -0.22837093, y: 0.040535, z: 0.009516967, w: 0.9726834}
+  m_LocalRotation: {x: -0.22837093, y: 0.040535, z: 0.009516965, w: 0.9726834}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -2109,7 +2110,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1700486477}
-  m_LocalRotation: {x: -0.24135979, y: 0.040404093, z: 0.010058267, w: 0.9695421}
+  m_LocalRotation: {x: -0.24135979, y: 0.04040409, z: 0.010058269, w: 0.9695421}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
