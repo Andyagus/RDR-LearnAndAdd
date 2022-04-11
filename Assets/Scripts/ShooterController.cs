@@ -123,12 +123,12 @@ public class ShooterController : MonoBehaviour
             {
                 sequence.Append(transform.DOLookAt(targets[i].position, .2f));
                 sequence.AppendCallback(() => anim.SetTrigger("fire"));
-                sequence.AppendInterval(1);
-                sequence.AppendCallback(() => Debug.Log("NEXT ROUND"));
-
+                sequence.AppendInterval(2.2f);
             }
 
             sequence.AppendCallback(() => Aim(false));
+            sequence.AppendCallback(() => DeadEye(false));
+
         }
         else
         {

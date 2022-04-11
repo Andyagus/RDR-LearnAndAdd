@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 3d62f65742a81497c9a27a9acd8100b7
+guid: a1caa5700806e438eac3d29415d745d6
 ModelImporter:
   serializedVersion: 23
   fileIDToRecycleName:
@@ -139,7 +139,7 @@ ModelImporter:
     400130: mixamorig:Spine1
     400132: mixamorig:Spine2
     400134: //RootNode
-    7400000: Rifle_Reload
+    7400000: Rifle Reload 2
     9500000: //RootNode
     2186277476908879412: ImportLogs
   externalObjects: {}
@@ -175,10 +175,10 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: Rifle_Reload
+      name: Rifle Reload 2
       takeName: mixamo.com
-      firstFrame: 24
-      lastFrame: 75
+      firstFrame: 0
+      lastFrame: 99
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
