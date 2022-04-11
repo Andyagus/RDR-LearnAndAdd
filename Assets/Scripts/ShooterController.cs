@@ -31,7 +31,7 @@ public class ShooterController : MonoBehaviour
     private float zoomFov = 20;
 
     [Header("Targets")]
-    public List<Transform> targets = new List<Transform>(); 
+    public List<Transform> targets = new List<Transform>();
 
     [Header("UI")]
     public Image reticle;
@@ -53,7 +53,6 @@ public class ShooterController : MonoBehaviour
         mainCamera = Camera.main;
         //access cinemachine components
         originalFov = thirdPersonCam.m_Lens.FieldOfView;
-
 
         gunIdlePosition = gun.localPosition;
         gunIdleRotation = gun.localEulerAngles;
@@ -110,6 +109,18 @@ public class ShooterController : MonoBehaviour
         if (hit.transform == null)
         {
             return;
+        }
+
+        if (!hit.transform.CompareTag("Enemy"))
+        {
+            return;
+        }
+
+
+        if (!targets.Contains(hit.transform) && !hit.transform.GetComponentInParent<EnemyController>().aimed)
+        {
+            hit.transform.GetComponentInParent<EnemyController>().aimed = true;
+            targets.Add(hit.transform);
         }
 
         //Debug.Log(hit.transform);
