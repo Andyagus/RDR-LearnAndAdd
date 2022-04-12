@@ -20,7 +20,6 @@ public class EnemyController : MonoBehaviour
 
     public void Ragdoll(bool state, Transform point)
     {
-        Debug.Log("CALLED Ragdoll state:  " + state);
         anim.enabled = !state;
 
         foreach(Rigidbody rb in rbs)

@@ -57,8 +57,8 @@ public class ShooterController : MonoBehaviour
         gunIdlePosition = gun.localPosition;
         gunIdleRotation = gun.localEulerAngles;
 
-        gun.localPosition = gunAimPosition;
-        gun.localEulerAngles = gunAimRotation;
+        //gun.localPosition = gunAimPosition;
+        //gun.localEulerAngles = gunAimRotation;
 
         Aim(false);
         SetTimeScale(0.1f);
@@ -106,6 +106,7 @@ public class ShooterController : MonoBehaviour
         RaycastHit hit;
         Physics.Raycast(mainCamera.transform.position, mainCamera.transform.forward, out hit);
 
+
         if (hit.transform == null)
         {
             return;
@@ -115,7 +116,6 @@ public class ShooterController : MonoBehaviour
         {
             return;
         }
-
 
         if (!targets.Contains(hit.transform) && !hit.transform.GetComponentInParent<EnemyController>().aimed)
         {
@@ -173,7 +173,7 @@ public class ShooterController : MonoBehaviour
         DOVirtual.Float(originalOffset, targetOffset, aimTime, HorizontalOffset);
 
         float zoom = state ? zoomFov : originalFov;
-        DOVirtual.Float(originalFov, zoom, aimTime, CameraZoom);
+        DOVirtual.Float(thirdPersonCam.m_Lens.FieldOfView, zoom, aimTime, CameraZoom);
 
         float originalTimeScale = state ? 1 : 0.7f;
         float postTimeScale = state ? 0.7f : 1;
@@ -193,6 +193,7 @@ public class ShooterController : MonoBehaviour
 
     private void CameraZoom(float zoomAmt)
     {
+        Debug.Log(zoomAmt);
         thirdPersonCam.m_Lens.FieldOfView = zoomAmt;
     }
 
