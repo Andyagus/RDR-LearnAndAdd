@@ -2689,6 +2689,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 92.288
       objectReference: {fileID: 0}
+    - target: {fileID: 634651313, guid: c5b954a71f3b7491788c96b8b336de9b, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c5b954a71f3b7491788c96b8b336de9b, type: 3}
 --- !u!1001 &1027808875
@@ -3969,7 +3973,11 @@ MonoBehaviour:
   aimTime: 0.2
   targets: []
   reticle: {fileID: 140639891}
-  gun: {fileID: 0}
+  XIndicator: {fileID: 5461032404049466586, guid: ba2041d63138748a8b6279818e4a5b33,
+    type: 3}
+  indicatorList: []
+  canvas: {fileID: 969315266}
+  gun: {fileID: 1582553955}
 --- !u!114 &1173127123
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4098,7 +4106,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1254204284}
-  m_LocalRotation: {x: -0.031200277, y: 0.04161693, z: 0.0013001942, w: 0.9986456}
+  m_LocalRotation: {x: -0.031200277, y: 0.04161693, z: 0.0013001944, w: 0.9986456}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -4326,6 +4334,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac0b09e7857660247b1477e93731de29, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!4 &1582553955 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1825511575, guid: c5b954a71f3b7491788c96b8b336de9b,
+    type: 3}
+  m_PrefabInstance: {fileID: 970717077}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1611640563
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5549,7 +5563,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1700486477}
-  m_LocalRotation: {x: -0.04455402, y: 0.04159582, z: 0.0018567146, w: 0.99813896}
+  m_LocalRotation: {x: -0.04455402, y: 0.04159582, z: 0.0018567144, w: 0.99813896}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:

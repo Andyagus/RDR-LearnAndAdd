@@ -35,6 +35,9 @@ public class ShooterController : MonoBehaviour
 
     [Header("UI")]
     public Image reticle;
+    public GameObject xIndicatorPrefab;
+    public List<Transform> indicatorList = new List<Transform>();
+    public Transform canvas;
 
     [Space]
 
@@ -94,7 +97,19 @@ public class ShooterController : MonoBehaviour
 
         if (aiming)
         {
+            PositionXIndicator();
             AddTargets();
+        }
+    }
+
+    private void PositionXIndicator()
+    {
+        if(targets.Count > 0)
+        {
+            for(int i = 0; i < targets.Count; i++ )
+            {
+                indicatorList[i].position = mainCamera.WorldToScreenPoint(targets[i].position);
+            }
         }
     }
 
@@ -121,6 +136,13 @@ public class ShooterController : MonoBehaviour
         {
             hit.transform.GetComponentInParent<EnemyController>().aimed = true;
             targets.Add(hit.transform);
+
+            //how does world screen pos work? Ask Sunny 
+            Vector3 worldToScreenPointPos = Camera.main.WorldToScreenPoint(hit.transform.position);
+
+            var indicator = Instantiate(xIndicatorPrefab, canvas);
+            indicator.transform.position = worldToScreenPointPos;
+            indicatorList.Add(indicator.transform);
         }
 
         //Debug.Log(hit.transform);
@@ -147,8 +169,10 @@ public class ShooterController : MonoBehaviour
                 sequence.AppendCallback(() => anim.SetTrigger("fire"));
                 //unsure why assigning i to x makes a difference…?
                 int x = i;
-                sequence.AppendInterval(0.2f);
+                sequence.AppendInterval(0.1f);
+                sequence.AppendCallback(FirePolish);
                 sequence.AppendCallback(() => targets[x].GetComponentInParent<EnemyController>().Ragdoll(true, targets[x]));
+                sequence.AppendCallback(() => indicatorList[x].GetComponent<Image>().color = Color.clear);
                 sequence.AppendInterval(1.6f);
             }
 
@@ -160,8 +184,37 @@ public class ShooterController : MonoBehaviour
         {
             Aim(false); 
         }
+    }
+
+    private void FirePolish()
+    {
+        foreach(ParticleSystem pSystem in gun.GetComponentsInChildren<ParticleSystem>())
+        {
+            pSystem.Play();
+        }
+    }
+
+    private void DeadEye(bool state)
+    {
+        deadEye = state;
+        input.enabled = !deadEye;
+
+        if (!state)
+        {
+            targets.Clear();
+
+            foreach (var indicator in indicatorList)
+            {
+                Destroy(indicator.gameObject);
+            }
+
+            indicatorList.Clear();
+        }
+
 
     }
+
+
 
     private void Aim(bool state)
     {
@@ -185,15 +238,10 @@ public class ShooterController : MonoBehaviour
 
     }
 
-    private void DeadEye(bool state)
-    {
-        deadEye = state;
-        input.enabled = !deadEye;
-    }
 
+    
     private void CameraZoom(float zoomAmt)
     {
-        Debug.Log(zoomAmt);
         thirdPersonCam.m_Lens.FieldOfView = zoomAmt;
     }
 
