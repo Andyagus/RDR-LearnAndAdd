@@ -6,7 +6,7 @@ using Cinemachine;
 using DG.Tweening;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
-using UnityEngine.Rendering;
+using UnityEngine.Rendering.PostProcessing;
 
 //andy script
 
