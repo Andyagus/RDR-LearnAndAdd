@@ -4087,6 +4087,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   thirdPersonCam: {fileID: 107641428}
+  deadEyeColor: {r: 0.654902, g: 0.36078432, b: 0.15686275, a: 1}
   aiming: 0
   deadEye: 0
   originalOffsetAmount: 0.2
@@ -4227,7 +4228,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1254204284}
-  m_LocalRotation: {x: -0.031200277, y: 0.04161693, z: 0.0013001951, w: 0.9986456}
+  m_LocalRotation: {x: -0.031200277, y: 0.04161693, z: 0.0013001952, w: 0.9986456}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -5684,7 +5685,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1700486477}
-  m_LocalRotation: {x: -0.04455402, y: 0.04159582, z: 0.0018567139, w: 0.99813896}
+  m_LocalRotation: {x: -0.04455402, y: 0.04159582, z: 0.0018567138, w: 0.99813896}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:

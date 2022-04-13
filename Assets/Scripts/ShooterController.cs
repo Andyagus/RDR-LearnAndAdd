@@ -18,6 +18,12 @@ public class ShooterController : MonoBehaviour
     [Header("Cinemachine")]
     public CinemachineFreeLook thirdPersonCam;
     private CinemachineImpulseSource impulseSource;
+    private PostProcessVolume postVolume;
+    private PostProcessProfile postProfile;
+    private ColorGrading colorGrading;
+    public Color deadEyeColor;
+    private Color currentColor = Color.white;
+
 
     [Header("Booleans")]
     public bool aiming = false;
@@ -63,7 +69,9 @@ public class ShooterController : MonoBehaviour
         gunIdleRotation = gun.localEulerAngles;
 
         impulseSource = thirdPersonCam.GetComponent<CinemachineImpulseSource>();
-
+        postVolume = mainCamera.GetComponent<PostProcessVolume>();
+        postProfile = mainCamera.GetComponent <PostProcessProfile>();
+        colorGrading = postProfile.GetSetting<ColorGrading>();
         //gun.localPosition = gunAimPosition;
         //gun.localEulerAngles = gunAimRotation;
 
@@ -195,6 +203,11 @@ public class ShooterController : MonoBehaviour
         {
             Aim(false); 
         }
+    }
+
+    private void FixedUpdate()
+    {
+        colorGrading.colorFilter.value = Color.Lerp(colorGrading.colorFilter.value, currentColor, 0.2f);
     }
 
     private void FirePolish()
