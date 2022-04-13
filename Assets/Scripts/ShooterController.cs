@@ -6,7 +6,7 @@ using Cinemachine;
 using DG.Tweening;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
-
+using UnityEngine.Rendering;
 
 //andy script
 
@@ -17,6 +17,7 @@ public class ShooterController : MonoBehaviour
 
     [Header("Cinemachine")]
     public CinemachineFreeLook thirdPersonCam;
+    private CinemachineImpulseSource impulseSource;
 
     [Header("Booleans")]
     public bool aiming = false;
@@ -52,6 +53,7 @@ public class ShooterController : MonoBehaviour
     void Start()
     {
         input = GetComponent<MovementInput>();
+
         anim = GetComponent<Animator>();
         mainCamera = Camera.main;
         //access cinemachine components
@@ -59,6 +61,8 @@ public class ShooterController : MonoBehaviour
 
         gunIdlePosition = gun.localPosition;
         gunIdleRotation = gun.localEulerAngles;
+
+        impulseSource = thirdPersonCam.GetComponent<CinemachineImpulseSource>();
 
         //gun.localPosition = gunAimPosition;
         //gun.localEulerAngles = gunAimRotation;
@@ -70,6 +74,13 @@ public class ShooterController : MonoBehaviour
     
     void Update()
     {
+
+
+
+        if (aiming)
+        {
+            PositionXIndicator();
+        }
 
 
         if (deadEye)
@@ -97,9 +108,9 @@ public class ShooterController : MonoBehaviour
 
         if (aiming)
         {
-            PositionXIndicator();
             AddTargets();
         }
+
     }
 
     private void PositionXIndicator()
@@ -173,7 +184,7 @@ public class ShooterController : MonoBehaviour
                 sequence.AppendCallback(FirePolish);
                 sequence.AppendCallback(() => targets[x].GetComponentInParent<EnemyController>().Ragdoll(true, targets[x]));
                 sequence.AppendCallback(() => indicatorList[x].GetComponent<Image>().color = Color.clear);
-                sequence.AppendInterval(1.6f);
+                sequence.AppendInterval(2f);
             }
 
             sequence.AppendCallback(() => Aim(false));
@@ -188,6 +199,8 @@ public class ShooterController : MonoBehaviour
 
     private void FirePolish()
     {
+        impulseSource.GenerateImpulse();
+
         foreach(ParticleSystem pSystem in gun.GetComponentsInChildren<ParticleSystem>())
         {
             pSystem.Play();
