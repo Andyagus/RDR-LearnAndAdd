@@ -70,21 +70,16 @@ public class ShooterController : MonoBehaviour
 
         impulseSource = thirdPersonCam.GetComponent<CinemachineImpulseSource>();
         postVolume = mainCamera.GetComponent<PostProcessVolume>();
-        postProfile = mainCamera.GetComponent <PostProcessProfile>();
-        colorGrading = postProfile.GetSetting<ColorGrading>();
-        //gun.localPosition = gunAimPosition;
-        //gun.localEulerAngles = gunAimRotation;
+        postProfile = postVolume.profile;
 
-        Aim(false);
+        colorGrading = postProfile.GetSetting<ColorGrading>();
+
         SetTimeScale(0.1f);
     }
 
     
     void Update()
     {
-
-
-
         if (aiming)
         {
             PositionXIndicator();
@@ -155,23 +150,12 @@ public class ShooterController : MonoBehaviour
         {
             hit.transform.GetComponentInParent<EnemyController>().aimed = true;
             targets.Add(hit.transform);
-
-            //how does world screen pos work? Ask Sunny 
             Vector3 worldToScreenPointPos = Camera.main.WorldToScreenPoint(hit.transform.position);
 
             var indicator = Instantiate(xIndicatorPrefab, canvas);
             indicator.transform.position = worldToScreenPointPos;
             indicatorList.Add(indicator.transform);
         }
-
-        //Debug.Log(hit.transform);
-        //Debug.Log(hit.transform.GetComponentInParent<Environment>());
-
-        //if (hit.transform.CompareTag("Cube") && !targets.Contains(hit.transform))
-        //{
-        //    hit.transform.GetComponent<CubeController>().OnAim();
-        //    targets.Add(hit.transform);
-        //}
     }
 
     private void ShotSequence()
@@ -186,12 +170,11 @@ public class ShooterController : MonoBehaviour
             {
                 sequence.Append(transform.DOLookAt(targets[i].GetComponentInParent<EnemyController>().transform.position, .2f));
                 sequence.AppendCallback(() => anim.SetTrigger("fire"));
-                //unsure why assigning i to x makes a difference…?
                 int x = i;
                 sequence.AppendInterval(0.1f);
                 sequence.AppendCallback(FirePolish);
                 sequence.AppendCallback(() => targets[x].GetComponentInParent<EnemyController>().Ragdoll(true, targets[x]));
-                sequence.AppendCallback(() => indicatorList[x].GetComponent<Image>().color = Color.clear);
+                sequence.AppendCallback(() => targets[x].GetComponent<Image>().color = Color.clear);
                 sequence.AppendInterval(2f);
             }
 
@@ -207,7 +190,7 @@ public class ShooterController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        colorGrading.colorFilter.value = Color.Lerp(colorGrading.colorFilter.value, currentColor, 0.2f);
+        colorGrading.colorFilter.value = Color.Lerp(colorGrading.colorFilter.value, currentColor, aimTime);
     }
 
     private void FirePolish()
@@ -262,6 +245,19 @@ public class ShooterController : MonoBehaviour
         Color reticleColor = state ? Color.white : Color.clear;
         reticle.color = reticleColor;
 
+        var originalAberation = state ? 0f : .34f;
+        var postAberation = state ? .34f: 0;
+
+        var originalVignette = state ? 0f : 0.5f;
+        var postVignette = state ? 0.5f : 0f;
+
+        currentColor = state ? deadEyeColor : Color.white;
+
+        //var originalColor = state ? Color.white : deadEyeColor;
+        //var postColor = state ? deadEyeColor : Color.white;
+        //DOVirtual.Color(originalColor, postColor, aimTime, ColorFilter);
+        DOVirtual.Float(originalAberation, postAberation, aimTime, AberationAmount);
+        DOVirtual.Float(originalVignette, postVignette, aimTime, VignetteAmount);
     }
 
 
@@ -285,4 +281,28 @@ public class ShooterController : MonoBehaviour
         Time.timeScale = x;
     }
 
+    //private void ColorFilter(Color color)
+    //{
+    //    var colorGrading = postProfile.GetSetting<ColorGrading>();
+    //    colorGrading.colorFilter.value = color;
+    //}
+
+    private void AberationAmount(float x)
+    {
+        var chromatic = postProfile.GetSetting<ChromaticAberration>();
+        chromatic.intensity.value = x;
+    }
+
+    private void VignetteAmount(float x)
+    {
+        var vignette = postProfile.GetSetting<Vignette>();
+        vignette.intensity.value = x;
+    }
+
+
+    //var chrome = 
+    //chrome.intensity.value = 1f;
+
+    //var vign = postProfile.GetSetting<Vignette>();
+    //vign.intensity.value = 1f;
 }

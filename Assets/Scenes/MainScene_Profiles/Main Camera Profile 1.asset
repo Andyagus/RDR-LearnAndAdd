@@ -69,7 +69,7 @@ MonoBehaviour:
     defaultState: 1
   intensity:
     overrideState: 1
-    value: 0.542
+    value: 0
   fastMode:
     overrideState: 1
     value: 0
@@ -154,7 +154,7 @@ MonoBehaviour:
     value: 0
   colorFilter:
     overrideState: 1
-    value: {r: 0.6226415, g: 0.18289691, b: 0.06755074, a: 1}
+    value: {r: 1, g: 1, b: 1, a: 1}
   hueShift:
     overrideState: 1
     value: 0
@@ -1480,13 +1480,13 @@ MonoBehaviour:
     value: {x: 0.5, y: 0.5}
   intensity:
     overrideState: 1
-    value: 0.47
+    value: 0
   smoothness:
     overrideState: 1
-    value: 0.2
+    value: 0.58
   roundness:
     overrideState: 1
-    value: 1
+    value: 0.75
   rounded:
     overrideState: 1
     value: 0
