@@ -136,6 +136,8 @@ public class ShooterController : MonoBehaviour
         Physics.Raycast(mainCamera.transform.position, mainCamera.transform.forward, out hit);
 
 
+        reticle.color = Color.white;
+
         if (hit.transform == null)
         {
             return;
@@ -145,6 +147,8 @@ public class ShooterController : MonoBehaviour
         {
             return;
         }
+
+        reticle.color = Color.red;
 
         if (!targets.Contains(hit.transform) && !hit.transform.GetComponentInParent<EnemyController>().aimed)
         {
@@ -208,6 +212,11 @@ public class ShooterController : MonoBehaviour
         deadEye = state;
         input.enabled = !deadEye;
 
+        if (state)
+        {
+            reticle.DOColor(Color.clear, 0.5f);
+        }
+
         if (!state)
         {
             targets.Clear();
@@ -241,10 +250,6 @@ public class ShooterController : MonoBehaviour
         float postTimeScale = state ? 0.7f : 1;
         DOVirtual.Float(originalTimeScale, postTimeScale, 3f, SetTimeScale);
 
-        //reticle color
-        Color reticleColor = state ? Color.white : Color.clear;
-        reticle.color = reticleColor;
-
         var originalAberation = state ? 0f : .34f;
         var postAberation = state ? .34f : 0;
 
@@ -253,11 +258,12 @@ public class ShooterController : MonoBehaviour
 
         currentColor = state ? deadEyeColor : Color.white;
 
-        //var originalColor = state ? Color.white : deadEyeColor;
-        //var postColor = state ? deadEyeColor : Color.white;
-        //DOVirtual.Color(originalColor, postColor, aimTime, ColorFilter);
         DOVirtual.Float(originalAberation, postAberation, aimTime, AberationAmount);
         DOVirtual.Float(originalVignette, postVignette, aimTime, VignetteAmount);
+
+        Color reticleColor = state ? Color.white : Color.clear;
+        reticle.color = reticleColor;
+
     }
 
 
