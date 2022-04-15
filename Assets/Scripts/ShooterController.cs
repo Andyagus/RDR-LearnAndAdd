@@ -245,14 +245,8 @@ public class ShooterController : MonoBehaviour
         Color reticleColor = state ? Color.white : Color.clear;
         reticle.color = reticleColor;
 
-
-        var aberationAmt = state ? postProfile.GetSetting<ChromaticAberration>().intensity.value : 1f;
-        DOVirtual.Float(aberationAmt, postAberation, aimTime, AberationAmount);
-
-
-
-        //var originalAberation = state ? 0f : .34f;
-        //var postAberation = state ? .34f: 0;
+        var originalAberation = state ? 0f : .34f;
+        var postAberation = state ? .34f : 0;
 
         var originalVignette = state ? 0f : 0.5f;
         var postVignette = state ? 0.5f : 0f;
@@ -262,7 +256,7 @@ public class ShooterController : MonoBehaviour
         //var originalColor = state ? Color.white : deadEyeColor;
         //var postColor = state ? deadEyeColor : Color.white;
         //DOVirtual.Color(originalColor, postColor, aimTime, ColorFilter);
-        //DOVirtual.Float(originalAberation, postAberation, aimTime, AberationAmount);
+        DOVirtual.Float(originalAberation, postAberation, aimTime, AberationAmount);
         DOVirtual.Float(originalVignette, postVignette, aimTime, VignetteAmount);
     }
 
