@@ -8,7 +8,7 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using UnityEngine.Rendering.PostProcessing;
 
-//andy script
+//andy script`
 
 public class ShooterController : MonoBehaviour
 {
@@ -189,7 +189,7 @@ public class ShooterController : MonoBehaviour
                 sequence.AppendCallback(FirePolish);
                 sequence.AppendCallback(() => currentTarget.GetComponentInParent<EnemyController>().Ragdoll(true, currentTarget));
                 sequence.AppendCallback(() => currentIndicator.GetComponent<Image>().color = Color.clear);
-                sequence.AppendInterval(2f);
+                sequence.AppendInterval(1.75f);
             }
 
             sequence.AppendCallback(() => Aim(false));
