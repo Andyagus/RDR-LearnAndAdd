@@ -45,15 +45,18 @@ public class EnemyController : MonoBehaviour
         {
             Attack(true);
         }
+
+        
         
 
     }
 
     public void Attack(bool state)
     {
-        //Debug.Log("CLOSE TO PLAYER");
+        attack = true;
         anim.SetBool("attack", true);
-        input.LookAt(shooter.transform.position);
+
+        //input.LookAt(shooter.transform.position);
     }
 
     //ragdoll from shot
