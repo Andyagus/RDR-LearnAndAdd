@@ -209,7 +209,6 @@ public class ShooterController : MonoBehaviour
         var rot = state ? gunAimRotation : gunAimRotation;
         gun.DOLocalMove(pos, .3f);
         gun.DOLocalRotate(rot, .3f);
-        Debug.Log(pos);
     }
 
     private void FixedUpdate()
@@ -231,6 +230,9 @@ public class ShooterController : MonoBehaviour
     {
         deadEye = state;
         input.enabled = !deadEye;
+
+        float animationSpeed = state ? 1.275f : 1;
+        anim.speed = animationSpeed;
 
         if (state)
         {
@@ -278,6 +280,11 @@ public class ShooterController : MonoBehaviour
         float originalTimeScale = state ? 1 : 0.7f;
         float postTimeScale = state ? 0.7f : 1;
         DOVirtual.Float(originalTimeScale, postTimeScale, 3f, SetTimeScale);
+
+        if(state == false)
+        {
+            transform.DORotate(new Vector3(0, transform.eulerAngles.y, transform.eulerAngles.z), aimTime);
+        }
 
         var originalAberation = state ? 0f : .34f;
         var postAberation = state ? .34f : 0;
