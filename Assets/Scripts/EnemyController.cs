@@ -9,10 +9,13 @@ public class EnemyController : MonoBehaviour
     private Rigidbody[] rbs;
     private Animator anim;
     ShooterController shooter;
-    NavMeshAgent agent;
-
+    NavMeshAgent enemy;
+    EnemyMovement input;
 
     public bool aimed;
+    public bool chase;
+    public bool attack;
+
 
     void Start()
     {
@@ -20,20 +23,40 @@ public class EnemyController : MonoBehaviour
         shooter = FindObjectOfType<ShooterController>();
         rbs = GetComponentsInChildren<Rigidbody>();
         Ragdoll(false, this.transform);
-        agent = GetComponent<NavMeshAgent>();
+        enemy = GetComponent<NavMeshAgent>();
+        input = GetComponent<EnemyMovement>();
+        chase = true;
     }
 
     private void Update()
     {
-        FollowPlayer();
-        
+        FollowPlayer();   
     }
 
-    public void FollowPlayer()
+    private void FollowPlayer()
     {
-        agent.destination = shooter.transform.position; 
+       
+        enemy.destination = shooter.transform.position; 
+        
+        var distanceFromPlayer = enemy.transform.position - shooter.transform.position;
+        var stopDistance = enemy.stoppingDistance;
+
+        if (stopDistance > distanceFromPlayer.z)
+        {
+            Attack(true);
+        }
+        
+
     }
 
+    public void Attack(bool state)
+    {
+        //Debug.Log("CLOSE TO PLAYER");
+        anim.SetBool("attack", true);
+        input.LookAt(shooter.transform.position);
+    }
+
+    //ragdoll from shot
     public void Ragdoll(bool state, Transform point)
     {
         anim.enabled = !state;
