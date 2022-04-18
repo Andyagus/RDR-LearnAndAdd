@@ -65,16 +65,18 @@ public class ShooterController : MonoBehaviour
         //access cinemachine components
         originalFov = thirdPersonCam.m_Lens.FieldOfView;
 
-        gunIdlePosition = gun.localPosition;
-        gunIdleRotation = gun.localEulerAngles;
-
         impulseSource = thirdPersonCam.GetComponent<CinemachineImpulseSource>();
         postVolume = mainCamera.GetComponent<PostProcessVolume>();
         postProfile = postVolume.profile;
 
         colorGrading = postProfile.GetSetting<ColorGrading>();
 
-        SetTimeScale(0.1f);
+        gunIdlePosition = gun.localPosition;
+        gunIdleRotation = gun.localEulerAngles;
+
+        Cursor.visible = false;
+        HorizontalOffset(originalOffsetAmount);
+
     }
 
     
@@ -93,6 +95,11 @@ public class ShooterController : MonoBehaviour
 
 
         anim.SetFloat("speed", input.Speed);
+
+        if (!aiming)
+        {
+            WeaponPosition();
+        }
 
         if (Input.GetKeyDown(KeyCode.R))
         {
@@ -172,13 +179,16 @@ public class ShooterController : MonoBehaviour
 
             for (var i = 0; i < targets.Count; i++) 
             {
-                sequence.Append(transform.DOLookAt(targets[i].GetComponentInParent<EnemyController>().transform.position, .2f));
+
+                var currentTarget = targets[i];
+                var currentIndicator = indicatorList[i];
+
+                sequence.Append(transform.DOLookAt(currentTarget.GetComponentInParent<EnemyController>().transform.position, .2f));
                 sequence.AppendCallback(() => anim.SetTrigger("fire"));
-                int x = i;
                 sequence.AppendInterval(0.1f);
                 sequence.AppendCallback(FirePolish);
-                sequence.AppendCallback(() => targets[x].GetComponentInParent<EnemyController>().Ragdoll(true, targets[x]));
-                sequence.AppendCallback(() => targets[x].GetComponent<Image>().color = Color.clear);
+                sequence.AppendCallback(() => currentTarget.GetComponentInParent<EnemyController>().Ragdoll(true, currentTarget));
+                sequence.AppendCallback(() => currentIndicator.GetComponent<Image>().color = Color.clear);
                 sequence.AppendInterval(2f);
             }
 
@@ -190,6 +200,16 @@ public class ShooterController : MonoBehaviour
         {
             Aim(false); 
         }
+    }
+
+    private void WeaponPosition()
+    {
+        bool state = input.Speed > 0;
+        var pos = state ? gunAimPosition : gunIdlePosition;
+        var rot = state ? gunAimRotation : gunAimRotation;
+        gun.DOLocalMove(pos, .3f);
+        gun.DOLocalRotate(rot, .3f);
+        Debug.Log(pos);
     }
 
     private void FixedUpdate()
@@ -246,19 +266,26 @@ public class ShooterController : MonoBehaviour
         float zoom = state ? zoomFov : originalFov;
         DOVirtual.Float(thirdPersonCam.m_Lens.FieldOfView, zoom, aimTime, CameraZoom);
 
+
+        var pos = state ? gunAimPosition : gunIdlePosition;
+        var rot = state ? gunAimRotation : gunIdleRotation;
+
+        gun.DOComplete();
+        gun.DOLocalMove(pos, 0.1f);
+        gun.DOLocalRotate(rot, 0.1f);
+
+        //post effects
         float originalTimeScale = state ? 1 : 0.7f;
         float postTimeScale = state ? 0.7f : 1;
         DOVirtual.Float(originalTimeScale, postTimeScale, 3f, SetTimeScale);
 
         var originalAberation = state ? 0f : .34f;
         var postAberation = state ? .34f : 0;
+        DOVirtual.Float(originalAberation, postAberation, aimTime, AberationAmount);
 
         var originalVignette = state ? 0f : 0.5f;
         var postVignette = state ? 0.5f : 0f;
-
         currentColor = state ? deadEyeColor : Color.white;
-
-        DOVirtual.Float(originalAberation, postAberation, aimTime, AberationAmount);
         DOVirtual.Float(originalVignette, postVignette, aimTime, VignetteAmount);
 
         Color reticleColor = state ? Color.white : Color.clear;
