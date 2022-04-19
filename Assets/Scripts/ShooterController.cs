@@ -58,7 +58,7 @@ public class ShooterController : MonoBehaviour
 
     [Header("Enemy")]
     public EnemyController enemy;
-
+    public Rigidbody attackRb;
 
     void Start()
     {
@@ -128,10 +128,11 @@ public class ShooterController : MonoBehaviour
         }
 
         //enemy
-        if (enemy.attack)
-        {
-            Debug.Log("enemy is attacking");
-        }
+        //if (enemy.attacking)
+        //{
+        //    anim.SetTrigger("onAttack");
+        //    //Debug.Log("enemy is attacking");
+        //}
 
     }
 
@@ -351,6 +352,14 @@ public class ShooterController : MonoBehaviour
         vignette.intensity.value = x;
     }
 
+
+    public void EnemyAttack()
+    {
+        //Debug.Log("Enemy has been hit");
+        //attackRb.AddForce(Vector3.forward*10, ForceMode.Impulse);
+        anim.SetTrigger("onAttack");
+
+    }
 
     //var chrome = 
     //chrome.intensity.value = 1f;

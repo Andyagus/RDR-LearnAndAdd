@@ -3,24 +3,28 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 using Cinemachine;
+using DG.Tweening;
 
 
 public class EnemyController : MonoBehaviour
 {
     private Rigidbody[] rbs;
     private Animator anim;
-    ShooterController shooter;
-    NavMeshAgent enemy;
-    EnemyMovement input;
+    private ShooterController shooter;
+    private NavMeshAgent enemy;
+    private EnemyMovement input;
+    private GameObject vCam;
+
+
+    public GameObject cubeObject;
 
     public Vector3 attackPosition;
-    public GameObject spawnSpherePrefab;
-
-    public bool aimed;
-    public bool chase;    
-    public bool attack;
-
+    public float stopDistancePadding = 0.5f;
+    public bool attacking;
+    public bool withinRange;
     public bool canCreateCam = true;
+    public bool aimed = false;
+
 
     void Start()
     {
@@ -30,7 +34,6 @@ public class EnemyController : MonoBehaviour
         Ragdoll(false, this.transform);
         enemy = GetComponent<NavMeshAgent>();
         input = GetComponent<EnemyMovement>();
-        chase = true;
     }
 
     private void Update()
@@ -39,64 +42,96 @@ public class EnemyController : MonoBehaviour
     }
 
     private void FollowPlayer()
-    { 
-        enemy.destination = shooter.transform.position; 
-        
-        var distanceFromPlayer = enemy.transform.position - shooter.transform.position;
-        var stopDistance = enemy.stoppingDistance;
+    {
+        enemy.destination = shooter.transform.position;
 
+        float distance = enemy.remainingDistance;
 
-       
-        if (stopDistance > distanceFromPlayer.z)
+        Debug.Log(distance);
+
+        if(distance != 0 && distance <= enemy.stoppingDistance + stopDistancePadding)
         {
-            Attack(true);
-            attackPosition = enemy.transform.position;
+            withinRange = true;
         }
-    }
-    public void Attack(bool state)
-    {
-        attack = state;
-        anim.SetBool("attack", true);
-        CreateCamera();
-        Debug.DrawRay(shooter.transform.position, shooter.transform.right * 100, Color.red);
+        else
+        {
+            withinRange = false;
+        }
+
+        if (withinRange)
+        {
+            AttackPlayer();
+        }
+        else
+        {
+            StopAttack();
+        }
+
+    
     }
 
-    private void LookAt()
+    private void AttackPlayer()
     {
-        //transform.LookAt
+        attacking = true;
+        attackPosition = enemy.transform.position;
+
+        CreateCamera();
+
+        anim.SetBool("attack", true);
+        //enemy.isStopped = true;
+    }
+
+    private void StopAttack()
+    {
+
+        //enemy.isStopped = false;
+        anim.SetBool("attack", false);
+
+        if (vCam != null)
+        {
+            vCam.SetActive(false);
+        }
+
+        if (attacking == true)
+        {
+            canCreateCam = true;
+            attacking = false;
+        }
+        
     }
 
     public void CreateCamera()
     {
         if (canCreateCam)
         {
+            if(vCam != null)
+            {
+                Debug.Log("DESTROYIGN CAM");
+                Destroy(vCam);
+            }
+                vCam = new GameObject();
+                vCam.SetActive(false);
+                vCam.name = "Camera2";
+                vCam.AddComponent<CinemachineVirtualCamera>();
 
-            GameObject vCam = new GameObject();
-            vCam.SetActive(false);
-            vCam.name = "Camera2";
-            vCam.AddComponent<CinemachineVirtualCamera>();
+                var ySpawn = new Vector3(0f, 5f, 0f);
+                vCam.transform.position = shooter.transform.position + shooter.transform.right * 4 + ySpawn;
+                //var cam = Instantiate(spawnSpherePrefab, shooter.transform.position + shooter.transform.right * 10 + ySpawn, Quaternion.identity);
 
-            var ySpawn = new Vector3(0f, 5f, 0f);
-            vCam.transform.position = shooter.transform.position + shooter.transform.right * 4 + ySpawn;
-            //var cam = Instantiate(spawnSpherePrefab, shooter.transform.position + shooter.transform.right * 10 + ySpawn, Quaternion.identity);
-
-            vCam.transform.LookAt(shooter.transform.position);
-
-            vCam.SetActive(true);
-
-            canCreateCam = false; 
+                vCam.transform.LookAt(shooter.transform.position);
+                vCam.SetActive(true);
+                Debug.Log("Created CAM");
+                canCreateCam = false;
         }
+
     }
 
+    public void OnHit()
+    {
+        shooter.EnemyAttack();
+    }
 
-    //public void AttackSequence()
-    //{
-    //    AttackSequence();
-    //    CreateCamera();
-    //    attack = false;
-    //}
-
-    //ragdoll from shot
+   
     public void Ragdoll(bool state, Transform point)
     {
         anim.enabled = !state;
