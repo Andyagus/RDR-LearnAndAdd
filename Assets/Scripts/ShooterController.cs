@@ -28,6 +28,7 @@ public class ShooterController : MonoBehaviour
     [Header("Booleans")]
     public bool aiming = false;
     public bool deadEye = false;
+    public bool zombieAttack = false;
 
     [Header("Camera Settings")]
     private Camera mainCamera;
@@ -59,6 +60,7 @@ public class ShooterController : MonoBehaviour
     [Header("Enemy")]
     public EnemyController enemy;
     public Rigidbody attackRb;
+    public Transform rightHand;
 
     void Start()
     {
@@ -102,7 +104,7 @@ public class ShooterController : MonoBehaviour
 
         anim.SetFloat("speed", input.Speed);
 
-        if (!aiming)
+        if (!aiming && zombieAttack == false)
         {
             WeaponPosition();
         }
@@ -355,10 +357,31 @@ public class ShooterController : MonoBehaviour
 
     public void EnemyAttack()
     {
-        //Debug.Log("Enemy has been hit");
-        //attackRb.AddForce(Vector3.forward*10, ForceMode.Impulse);
+        gun.GetComponent<Rigidbody>().isKinematic = false;
+        gun.GetComponent<BoxCollider>().enabled = true;
+        gun.transform.parent = null;
+        zombieAttack = true;
         anim.SetTrigger("onAttack");
+    }
 
+    //private void OnCollisionEnter(Collision collision)
+    //{
+    //    if (collision.collider.CompareTag("gun") && zombieAttack == true)
+    //    {
+    //        Debug.Log("GOT GUN");
+    //    }
+    //}
+
+    private void OnControllerColliderHit(ControllerColliderHit hit)
+    {
+        if (hit.collider.CompareTag("gun"))
+        {
+            gun.GetComponent<Rigidbody>().isKinematic = true;
+            zombieAttack = false;
+            gun.transform.parent = rightHand;
+            anim.SetTrigger("gotRifle");
+
+        }
     }
 
     //var chrome = 

@@ -24,7 +24,7 @@ public class EnemyController : MonoBehaviour
     public bool withinRange;
     public bool canCreateCam = true;
     public bool aimed = false;
-
+    public bool shot; 
 
     void Start()
     {
@@ -38,7 +38,30 @@ public class EnemyController : MonoBehaviour
 
     private void Update()
     {
-        FollowPlayer();   
+        if (!shot)
+        {
+            FollowPlayer();
+        }
+
+        if(shot == true)
+        {
+            DestroyEnemy();
+        }
+
+        
+    }
+
+    private void DestroyEnemy()
+    {
+        GetComponent<NavMeshAgent>().enabled = false;
+    }
+
+    private void UpdateCam()
+    {
+        if(vCam != null)
+        {
+            vCam.GetComponent<CinemachineVirtualCamera>().LookAt = shooter.transform;
+        }
     }
 
     private void FollowPlayer()
@@ -47,7 +70,7 @@ public class EnemyController : MonoBehaviour
 
         float distance = enemy.remainingDistance;
 
-        Debug.Log(distance);
+        //Debug.Log(distance);
 
         if(distance != 0 && distance <= enemy.stoppingDistance + stopDistancePadding)
         {
@@ -113,7 +136,6 @@ public class EnemyController : MonoBehaviour
                 vCam.SetActive(false);
                 vCam.name = "Camera2";
                 vCam.AddComponent<CinemachineVirtualCamera>();
-
                 var ySpawn = new Vector3(0f, 5f, 0f);
                 vCam.transform.position = shooter.transform.position + shooter.transform.right * 4 + ySpawn;
                 //var cam = Instantiate(spawnSpherePrefab, shooter.transform.position + shooter.transform.right * 10 + ySpawn, Quaternion.identity);
@@ -144,6 +166,7 @@ public class EnemyController : MonoBehaviour
         if(state == true)
         {
             point.GetComponent<Rigidbody>().AddForce(shooter.transform.forward * 30, ForceMode.Impulse);
+            shot = true;
         }
     }
 }
