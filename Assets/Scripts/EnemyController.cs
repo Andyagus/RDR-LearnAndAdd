@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using Cinemachine;
 using DG.Tweening;
+using UnityEngine.Rendering.PostProcessing;
 
 
 public class EnemyController : MonoBehaviour
@@ -14,8 +15,9 @@ public class EnemyController : MonoBehaviour
     private NavMeshAgent enemy;
     private EnemyMovement input;
     private GameObject vCam;
-
-
+    private PostProcessVolume postVolume;
+    private PostProcessProfile postProfile;
+    private Camera mainCamera;
     public GameObject cubeObject;
 
     public Vector3 attackPosition;
@@ -34,6 +36,9 @@ public class EnemyController : MonoBehaviour
         Ragdoll(false, this.transform);
         enemy = GetComponent<NavMeshAgent>();
         input = GetComponent<EnemyMovement>();
+        mainCamera = Camera.main;
+        postVolume = mainCamera.GetComponent<PostProcessVolume>();
+        postProfile = postVolume.profile;
     }
 
     private void Update()
@@ -151,6 +156,8 @@ public class EnemyController : MonoBehaviour
     public void OnHit()
     {
         shooter.EnemyAttack();
+        var colorG = postProfile.GetSetting<ColorGrading>();
+        colorG.colorFilter.value = Color.red;
     }
 
    
