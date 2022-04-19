@@ -357,20 +357,13 @@ public class ShooterController : MonoBehaviour
 
     public void EnemyAttack()
     {
+        zombieAttack = true;
         gun.GetComponent<Rigidbody>().isKinematic = false;
         gun.GetComponent<BoxCollider>().enabled = true;
-        gun.transform.parent = null;
-        zombieAttack = true;
         anim.SetTrigger("onAttack");
+        gun.transform.parent = null;
     }
 
-    //private void OnCollisionEnter(Collision collision)
-    //{
-    //    if (collision.collider.CompareTag("gun") && zombieAttack == true)
-    //    {
-    //        Debug.Log("GOT GUN");
-    //    }
-    //}
 
     private void OnControllerColliderHit(ControllerColliderHit hit)
     {
