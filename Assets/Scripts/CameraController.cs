@@ -20,14 +20,16 @@ public class CameraController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(!enemy.attack == true)
-        {
-            camera2.transform.position = new Vector3(camera2.transform.position.x, camera2.transform.position.y, shooter.transform.position.z);
-        }
 
-        if(enemy.attack == true)
-        {
-            camera2.gameObject.SetActive(true);
-        }
+
+        //if(!enemy.attack == true)
+        //{
+        //    camera2.transform.position = new Vector3(camera2.transform.position.x, camera2.transform.position.y, shooter.transform.position.z);
+        //}
+
+        //if(enemy.attack == true)
+        //{
+        //    camera2.gameObject.SetActive(true);
+        //}
     }
 }

@@ -56,6 +56,10 @@ public class ShooterController : MonoBehaviour
     private Vector3 gunAimRotation = new Vector3(-6.622f, 97.47501f, 94.774f);
 
 
+    [Header("Enemy")]
+    public EnemyController enemy;
+
+
     void Start()
     {
         input = GetComponent<MovementInput>();
@@ -76,6 +80,8 @@ public class ShooterController : MonoBehaviour
 
         Cursor.visible = false;
         HorizontalOffset(originalOffsetAmount);
+
+        enemy = GameObject.FindObjectOfType<EnemyController>();
 
     }
 
@@ -119,6 +125,12 @@ public class ShooterController : MonoBehaviour
         if (aiming)
         {
             AddTargets();
+        }
+
+        //enemy
+        if (enemy.attack)
+        {
+            Debug.Log("enemy is attacking");
         }
 
     }
