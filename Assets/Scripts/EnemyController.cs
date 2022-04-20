@@ -177,6 +177,8 @@ public class EnemyController : MonoBehaviour
         {
             point.GetComponent<Rigidbody>().AddForce(shooter.transform.forward * 30, ForceMode.Impulse);
             shot = true;
+            OnEnemyShot();
+            
         }
     }
 }

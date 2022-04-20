@@ -6,7 +6,12 @@ public class LevelManager : MonoBehaviour
 {
     public int spawnCount = 0;
     public ZombieSpawner[] zombieSpawners;
+    public EnemyController[] enemies;
+    public int enemiesShot;
+    public int enemiesInScene;
     public bool allSpawned = false;
+    public bool allShot = false;
+
 
     private void Start()
     {
@@ -23,6 +28,17 @@ public class LevelManager : MonoBehaviour
         if(spawnCount == zombieSpawners.Length && allSpawned == false)
         {
             allSpawned = true;
+            Debug.Log("All spawners have spawned all their enemies");
+        }
+        if(enemiesShot == enemiesInScene && allSpawned == true)
+        {
+            Debug.Log("No more enemies");
+            allShot = true;
+        }
+
+        if(allShot && allSpawned)
+        {
+            Debug.Log("Level Complete");
         }
     }
 
@@ -33,12 +49,25 @@ public class LevelManager : MonoBehaviour
         foreach (var zs in zombieSpawners)
         {
             zs.OnSpawnComplete += OnSpawnComplete;
+            zs.OnEnemySpawn += OnEnemySpawn;
         }
     }
 
-    public void OnSpawnComplete()
+    public void OnEnemySpawn(EnemyController enemy)
     {
-        Debug.Log("Level Manager: Spawned All Enemies");
+        enemiesInScene++; 
+        enemy.OnEnemyShot = OnEnemyShot;
+    }
+
+    public void OnSpawnComplete(int x)
+    {
         spawnCount++;
     }
+
+    public void OnEnemyShot()
+    {
+        Debug.Log("Enemy Shot! ");
+        enemiesShot++;
+    }
+
 }

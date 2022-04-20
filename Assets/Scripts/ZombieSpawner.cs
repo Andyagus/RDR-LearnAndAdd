@@ -10,8 +10,8 @@ public class ZombieSpawner : MonoBehaviour
     public bool spawnZombie = true;
     public float frequency = .01f;
     public int limit = 10;
-    public Action OnSpawnComplete = () => {};
-     
+    public Action<int> OnSpawnComplete = (int x) => {};
+    public Action<EnemyController> OnEnemySpawn = (EnemyController enemy) => {};
 
     //public - spawn frequency int
     //spawn limit int 
@@ -33,9 +33,12 @@ public class ZombieSpawner : MonoBehaviour
         for(var i = 0; i < limit; i++)
         {
             yield return new WaitForSeconds(frequency);
-            Instantiate(zombiePrefab, gameObject.transform.position, Quaternion.identity);
+            var zombie = Instantiate(zombiePrefab, gameObject.transform.position, Quaternion.identity);
+            var enemy = zombie.GetComponent<EnemyController>();
+            OnEnemySpawn(enemy);
+
         }
-        OnSpawnComplete();
+        OnSpawnComplete(limit);
         yield return null;
     }
 }
