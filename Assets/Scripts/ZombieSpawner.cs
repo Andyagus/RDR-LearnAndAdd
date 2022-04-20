@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -7,6 +8,13 @@ public class ZombieSpawner : MonoBehaviour
 
     public GameObject zombiePrefab;
     public bool spawnZombie = true;
+    public float frequency = .01f;
+    public int limit = 10;
+    public Action OnSpawnComplete = () => {};
+     
+
+    //public - spawn frequency int
+    //spawn limit int 
 
     // Start is called before the first frame update
     void Start()
@@ -21,13 +29,13 @@ public class ZombieSpawner : MonoBehaviour
 
     public IEnumerator SpawnZombies()
     {
-        while (spawnZombie)
+        for(var i = 0; i < limit; i++)
         {
-            //gameObject.transform.position = new Vector3(Random.Range(-20, 20), 0, 0);
-            var randomX = Random.Range(-25, 25);
-            var offset = new Vector3(randomX, 0, 0);
-            Instantiate(zombiePrefab, gameObject.transform.position + offset, Quaternion.identity);
-            yield return new WaitForSeconds(5);
+            Instantiate(zombiePrefab, gameObject.transform.position, Quaternion.identity);
+            yield return new WaitForSeconds(frequency);
         }
+
+        Debug.Log("Spawn Complete");
+        yield return null;
     }
 }
