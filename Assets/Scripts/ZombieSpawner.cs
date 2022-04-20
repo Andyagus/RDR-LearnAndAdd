@@ -23,9 +23,11 @@ public class ZombieSpawner : MonoBehaviour
     {
         while (spawnZombie)
         {
-            yield return new WaitForSeconds(1);
-            gameObject.transform.position = new Vector3(Random.Range(0, 100), 0, 0);
-            Instantiate(zombiePrefab, gameObject.transform);
+            //gameObject.transform.position = new Vector3(Random.Range(-20, 20), 0, 0);
+            var randomX = Random.Range(-25, 25);
+            var offset = new Vector3(randomX, 0, 0);
+            Instantiate(zombiePrefab, gameObject.transform.position + offset, Quaternion.identity);
+            yield return new WaitForSeconds(5);
         }
     }
 }
