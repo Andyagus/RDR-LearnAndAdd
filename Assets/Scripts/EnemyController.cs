@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
@@ -27,6 +28,8 @@ public class EnemyController : MonoBehaviour
     public bool canCreateCam = true;
     public bool aimed = false;
     public bool shot; 
+
+    public Action OnEnemyShot = () => {};
 
     void Start()
     {

@@ -4,15 +4,41 @@ using UnityEngine;
 
 public class LevelManager : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    public int spawnCount = 0;
+    public ZombieSpawner[] zombieSpawners;
+    public bool allSpawned = false;
+
+    private void Start()
     {
-        
+        FindSpawners();
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
-        
+        LevelComplete();
+    }
+
+    public void LevelComplete()
+    {
+        if(spawnCount == zombieSpawners.Length && allSpawned == false)
+        {
+            allSpawned = true;
+        }
+    }
+
+    public void FindSpawners()
+    {
+        zombieSpawners = GameObject.FindObjectsOfType<ZombieSpawner>();
+
+        foreach (var zs in zombieSpawners)
+        {
+            zs.OnSpawnComplete += OnSpawnComplete;
+        }
+    }
+
+    public void OnSpawnComplete()
+    {
+        Debug.Log("Level Manager: Spawned All Enemies");
+        spawnCount++;
     }
 }

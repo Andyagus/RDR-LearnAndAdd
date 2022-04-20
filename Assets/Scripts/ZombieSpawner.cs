@@ -25,17 +25,17 @@ public class ZombieSpawner : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
     }
 
     public IEnumerator SpawnZombies()
     {
         for(var i = 0; i < limit; i++)
         {
-            Instantiate(zombiePrefab, gameObject.transform.position, Quaternion.identity);
             yield return new WaitForSeconds(frequency);
+            Instantiate(zombiePrefab, gameObject.transform.position, Quaternion.identity);
         }
-
-        Debug.Log("Spawn Complete");
+        OnSpawnComplete();
         yield return null;
     }
 }
