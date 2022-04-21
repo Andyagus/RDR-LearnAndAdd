@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class LevelManager : MonoBehaviour
+public class LevelManager : Singleton<LevelManager>
 {
     public int spawnCount = 0;
     public ZombieSpawner[] zombieSpawners;
@@ -12,6 +12,10 @@ public class LevelManager : MonoBehaviour
     public bool allSpawned = false;
     public bool allShot = false;
 
+    private void Awake()
+    {
+        //SayHi();
+    }
 
     private void Start()
     {
