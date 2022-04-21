@@ -62,8 +62,7 @@ public class ShooterController : MonoBehaviour
     public Rigidbody attackRb;
     public Transform rightHand;
 
-    [Header("Event")]
-
+    [Header("Events")]
     public Action OnPlayerAttack = () => {};
 
     void Start()
@@ -361,6 +360,7 @@ public class ShooterController : MonoBehaviour
 
     public void EnemyAttack()
     {
+        Debug.Log("enemy attack -shooter controller");
         OnPlayerAttack();
         //zombieAttack = true;
         //gun.GetComponent<Rigidbody>().isKinematic = false;
