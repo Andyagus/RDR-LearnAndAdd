@@ -62,6 +62,10 @@ public class ShooterController : MonoBehaviour
     public Rigidbody attackRb;
     public Transform rightHand;
 
+    [Header("Event")]
+
+    public Action OnPlayerAttack = () => {};
+
     void Start()
     {
         input = GetComponent<MovementInput>();
@@ -357,11 +361,12 @@ public class ShooterController : MonoBehaviour
 
     public void EnemyAttack()
     {
-        zombieAttack = true;
-        gun.GetComponent<Rigidbody>().isKinematic = false;
-        gun.GetComponent<BoxCollider>().enabled = true;
-        anim.SetTrigger("onAttack");
-        gun.transform.parent = null;
+        OnPlayerAttack();
+        //zombieAttack = true;
+        //gun.GetComponent<Rigidbody>().isKinematic = false;
+        //gun.GetComponent<BoxCollider>().enabled = true;
+        //anim.SetTrigger("onAttack");
+        //gun.transform.parent = null;
     }
 
 

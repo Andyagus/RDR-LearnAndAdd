@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -11,6 +12,26 @@ public class LevelManager : MonoBehaviour
     public int enemiesInScene;
     public bool allSpawned = false;
     public bool allShot = false;
+
+    //public ShooterController Player
+    //{
+    //    get
+    //    {
+    //        return _player;
+    //    }
+
+    //    set
+    //    {
+    //        _player = GameObject.FindObjectOfType<ShooterController>();
+    //    }
+        
+    //}
+
+    //private ShooterController _player;
+
+    //public int playerScore;
+    //public float playerHealth;
+    
 
 
     private void Start()
@@ -28,11 +49,11 @@ public class LevelManager : MonoBehaviour
         if(spawnCount == zombieSpawners.Length && allSpawned == false)
         {
             allSpawned = true;
-            Debug.Log("All spawners have spawned all their enemies");
+            //Debug.Log("All spawners have spawned all their enemies");
         }
         if(enemiesShot == enemiesInScene && allSpawned == true)
         {
-            Debug.Log("No more enemies");
+            //Debug.Log("No more enemies");
             allShot = true;
         }
 
@@ -41,6 +62,17 @@ public class LevelManager : MonoBehaviour
             Debug.Log("Level Complete");
         }
     }
+
+    public void FindPlayer()
+    {
+        //Player.OnPlayerAttack += OnPlayerAttack;
+    }
+
+    public void OnPlayerAttack()
+    {
+        Debug.Log("Player has been hit");
+    }
+
 
     public void FindSpawners()
     {
@@ -56,7 +88,7 @@ public class LevelManager : MonoBehaviour
     public void OnEnemySpawn(EnemyController enemy)
     {
         enemiesInScene++; 
-        enemy.OnEnemyShot = OnEnemyShot;
+        enemy.OnEnemyShot += OnEnemyShot;
     }
 
     public void OnSpawnComplete(int x)
@@ -64,10 +96,10 @@ public class LevelManager : MonoBehaviour
         spawnCount++;
     }
 
-    public void OnEnemyShot()
+    public void OnEnemyShot(EnemyController enemy)
     {
-        Debug.Log("Enemy Shot! ");
         enemiesShot++;
     }
+
 
 }

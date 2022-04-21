@@ -29,7 +29,7 @@ public class EnemyController : MonoBehaviour
     public bool aimed = false;
     public bool shot; 
 
-    public Action OnEnemyShot = () => {};
+    public Action<EnemyController> OnEnemyShot = (EnemyController enemy) => {};
 
     void Start()
     {
@@ -173,7 +173,7 @@ public class EnemyController : MonoBehaviour
         {
             point.GetComponent<Rigidbody>().AddForce(shooter.transform.forward * 30, ForceMode.Impulse);
             shot = true;
-            OnEnemyShot();
+            OnEnemyShot(this.gameObject.GetComponent<EnemyController>());
             
         }
     }
