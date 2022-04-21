@@ -55,7 +55,6 @@ public class EnemyController : MonoBehaviour
         {
             DestroyEnemy();
         }
-
         
     }
 
@@ -64,15 +63,10 @@ public class EnemyController : MonoBehaviour
         GetComponent<NavMeshAgent>().enabled = false;
     }
 
-
-
     private void FollowPlayer()
     {
         enemy.destination = shooter.transform.position;
-
         float distance = enemy.remainingDistance;
-
-        //Debug.Log(distance);
 
         if(distance != 0 && distance <= enemy.stoppingDistance + stopDistancePadding)
         {
@@ -92,17 +86,16 @@ public class EnemyController : MonoBehaviour
             StopAttack();
         }
 
-    
     }
 
     private void AttackPlayer()
     {
+        anim.SetBool("attack", true);
         attacking = true;
         attackPosition = enemy.transform.position;
-
+        //where camera changes
         //CreateCamera();
 
-        anim.SetBool("attack", true);
         //enemy.isStopped = true;
     }
 
@@ -160,6 +153,7 @@ public class EnemyController : MonoBehaviour
 
     public void OnHit()
     {
+        //event driven?
         shooter.EnemyAttack();
         var colorG = postProfile.GetSetting<ColorGrading>();
         colorG.colorFilter.value = Color.red;
