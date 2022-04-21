@@ -64,13 +64,7 @@ public class EnemyController : MonoBehaviour
         GetComponent<NavMeshAgent>().enabled = false;
     }
 
-    private void UpdateCam()
-    {
-        if(vCam != null)
-        {
-            vCam.GetComponent<CinemachineVirtualCamera>().LookAt = shooter.transform;
-        }
-    }
+
 
     private void FollowPlayer()
     {
@@ -106,7 +100,7 @@ public class EnemyController : MonoBehaviour
         attacking = true;
         attackPosition = enemy.transform.position;
 
-        CreateCamera();
+        //CreateCamera();
 
         anim.SetBool("attack", true);
         //enemy.isStopped = true;
@@ -131,30 +125,38 @@ public class EnemyController : MonoBehaviour
         
     }
 
-    public void CreateCamera()
-    {
-        if (canCreateCam)
-        {
-            if(vCam != null)
-            {
-                Debug.Log("DESTROYIGN CAM");
-                Destroy(vCam);
-            }
-                vCam = new GameObject();
-                vCam.SetActive(false);
-                vCam.name = "Camera2";
-                vCam.AddComponent<CinemachineVirtualCamera>();
-                var ySpawn = new Vector3(0f, 5f, 0f);
-                vCam.transform.position = shooter.transform.position + shooter.transform.right * 4 + ySpawn;
-                //var cam = Instantiate(spawnSpherePrefab, shooter.transform.position + shooter.transform.right * 10 + ySpawn, Quaternion.identity);
+    //private void UpdateCam()
+    //{
+    //    if(vCam != null)
+    //    {
+    //        vCam.GetComponent<CinemachineVirtualCamera>().LookAt = shooter.transform;
+    //    }
+    //}
 
-                vCam.transform.LookAt(shooter.transform.position);
-                vCam.SetActive(true);
-                Debug.Log("Created CAM");
-                canCreateCam = false;
-        }
+    //public void CreateCamera()
+    //{
+    //    if (canCreateCam)
+    //    {
+    //        if(vCam != null)
+    //        {
+    //            Debug.Log("DESTROYIGN CAM");
+    //            Destroy(vCam);
+    //        }
+    //            vCam = new GameObject();
+    //            vCam.SetActive(false);
+    //            vCam.name = "Camera2";
+    //            vCam.AddComponent<CinemachineVirtualCamera>();
+    //            var ySpawn = new Vector3(0f, 5f, 0f);
+    //            vCam.transform.position = shooter.transform.position + shooter.transform.right * 4 + ySpawn;
+    //            //var cam = Instantiate(spawnSpherePrefab, shooter.transform.position + shooter.transform.right * 10 + ySpawn, Quaternion.identity);
 
-    }
+    //            vCam.transform.LookAt(shooter.transform.position);
+    //            vCam.SetActive(true);
+    //            Debug.Log("Created CAM");
+    //            canCreateCam = false;
+    //    }
+
+    //}
 
     public void OnHit()
     {
