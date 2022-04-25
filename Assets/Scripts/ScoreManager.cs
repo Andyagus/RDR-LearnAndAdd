@@ -29,7 +29,6 @@ public class ScoreManager : MonoBehaviour
 
     private void Update()
     {
-        //Debug.Log(Player);
 
     }
 
@@ -37,7 +36,6 @@ public class ScoreManager : MonoBehaviour
     {
         var player = GameObject.FindObjectOfType<ShooterController>();
         return player;
-
     }
 
 

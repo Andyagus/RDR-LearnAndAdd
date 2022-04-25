@@ -13,27 +13,6 @@ public class LevelManager : MonoBehaviour
     public bool allSpawned = false;
     public bool allShot = false;
 
-    //public ShooterController Player
-    //{
-    //    get
-    //    {
-    //        return _player;
-    //    }
-
-    //    set
-    //    {
-    //        _player = GameObject.FindObjectOfType<ShooterController>();
-    //    }
-        
-    //}
-
-    //private ShooterController _player;
-
-    //public int playerScore;
-    //public float playerHealth;
-    
-
-
     private void Start()
     {
         FindSpawners();
@@ -49,11 +28,9 @@ public class LevelManager : MonoBehaviour
         if(spawnCount == zombieSpawners.Length && allSpawned == false)
         {
             allSpawned = true;
-            //Debug.Log("All spawners have spawned all their enemies");
         }
         if(enemiesShot == enemiesInScene && allSpawned == true)
         {
-            //Debug.Log("No more enemies");
             allShot = true;
         }
 
@@ -65,7 +42,6 @@ public class LevelManager : MonoBehaviour
 
     public void FindPlayer()
     {
-        //Player.OnPlayerAttack += OnPlayerAttack;
     }
 
     public void OnPlayerAttack()
