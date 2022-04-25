@@ -92,17 +92,12 @@ public class EnemyController : MonoBehaviour
     {
         anim.SetBool("attack", true);
         attacking = true;
-        attackPosition = enemy.transform.position;
-        //where camera changes
-        //CreateCamera();
-
-        //enemy.isStopped = true;
+        attackPosition = enemy.transform.position;        
     }
 
     private void StopAttack()
     {
 
-        //enemy.isStopped = false;
         anim.SetBool("attack", false);
 
         if (vCam != null)

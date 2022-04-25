@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering.PostProcessing;
 using TMPro;
+using DG.Tweening;
 
 public class ScoreManager : MonoBehaviour
 {
@@ -21,6 +22,11 @@ public class ScoreManager : MonoBehaviour
     public bool playerAiming;
     public bool playerAimed;
     public bool canStartBloom = true;
+    private Bloom bloom;
+    private Color originalBloomColor;
+    private float originalBloomIntensity;
+
+
 
     private ShooterController _player;
     private ShooterController Player
@@ -45,7 +51,9 @@ public class ScoreManager : MonoBehaviour
         mainCamera = Camera.main;
         ppVolume = mainCamera.GetComponent<PostProcessVolume>();
         ppProfile = ppVolume.profile;
-
+        bloom = ppProfile.GetSetting<Bloom>();
+        originalBloomColor = bloom.color.value;
+        originalBloomIntensity = bloom.intensity.value;
     }
 
     private void Update()
@@ -63,25 +71,14 @@ public class ScoreManager : MonoBehaviour
 
             if (canStartBloom && multiplier == 3)
             {
-                PlayerBloom();
+                //Debug.Log("Bloom to be called");
+                PlayerBloom(true);
                 canStartBloom = false;
                 playerAimed = false;
             }
         }
 
     }
-
-    //public IEnumerator PlayerDoneAiming()
-    //{
-    //    Debug.Log("Calling Coroutine");
-
-    //    if(multiplier == 3)
-    //    {
-    //        PlayerBloom();
-    //    }
-    //    yield return new WaitForSeconds(1);
-    //    canStartBloom = true;
-    //}
 
     public ShooterController FindPlayer()
     {
@@ -110,6 +107,10 @@ public class ScoreManager : MonoBehaviour
     public void DecreaseHealth()
     {
         health -= 1;
+        PlayerBloom(false);
+        multiplier = 1;
+        multiplierText.text = $"X{multiplier}";
+        multiplierText.fontSize = 36;
     }
 
     public void OnEnemySpawn(EnemyController enemy)
@@ -144,13 +145,23 @@ public class ScoreManager : MonoBehaviour
         }       
     }
 
-    private void PlayerBloom()
+    private void PlayerBloom(bool state)
     {
-        var bloom = ppProfile.GetSetting<Bloom>();
-        bloom.intensity.value = 7f;
-        bloom.color.value = Color.yellow;
-        bloom.threshold.value = 0.80f;
-        canStartBloom = true;
+
+        bloom.intensity.value = state ? 7f : originalBloomIntensity;
+        bloom.color.value = state ? Color.yellow : originalBloomColor;
+        var thresholdValue = state ? .80f : 1f;
+        DOVirtual.Float(bloom.threshold.value, thresholdValue, .4f, BloomTween);
+
+        if (!state)
+        {
+            canStartBloom = true;
+        }
+    }
+
+    private void BloomTween(float thresholdValue)
+    {
+        bloom.threshold.value = thresholdValue;
     }
 
 
