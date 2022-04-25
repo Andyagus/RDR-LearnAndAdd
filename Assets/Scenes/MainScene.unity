@@ -145,7 +145,7 @@ MonoBehaviour:
     type: 3}
   spawnZombie: 1
   frequency: 5
-  limit: 1
+  limit: 2
 --- !u!4 &33806240
 Transform:
   m_ObjectHideFlags: 0
@@ -794,7 +794,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 460102724}
-  m_LocalRotation: {x: 0.123884335, y: 0.0503815, z: -0.006298208, w: 0.99099684}
+  m_LocalRotation: {x: 0.123884335, y: 0.0503815, z: -0.006298214, w: 0.99099684}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -1500,7 +1500,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BindingMode: 4
-  m_FollowOffset: {x: 0, y: 2.317152e-10, z: -2.8}
+  m_FollowOffset: {x: 0, y: 2, z: -2.8}
   m_XDamping: 1
   m_YDamping: 1
   m_ZDamping: 1
@@ -1678,6 +1678,7 @@ MonoBehaviour:
   aiming: 0
   deadEye: 0
   zombieAttack: 0
+  lostWeapon: 0
   originalOffsetAmount: 0.2
   zoomOffsetAmount: 0.45
   aimTime: 0.2
@@ -1819,7 +1820,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1254204284}
-  m_LocalRotation: {x: 0.11514358, y: 0.05043506, z: -0.0058537936, w: 0.9920504}
+  m_LocalRotation: {x: 0.11514358, y: 0.050435062, z: -0.0058537903, w: 0.9920504}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -1900,7 +1901,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BindingMode: 4
-  m_FollowOffset: {x: 0, y: 2.317152e-10, z: -2.8}
+  m_FollowOffset: {x: 0, y: 2, z: -2.8}
   m_XDamping: 1
   m_YDamping: 1
   m_ZDamping: 1
@@ -2282,7 +2283,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1700486477}
-  m_LocalRotation: {x: 0.106399305, y: 0.050484676, z: -0.005409277, w: 0.9930263}
+  m_LocalRotation: {x: 0.106399305, y: 0.050484676, z: -0.0054092784, w: 0.9930263}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -2468,7 +2469,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1835631222
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2484,8 +2485,8 @@ MonoBehaviour:
   zombiePrefab: {fileID: 1431817759891498668, guid: a98c1dd48c0c542eb8f6612aa1bd5540,
     type: 3}
   spawnZombie: 1
-  frequency: 4
-  limit: 3
+  frequency: 8
+  limit: 4
 --- !u!4 &1835631223
 Transform:
   m_ObjectHideFlags: 0
@@ -2727,7 +2728,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BindingMode: 4
-  m_FollowOffset: {x: 0, y: 2.317152e-10, z: -2.8}
+  m_FollowOffset: {x: 0, y: 2, z: -2.8}
   m_XDamping: 1
   m_YDamping: 1
   m_ZDamping: 1

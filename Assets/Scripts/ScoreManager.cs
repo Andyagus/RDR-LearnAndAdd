@@ -28,6 +28,9 @@ public class ScoreManager : MonoBehaviour
     private float originalBloomIntensity;
 
     [Header("Player Health Color Grading", order = 2)]
+
+    public PostProcessProfile originalProfile;
+    //public PostProcessProfile attackProfile;
     private ColorGrading colorGrading;
 
     private ShooterController _player;
@@ -48,7 +51,7 @@ public class ScoreManager : MonoBehaviour
     {
         multiplier = 1;
         FindEnemies();
-        OnPlayerAttack();
+        //OnPlayerAttack();
 
         mainCamera = Camera.main;
         ppVolume = mainCamera.GetComponent<PostProcessVolume>();
@@ -56,8 +59,8 @@ public class ScoreManager : MonoBehaviour
         bloom = ppProfile.GetSetting<Bloom>();
         originalBloomColor = bloom.color.value;
         originalBloomIntensity = bloom.intensity.value;
-
         colorGrading = ppProfile.GetSetting<ColorGrading>();
+
     }
 
     private void Update()
@@ -81,6 +84,18 @@ public class ScoreManager : MonoBehaviour
 
     }
 
+    //private void SwitchCameraProfile(bool state)
+    //{
+
+    //    ppVolume.profile = state ? attackProfile : originalProfile;
+
+    //    if (state)
+    //    {
+    //    }
+
+
+    //}
+
     public ShooterController FindPlayer()
     {
         var player = GameObject.FindObjectOfType<ShooterController>();
@@ -100,9 +115,14 @@ public class ScoreManager : MonoBehaviour
 
     //player attack
 
-    public void OnPlayerAttack()
-    {        
-        Player.OnPlayerAttack += DecreaseHealth;
+    //public void OnPlayerAttack()
+    //{        
+    //    Player.OnPlayerAttack += DecreaseHealth;
+    //}
+
+    private void OnEnemyAttackPlayer(EnemyController enemy)
+    {
+        DecreaseHealth();
     }
 
     public void DecreaseHealth()
@@ -117,6 +137,7 @@ public class ScoreManager : MonoBehaviour
     public void OnEnemySpawn(EnemyController enemy)
     {
         enemy.OnEnemyShot += OnEnemyShot;
+        enemy.OnEnemyAttackPlayer += OnEnemyAttackPlayer;
     }
 
     public void OnEnemyShot(EnemyController enemy)
@@ -148,6 +169,7 @@ public class ScoreManager : MonoBehaviour
 
     private void PlayerBloom(bool state)
     {
+        //SwitchCameraProfile(true);
 
         bloom.intensity.value = state ? 7f : originalBloomIntensity;
         bloom.color.value = state ? Color.yellow : originalBloomColor;

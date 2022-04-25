@@ -29,7 +29,7 @@ public class ShooterController : MonoBehaviour
     public bool aiming = false;
     public bool deadEye = false;
     public bool zombieAttack = false;
-
+    public bool lostWeapon = false;
 
     [Header("Camera Settings")]
     private Camera mainCamera;
@@ -119,7 +119,7 @@ public class ShooterController : MonoBehaviour
             SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().name);
         }
 
-        if (Input.GetMouseButtonDown(1) && !zombieAttack)
+        if (Input.GetMouseButtonDown(1) && !zombieAttack && !lostWeapon)
         {
             Aim(true);
         }
@@ -373,46 +373,49 @@ public class ShooterController : MonoBehaviour
     public void OnEnemyAttack(EnemyController enemy)
     {
         ToggleControls(true);
-        //Debug.Log("Player.EnemyAttack");
-        //gun.GetComponent<Rigidbody>().isKinematic = false;
-        //gun.GetComponent<BoxCollider>().enabled = true;
-        //anim.SetTrigger("onAttack");
-        //gun.transform.parent = null;
+        AttackAnimation();
+        LoseGun();    
+    }
+
+    private void LoseGun()
+    {
+        gun.GetComponent<Rigidbody>().isKinematic = false;
+        gun.GetComponent<BoxCollider>().enabled = true;
+        gun.transform.parent = null;
+        lostWeapon = true;
+    }
+    private void FoundGun()
+    {
+        lostWeapon = false;
+        gun.GetComponent<Rigidbody>().isKinematic = true;
+        zombieAttack = false;
+        gun.transform.parent = rightHand;
+        anim.SetTrigger("gotRifle");
+    }
+
+    private void AttackAnimation()
+    {
+        anim.SetTrigger("onAttack");
     }
 
     public void OnEnemyLeave(EnemyController enemy)
     {
-        ToggleControls(false);
         Debug.Log("On Enemy Leave");
+        ToggleControls(false);
     }
 
     private void ToggleControls(bool state)
     {
+        
         zombieAttack = state;
+        Debug.Log("Zombie Attack: " + state);
     }
 
     private void OnControllerColliderHit(ControllerColliderHit hit)
     {
-        //current enemy that is attacking the issue is sometimes they are not touching
-        //event will be added after an enemy is hit so first event wont register.
-        //if (hit.collider.CompareTag("Enemy"))
-        //{
-        //    Debug.Log(hit.collider.transform.root);
-        //}
-
         if (hit.collider.CompareTag("gun"))
         {
-            gun.GetComponent<Rigidbody>().isKinematic = true;
-            zombieAttack = false;
-            gun.transform.parent = rightHand;
-            anim.SetTrigger("gotRifle");
-
+            FoundGun();
         }
     }
-
-    //var chrome = 
-    //chrome.intensity.value = 1f;
-
-    //var vign = postProfile.GetSetting<Vignette>();
-    //vign.intensity.value = 1f;
 }
