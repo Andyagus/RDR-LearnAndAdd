@@ -30,6 +30,7 @@ public class ShooterController : MonoBehaviour
     public bool deadEye = false;
     public bool zombieAttack = false;
 
+
     [Header("Camera Settings")]
     private Camera mainCamera;
     public float originalOffsetAmount;
@@ -87,6 +88,7 @@ public class ShooterController : MonoBehaviour
         HorizontalOffset(originalOffsetAmount);
 
         enemy = GameObject.FindObjectOfType<EnemyController>();
+        FindEnemiesInScene();
 
     }
 
@@ -268,8 +270,6 @@ public class ShooterController : MonoBehaviour
 
             indicatorList.Clear();
         }
-
-
     }
 
 
@@ -339,12 +339,6 @@ public class ShooterController : MonoBehaviour
         Time.timeScale = x;
     }
 
-    //private void ColorFilter(Color color)
-    //{
-    //    var colorGrading = postProfile.GetSetting<ColorGrading>();
-    //    colorGrading.colorFilter.value = color;
-    //}
-
     private void AberationAmount(float x)
     {
         var chromatic = postProfile.GetSetting<ChromaticAberration>();
@@ -357,21 +351,55 @@ public class ShooterController : MonoBehaviour
         vignette.intensity.value = x;
     }
 
+    //already doing this in the level manager
 
-    public void EnemyAttack()
+    public void FindEnemiesInScene()
     {
-        Debug.Log("Player.EnemyAttack");
-        //OnPlayerAttack();
-        //zombieAttack = true;
+        var spawners = GameObject.FindObjectsOfType<ZombieSpawner>();
+
+        foreach(var spawner in spawners)
+        {
+            spawner.OnEnemySpawn += OnEnemySpawn;
+
+        }
+    }
+
+    public void OnEnemySpawn(EnemyController enemy)
+    {
+        enemy.OnEnemyAttackPlayer += OnEnemyAttack;
+        enemy.OnEnemyOutOfRangeFromPlayer += OnEnemyLeave;
+    }
+
+    public void OnEnemyAttack(EnemyController enemy)
+    {
+        ToggleControls(true);
+        //Debug.Log("Player.EnemyAttack");
         //gun.GetComponent<Rigidbody>().isKinematic = false;
         //gun.GetComponent<BoxCollider>().enabled = true;
         //anim.SetTrigger("onAttack");
         //gun.transform.parent = null;
     }
 
+    public void OnEnemyLeave(EnemyController enemy)
+    {
+        ToggleControls(false);
+        Debug.Log("On Enemy Leave");
+    }
+
+    private void ToggleControls(bool state)
+    {
+        zombieAttack = state;
+    }
 
     private void OnControllerColliderHit(ControllerColliderHit hit)
     {
+        //current enemy that is attacking the issue is sometimes they are not touching
+        //event will be added after an enemy is hit so first event wont register.
+        //if (hit.collider.CompareTag("Enemy"))
+        //{
+        //    Debug.Log(hit.collider.transform.root);
+        //}
+
         if (hit.collider.CompareTag("gun"))
         {
             gun.GetComponent<Rigidbody>().isKinematic = true;

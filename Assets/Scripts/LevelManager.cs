@@ -22,10 +22,6 @@ public class LevelManager : MonoBehaviour
 
     private void Update()
     {
-        if(enemiesInScene == 1)
-        {
-            Debug.Log("Frame check");
-        }
         LevelComplete();
     }
 
@@ -63,25 +59,12 @@ public class LevelManager : MonoBehaviour
     }
 
 
-    //where should this go? Ask Sunny – 
-    public void OnEnemyAttackPlayer(EnemyController enemy)
-    {
-        player.EnemyAttack();
-        //Debug.Log(enemy + " Attacked player");
-    }
-
-    public void OnEnemyOutofRangeFromPlayer(EnemyController enemy)
-    {
-        //Debug.Log(enemy + " Out of range");
-
-    }
 
     public void OnEnemySpawn(EnemyController enemy)
     {
         enemiesInScene++;
         enemy.OnEnemyShot += OnEnemyShot;
-        enemy.OnEnemyAttackPlayer += OnEnemyAttackPlayer;
-        enemy.OnEnemyOutOfRangeFromPlayer += OnEnemyOutofRangeFromPlayer;
+
     }
 
     public void OnSpawnComplete(int x)

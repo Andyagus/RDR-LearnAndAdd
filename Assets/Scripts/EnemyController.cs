@@ -28,7 +28,8 @@ public class EnemyController : MonoBehaviour
     public bool canCreateCam = true;
     public bool aimed = false;
     public bool shot;
-    public bool outOfRange;
+    //public bool outOfRange = false;
+    private bool triggerStopAttack;
 
     public Action<EnemyController> OnEnemyShot = (EnemyController enemy) => {};
     public Action<EnemyController> OnEnemyAttackPlayer = (EnemyController enemy) => {};
@@ -85,9 +86,13 @@ public class EnemyController : MonoBehaviour
         {
             AttackPlayer();
         }
-        else
+        else if (withinRange == false)
         {
-            StopAttack();
+            if(triggerStopAttack == true)
+            {
+                StopAttack();
+                triggerStopAttack = false;
+            }
         }
 
     }
@@ -96,19 +101,17 @@ public class EnemyController : MonoBehaviour
     {
         anim.SetBool("attack", true);
         attacking = true;
-        attackPosition = enemy.transform.position;        
+        attackPosition = enemy.transform.position;
+        triggerStopAttack = true;
     }
 
     private void StopAttack()
     {
+       
         anim.SetBool("attack", false);
+        OnEnemyOutOfRangeFromPlayer(gameObject.GetComponent<EnemyController>());
 
-        if(outOfRange == false)
-        {
-            OnEnemyOutOfRangeFromPlayer(gameObject.GetComponent<EnemyController>());
-            outOfRange = true;
-        }
-        
+
 
         if (vCam != null)
         {
@@ -146,4 +149,9 @@ public class EnemyController : MonoBehaviour
             
         }
     }
+
+    //static void FindEnemies()
+    //{
+
+    //}
 }
