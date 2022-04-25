@@ -81,20 +81,7 @@ public class ScoreManager : MonoBehaviour
                 playerAimed = false;
             }
         }
-
     }
-
-    //private void SwitchCameraProfile(bool state)
-    //{
-
-    //    ppVolume.profile = state ? attackProfile : originalProfile;
-
-    //    if (state)
-    //    {
-    //    }
-
-
-    //}
 
     public ShooterController FindPlayer()
     {
@@ -113,13 +100,6 @@ public class ScoreManager : MonoBehaviour
         }
     }
 
-    //player attack
-
-    //public void OnPlayerAttack()
-    //{        
-    //    Player.OnPlayerAttack += DecreaseHealth;
-    //}
-
     private void OnEnemyAttackPlayer(EnemyController enemy)
     {
         DecreaseHealth();
@@ -132,6 +112,17 @@ public class ScoreManager : MonoBehaviour
         multiplier = 1;
         multiplierText.text = $"X{multiplier}";
         multiplierText.fontSize = 36;
+        HealthColorGrading();
+    }
+
+    private void HealthColorGrading()
+    {
+        //float H, S, V;
+        //colorGrading.colorFilter.value. += 50;
+        //int redToAdd = 20;
+
+        //colorGrading.colorFilter.value = new Color(colorGrading.colorFilter.value.r += redToAdd, colorGrading.colorFilter.value.g, colorGrading.colorFilter.value.b);
+        colorGrading.colorFilter.value = Color.HSVToRGB(0, 1, 100);
     }
 
     public void OnEnemySpawn(EnemyController enemy)
@@ -169,8 +160,6 @@ public class ScoreManager : MonoBehaviour
 
     private void PlayerBloom(bool state)
     {
-        //SwitchCameraProfile(true);
-
         bloom.intensity.value = state ? 7f : originalBloomIntensity;
         bloom.color.value = state ? Color.yellow : originalBloomColor;
         var thresholdValue = state ? .80f : 1f;

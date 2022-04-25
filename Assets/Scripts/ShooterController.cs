@@ -233,7 +233,17 @@ public class ShooterController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        colorGrading.colorFilter.value = Color.Lerp(colorGrading.colorFilter.value, currentColor, aimTime);
+
+        //TODO fix the lerp after
+        if (!zombieAttack)
+        {
+            colorGrading.colorFilter.value = Color.Lerp(colorGrading.colorFilter.value, currentColor, aimTime);
+        }
+        //else if (zombieAttack)
+        //{
+        //    colorGrading.colorFilter.value = Color.red;
+        //}
+
     }
 
     private void FirePolish()

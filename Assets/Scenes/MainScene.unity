@@ -794,7 +794,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 460102724}
-  m_LocalRotation: {x: 0.123884335, y: 0.0503815, z: -0.006298214, w: 0.99099684}
+  m_LocalRotation: {x: 0.123884335, y: 0.0503815, z: -0.006298217, w: 0.99099684}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -997,6 +997,7 @@ MonoBehaviour:
   playerAiming: 0
   playerAimed: 0
   canStartBloom: 1
+  originalProfile: {fileID: 0}
 --- !u!4 &748819173
 Transform:
   m_ObjectHideFlags: 0
@@ -1500,7 +1501,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BindingMode: 4
-  m_FollowOffset: {x: 0, y: 2, z: -2.8}
+  m_FollowOffset: {x: 0, y: 1.681642, z: -2.825177}
   m_XDamping: 1
   m_YDamping: 1
   m_ZDamping: 1
@@ -1820,7 +1821,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1254204284}
-  m_LocalRotation: {x: 0.11514358, y: 0.050435062, z: -0.0058537903, w: 0.9920504}
+  m_LocalRotation: {x: 0.11514358, y: 0.05043506, z: -0.0058537857, w: 0.9920504}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -1901,7 +1902,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BindingMode: 4
-  m_FollowOffset: {x: 0, y: 2, z: -2.8}
+  m_FollowOffset: {x: 0, y: 1.681642, z: -2.825177}
   m_XDamping: 1
   m_YDamping: 1
   m_ZDamping: 1
@@ -2283,7 +2284,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1700486477}
-  m_LocalRotation: {x: 0.106399305, y: 0.050484676, z: -0.0054092784, w: 0.9930263}
+  m_LocalRotation: {x: 0.1063993, y: 0.050484676, z: -0.00540928, w: 0.9930264}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -2728,7 +2729,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BindingMode: 4
-  m_FollowOffset: {x: 0, y: 2, z: -2.8}
+  m_FollowOffset: {x: 0, y: 1.681642, z: -2.825177}
   m_XDamping: 1
   m_YDamping: 1
   m_ZDamping: 1
