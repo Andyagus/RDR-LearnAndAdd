@@ -40,16 +40,6 @@ public class LevelManager : MonoBehaviour
         }
     }
 
-    public void FindPlayer()
-    {
-    }
-
-    public void OnPlayerAttack()
-    {
-        Debug.Log("Player has been hit");
-    }
-
-
     public void FindSpawners()
     {
         zombieSpawners = GameObject.FindObjectsOfType<ZombieSpawner>();
@@ -63,7 +53,7 @@ public class LevelManager : MonoBehaviour
 
     public void OnEnemySpawn(EnemyController enemy)
     {
-        enemiesInScene++; 
+        enemiesInScene++;
         enemy.OnEnemyShot += OnEnemyShot;
     }
 
