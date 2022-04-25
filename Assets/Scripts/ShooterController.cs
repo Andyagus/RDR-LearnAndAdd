@@ -117,7 +117,7 @@ public class ShooterController : MonoBehaviour
             SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().name);
         }
 
-        if (Input.GetMouseButtonDown(1))
+        if (Input.GetMouseButtonDown(1) && !zombieAttack)
         {
             Aim(true);
         }
@@ -360,8 +360,8 @@ public class ShooterController : MonoBehaviour
 
     public void EnemyAttack()
     {
-        Debug.Log("enemy attack -shooter controller");
-        OnPlayerAttack();
+        Debug.Log("Player.EnemyAttack");
+        //OnPlayerAttack();
         //zombieAttack = true;
         //gun.GetComponent<Rigidbody>().isKinematic = false;
         //gun.GetComponent<BoxCollider>().enabled = true;

@@ -27,9 +27,13 @@ public class EnemyController : MonoBehaviour
     public bool withinRange;
     public bool canCreateCam = true;
     public bool aimed = false;
-    public bool shot; 
+    public bool shot;
+    public bool outOfRange;
 
     public Action<EnemyController> OnEnemyShot = (EnemyController enemy) => {};
+    public Action<EnemyController> OnEnemyAttackPlayer = (EnemyController enemy) => {};
+    public Action<EnemyController> OnEnemyOutOfRangeFromPlayer = (EnemyController enemy) => {};
+
 
     void Start()
     {
@@ -97,8 +101,14 @@ public class EnemyController : MonoBehaviour
 
     private void StopAttack()
     {
-
         anim.SetBool("attack", false);
+
+        if(outOfRange == false)
+        {
+            OnEnemyOutOfRangeFromPlayer(gameObject.GetComponent<EnemyController>());
+            outOfRange = true;
+        }
+        
 
         if (vCam != null)
         {
@@ -115,13 +125,10 @@ public class EnemyController : MonoBehaviour
 
     public void OnHit()
     {
-        //event driven?
-        shooter.EnemyAttack();
-        var colorG = postProfile.GetSetting<ColorGrading>();
-        colorG.colorFilter.value = Color.red;
+        OnEnemyAttackPlayer(gameObject.GetComponent<EnemyController>());
     }
 
-   
+
     public void Ragdoll(bool state, Transform point)
     {
         anim.enabled = !state;

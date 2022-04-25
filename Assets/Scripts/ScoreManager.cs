@@ -14,6 +14,7 @@ public class ScoreManager : MonoBehaviour
     public int health = 10;
     public int multiplier = 1;
 
+    [Header("Cam Settings", order = 0)]
     private Camera mainCamera;
     private PostProcessVolume ppVolume;
     private PostProcessProfile ppProfile;
@@ -26,7 +27,8 @@ public class ScoreManager : MonoBehaviour
     private Color originalBloomColor;
     private float originalBloomIntensity;
 
-
+    [Header("Player Health Color Grading", order = 2)]
+    private ColorGrading colorGrading;
 
     private ShooterController _player;
     private ShooterController Player
@@ -54,11 +56,12 @@ public class ScoreManager : MonoBehaviour
         bloom = ppProfile.GetSetting<Bloom>();
         originalBloomColor = bloom.color.value;
         originalBloomIntensity = bloom.intensity.value;
+
+        colorGrading = ppProfile.GetSetting<ColorGrading>();
     }
 
     private void Update()
     {
-        //bool playerAimed = false;
         playerAiming = Player.aiming;
 
         if(playerAiming == true)
@@ -68,10 +71,8 @@ public class ScoreManager : MonoBehaviour
 
         if(playerAiming == false && playerAimed == true)
         {
-
             if (canStartBloom && multiplier == 3)
             {
-                //Debug.Log("Bloom to be called");
                 PlayerBloom(true);
                 canStartBloom = false;
                 playerAimed = false;
