@@ -66,6 +66,7 @@ public class ShooterController : MonoBehaviour
     [Header("Events")]
     //public Action OnPlayerAttack = () => {};
     public Action OnZombieLeave = () => { };
+    private ScoreManager scoreManagerScript;
 
 
     void Start()
@@ -87,11 +88,14 @@ public class ShooterController : MonoBehaviour
         gunIdlePosition = gun.localPosition;
         gunIdleRotation = gun.localEulerAngles;
 
+        
+
         Cursor.visible = false;
         HorizontalOffset(originalOffsetAmount);
 
         enemy = GameObject.FindObjectOfType<EnemyController>();
         FindEnemiesInScene();
+        FindScoreManager();
 
     }
 
@@ -432,5 +436,17 @@ public class ShooterController : MonoBehaviour
         {
             FoundGun();
         }
+    }
+
+    private void FindScoreManager()
+    {
+        scoreManagerScript = GameObject.FindObjectOfType<ScoreManager>();
+        scoreManagerScript.OnPlayerDeath += OnPlayerDeath;
+    }
+
+    private void OnPlayerDeath()
+    {
+        anim.enabled = false;
+
     }
 }

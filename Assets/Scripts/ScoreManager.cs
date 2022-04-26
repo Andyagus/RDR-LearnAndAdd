@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering.PostProcessing;
@@ -7,7 +8,7 @@ using DG.Tweening;
 
 public class ScoreManager : MonoBehaviour
 {
-    [Header("TEMPORARY")]
+    //[Header("TEMPORARY")]
     //public bool playerRunningAwayfromEnemy = false;
     public int enemiesInScene = 0;
     public bool canRestoreHealth = false;
@@ -22,6 +23,7 @@ public class ScoreManager : MonoBehaviour
     public float health = 10;
     float healthDecrement = 2;
     public int multiplier = 1;
+    public bool gameOver = false;
 
     [Header("Cam Settings", order = 0)]
     private Camera mainCamera;
@@ -62,6 +64,8 @@ public class ScoreManager : MonoBehaviour
             return _player;
         }
     }
+
+    public Action OnPlayerDeath = () => { }; 
 
     private void Start()
     {
@@ -123,11 +127,15 @@ public class ScoreManager : MonoBehaviour
     private void OnEnemyAttackPlayer(EnemyController enemy)
     {
         Debug.Log("On enemy attack called");
-        attackMode = true;
-        PlayerBloom(false);
-        ResetMultiplier();
-        DecreaseHealth();
-        HealthVignetteColor();
+        if (gameOver != true)
+        {
+            attackMode = true;
+            PlayerBloom(false);
+            ResetMultiplier();
+            DecreaseHealth();
+            IncreaseVignette();
+            HealthVignetteColor();
+        }
     }
 
     public void RestoreHealth()
@@ -146,6 +154,7 @@ public class ScoreManager : MonoBehaviour
     
     private void OnEnemyOutOfRangeFromPlayer(EnemyController enemy)
     {
+        vignette.intensity.value = 0;
         //attackMode = false;
         //TODO ask sunny - because there are multiple enemies called here…
         //var enemies = new List<EnemyController>();
@@ -153,7 +162,7 @@ public class ScoreManager : MonoBehaviour
         //Debug.Log("enemies out of range: " + enemies.Count);
         //outOfRange = true;
 
-        
+
 
         //attackMode = false;
         //StartCoroutine(RestoreHealthOverTime());
@@ -183,9 +192,15 @@ public class ScoreManager : MonoBehaviour
         }
         else if(health <= 0)
         {
+            OnPlayerDeath();
+            gameOver = true;
             //player Ragdoll…
         }
-        //vignette.intensity.value += healthDecrement/10;
+    }
+
+    public void IncreaseVignette()
+    {
+        vignette.intensity.value += healthDecrement / 10;
     }
 
     IEnumerator RestoreHealthOverTime()
