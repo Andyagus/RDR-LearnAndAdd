@@ -320,12 +320,12 @@ public class ShooterController : MonoBehaviour
 
         var originalVignette = state ? 0f : 0.5f;
         var postVignette = state ? 0.5f : 0f;
-        currentColor = state ? deadEyeColor : Color.white;
         DOVirtual.Float(originalVignette, postVignette, aimTime, VignetteAmount);
 
         Color reticleColor = state ? Color.white : Color.clear;
         reticle.color = reticleColor;
 
+        currentColor = state ? deadEyeColor : Color.white;
     }
 
 

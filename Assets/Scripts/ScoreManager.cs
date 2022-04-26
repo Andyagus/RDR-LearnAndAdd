@@ -32,6 +32,10 @@ public class ScoreManager : MonoBehaviour
     public PostProcessProfile originalProfile;
     //public PostProcessProfile attackProfile;
     private ColorGrading colorGrading;
+    private Vignette vignette;
+    private Color originalVignetteColor;
+    private Color postVignetteColor;
+
 
     private ShooterController _player;
     private ShooterController Player
@@ -59,7 +63,11 @@ public class ScoreManager : MonoBehaviour
         bloom = ppProfile.GetSetting<Bloom>();
         originalBloomColor = bloom.color.value;
         originalBloomIntensity = bloom.intensity.value;
-        colorGrading = ppProfile.GetSetting<ColorGrading>();
+        //colorGrading = ppProfile.GetSetting<ColorGrading>();
+        vignette = ppProfile.GetSetting<Vignette>();
+        originalVignetteColor = vignette.color.value;
+        postVignetteColor = Color.red;
+
 
     }
 
@@ -107,22 +115,27 @@ public class ScoreManager : MonoBehaviour
 
     public void DecreaseHealth()
     {
-        health -= 1;
+        int healthDecrement = 2;
+        //Debug.Log("HEALTH DECREASE");
+        health -= healthDecrement;
         PlayerBloom(false);
         multiplier = 1;
         multiplierText.text = $"X{multiplier}";
         multiplierText.fontSize = 36;
-        HealthColorGrading();
+        HealthVignette(healthDecrement);
     }
 
-    private void HealthColorGrading()
+    private void HealthVignette(float healthDecrement)
     {
-        //float H, S, V;
-        //colorGrading.colorFilter.value. += 50;
-        //int redToAdd = 20;
 
-        //colorGrading.colorFilter.value = new Color(colorGrading.colorFilter.value.r += redToAdd, colorGrading.colorFilter.value.g, colorGrading.colorFilter.value.b);
-        colorGrading.colorFilter.value = Color.HSVToRGB(0, 1, 100);
+        DOVirtual.Color(originalVignetteColor, postVignetteColor, 0.2f, FadeVignetteColor);
+        vignette.intensity.value += healthDecrement/10;
+    }
+
+    public void FadeVignetteColor(Color x)
+    {
+        Debug.Log(x);
+        vignette.color.value = x;
     }
 
     public void OnEnemySpawn(EnemyController enemy)
