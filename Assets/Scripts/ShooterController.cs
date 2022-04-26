@@ -23,7 +23,7 @@ public class ShooterController : MonoBehaviour
     private ColorGrading colorGrading;
     public Color deadEyeColor;
     private Color currentColor = Color.white;
-
+    public Color originalVignetteColor;
 
     [Header("Booleans")]
     public bool aiming = false;
@@ -80,6 +80,7 @@ public class ShooterController : MonoBehaviour
         postProfile = postVolume.profile;
 
         colorGrading = postProfile.GetSetting<ColorGrading>();
+        originalVignetteColor = postProfile.GetSetting<Vignette>().color.value;
 
         gunIdlePosition = gun.localPosition;
         gunIdleRotation = gun.localEulerAngles;
@@ -286,6 +287,7 @@ public class ShooterController : MonoBehaviour
 
     private void Aim(bool state)
     {
+        
         aiming = state;
         anim.SetBool("aiming", state);
 
@@ -358,6 +360,7 @@ public class ShooterController : MonoBehaviour
     private void VignetteAmount(float x)
     {
         var vignette = postProfile.GetSetting<Vignette>();
+        vignette.color.value = originalVignetteColor;
         vignette.intensity.value = x;
     }
 

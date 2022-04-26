@@ -11,7 +11,8 @@ public class ScoreManager : MonoBehaviour
     public TextMeshProUGUI multiplierText;
 
     public int playerScore;
-    public int health = 10;
+    private int maxHealth = 10;
+    public float health = 10;
     public int multiplier = 1;
 
     [Header("Cam Settings", order = 0)]
@@ -33,9 +34,12 @@ public class ScoreManager : MonoBehaviour
     //public PostProcessProfile attackProfile;
     private ColorGrading colorGrading;
     private Vignette vignette;
-    private Color originalVignetteColor;
-    private Color postVignetteColor;
-
+    //private Color originalVignetteColor;
+    [Header("Post Vignette Color")]
+    public Color postVignetteColor;
+    public bool attackMode = false;
+    public bool onEnemyOutofRange = false;
+    //[Header("For ")]
 
     private ShooterController _player;
     private ShooterController Player
@@ -65,9 +69,6 @@ public class ScoreManager : MonoBehaviour
         originalBloomIntensity = bloom.intensity.value;
         //colorGrading = ppProfile.GetSetting<ColorGrading>();
         vignette = ppProfile.GetSetting<Vignette>();
-        originalVignetteColor = vignette.color.value;
-        postVignetteColor = Color.red;
-
 
     }
 
@@ -110,38 +111,72 @@ public class ScoreManager : MonoBehaviour
 
     private void OnEnemyAttackPlayer(EnemyController enemy)
     {
+        attackMode = true;
         DecreaseHealth();
+        HealthVignetteColor();
+    }
+
+    private void OnEnemyOutOfRangeFromPlayer(EnemyController enemy)
+    {
+        Debug.Log("On enemy out of range called");
+        //HealthVignetteColor(false);
+        attackMode = false;
+        RestoreHealth();
     }
 
     public void DecreaseHealth()
     {
-        int healthDecrement = 2;
+        float healthDecrement = 2;
         //Debug.Log("HEALTH DECREASE");
         health -= healthDecrement;
         PlayerBloom(false);
         multiplier = 1;
         multiplierText.text = $"X{multiplier}";
         multiplierText.fontSize = 36;
-        HealthVignette(healthDecrement);
+        //Debug.Log(healthDecrement / 10);
+        vignette.intensity.value += healthDecrement/10;
     }
 
-    private void HealthVignette(float healthDecrement)
+    private void HealthVignetteColor()
     {
-
-        DOVirtual.Color(originalVignetteColor, postVignetteColor, 0.2f, FadeVignetteColor);
-        vignette.intensity.value += healthDecrement/10;
+        DOVirtual.Color(vignette.color.value, postVignetteColor, 0.2f, FadeVignetteColor);
     }
 
     public void FadeVignetteColor(Color x)
     {
-        Debug.Log(x);
         vignette.color.value = x;
     }
+
+    public void RestoreHealth()
+    {
+        if(attackMode == false)
+        {
+            DOVirtual.Float(health, maxHealth, 10f, RestoreHealthTween);
+        }
+        //health = 10;
+    }
+
+    //IEnumerator RestoreHealthOverTime()
+    //{
+    //    if(attackMode == false)
+    //    {
+    //        yield return null
+    //    }
+
+    //}
+    public void RestoreHealthTween(float x)
+    {
+        Debug.Log(x);
+        health = x;
+        vignette.intensity.value -= x / 10;
+    }
+
 
     public void OnEnemySpawn(EnemyController enemy)
     {
         enemy.OnEnemyShot += OnEnemyShot;
         enemy.OnEnemyAttackPlayer += OnEnemyAttackPlayer;
+        enemy.OnEnemyOutOfRangeFromPlayer += OnEnemyOutOfRangeFromPlayer;
     }
 
     public void OnEnemyShot(EnemyController enemy)
