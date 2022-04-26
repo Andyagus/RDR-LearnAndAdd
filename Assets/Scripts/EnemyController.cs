@@ -111,8 +111,6 @@ public class EnemyController : MonoBehaviour
         anim.SetBool("attack", false);
         OnEnemyOutOfRangeFromPlayer(gameObject.GetComponent<EnemyController>());
 
-
-
         if (vCam != null)
         {
             vCam.SetActive(false);

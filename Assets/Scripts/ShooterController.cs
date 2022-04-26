@@ -64,7 +64,9 @@ public class ShooterController : MonoBehaviour
     public Transform rightHand;
 
     [Header("Events")]
-    public Action OnPlayerAttack = () => {};
+    //public Action OnPlayerAttack = () => {};
+    public Action OnZombieLeave = () => { };
+
 
     void Start()
     {
@@ -413,7 +415,7 @@ public class ShooterController : MonoBehaviour
 
     public void OnEnemyLeave(EnemyController enemy)
     {
-        Debug.Log("On Enemy Leave");
+        //Debug.Log("On Enemy Leave");
         ToggleControls(false);
     }
 
@@ -421,7 +423,7 @@ public class ShooterController : MonoBehaviour
     {
         
         zombieAttack = state;
-        Debug.Log("Zombie Attack: " + state);
+        //Debug.Log("Zombie Attack: " + state);
     }
 
     private void OnControllerColliderHit(ControllerColliderHit hit)

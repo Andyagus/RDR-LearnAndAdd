@@ -7,12 +7,20 @@ using DG.Tweening;
 
 public class ScoreManager : MonoBehaviour
 {
+    [Header("TEMPORARY")]
+    //public bool playerRunningAwayfromEnemy = false;
+    public int enemiesInScene = 0;
+    public bool canRestoreHealth = false;
+
+
     public TextMeshProUGUI scoreText;
     public TextMeshProUGUI multiplierText;
 
+    [Header("Player Health")]
     public int playerScore;
     private int maxHealth = 10;
     public float health = 10;
+    float healthDecrement = 2;
     public int multiplier = 1;
 
     [Header("Cam Settings", order = 0)]
@@ -38,7 +46,7 @@ public class ScoreManager : MonoBehaviour
     [Header("Post Vignette Color")]
     public Color postVignetteColor;
     public bool attackMode = false;
-    public bool onEnemyOutofRange = false;
+    public bool outOfRange = false;
     //[Header("For ")]
 
     private ShooterController _player;
@@ -74,6 +82,9 @@ public class ScoreManager : MonoBehaviour
 
     private void Update()
     {
+        RestoreHealth();
+        //PlayerRunning();
+
         playerAiming = Player.aiming;
 
         if(playerAiming == true)
@@ -111,30 +122,93 @@ public class ScoreManager : MonoBehaviour
 
     private void OnEnemyAttackPlayer(EnemyController enemy)
     {
+        Debug.Log("On enemy attack called");
         attackMode = true;
+        PlayerBloom(false);
+        ResetMultiplier();
         DecreaseHealth();
         HealthVignetteColor();
     }
 
+    public void RestoreHealth()
+    {
+        if(attackMode == true)
+        {
+            canRestoreHealth = true;
+        }
+
+        if(attackMode == false && canRestoreHealth == true)
+        {
+            StartCoroutine(RestoreHealthOverTime());
+            canRestoreHealth = false;
+        } 
+    }
+    
     private void OnEnemyOutOfRangeFromPlayer(EnemyController enemy)
     {
-        Debug.Log("On enemy out of range called");
+        //attackMode = false;
+        //TODO ask sunny - because there are multiple enemies called here…
+        //var enemies = new List<EnemyController>();
+        //enemies.Add(enemy);
+        //Debug.Log("enemies out of range: " + enemies.Count);
+        //outOfRange = true;
+
+        
+
+        //attackMode = false;
+        //StartCoroutine(RestoreHealthOverTime());
+
+        //Debug.Log("On enemy out of range called");
         //HealthVignetteColor(false);
-        attackMode = false;
-        RestoreHealth();
+        //canRestoreHealth = false;
+        //RestoreHealth();
+        //Debug.Log("starting coroutine restore health");
+    }
+
+    public void PlayerRunning()
+    {
+        //if (playerRunningAwayfromEnemy == true)
+        //{
+        //    Debug.Log("starting coroutine");
+        //    StartCoroutine(RestoreHealthOverTime());
+        //    playerRunningAwayfromEnemy = false;
+        //}
     }
 
     public void DecreaseHealth()
     {
-        float healthDecrement = 2;
-        //Debug.Log("HEALTH DECREASE");
-        health -= healthDecrement;
-        PlayerBloom(false);
+        if(health > 0)
+        {
+            health -= healthDecrement;
+        }
+        else if(health <= 0)
+        {
+            //player Ragdoll…
+        }
+        //vignette.intensity.value += healthDecrement/10;
+    }
+
+    IEnumerator RestoreHealthOverTime()
+    {
+      
+        var i = 0;
+        while (i < 10)
+        {
+            yield return new WaitForSeconds(1);
+            i++;
+            Debug.Log("Coroutine: " + i);
+        }
+
+        yield return null;
+
+
+    }
+
+    private void ResetMultiplier()
+    {
         multiplier = 1;
         multiplierText.text = $"X{multiplier}";
         multiplierText.fontSize = 36;
-        //Debug.Log(healthDecrement / 10);
-        vignette.intensity.value += healthDecrement/10;
     }
 
     private void HealthVignetteColor()
@@ -147,29 +221,22 @@ public class ScoreManager : MonoBehaviour
         vignette.color.value = x;
     }
 
-    public void RestoreHealth()
-    {
-        if(attackMode == false)
-        {
-            DOVirtual.Float(health, maxHealth, 10f, RestoreHealthTween);
-        }
-        //health = 10;
-    }
-
-    //IEnumerator RestoreHealthOverTime()
+    //public void RestoreHealth()
     //{
     //    if(attackMode == false)
     //    {
-    //        yield return null
+    //        DOVirtual.Float(health, maxHealth, 10f, RestoreHealthTween);
     //    }
-
+    //    //health = 10;
     //}
-    public void RestoreHealthTween(float x)
-    {
-        Debug.Log(x);
-        health = x;
-        vignette.intensity.value -= x / 10;
-    }
+
+
+    //public void RestoreHealthTween(float x)
+    //{
+    //    Debug.Log(x);
+    //    health = x;
+    //    vignette.intensity.value -= x / 10;
+    //}
 
 
     public void OnEnemySpawn(EnemyController enemy)
