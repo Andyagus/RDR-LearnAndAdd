@@ -14,7 +14,6 @@ public class EnemyController : MonoBehaviour
     private Animator anim;
     private ShooterController shooter;
     private NavMeshAgent enemy;
-    private EnemyMovement input;
     private GameObject vCam;
     private PostProcessVolume postVolume;
     private PostProcessProfile postProfile;
@@ -43,7 +42,6 @@ public class EnemyController : MonoBehaviour
         rbs = GetComponentsInChildren<Rigidbody>();
         Ragdoll(false, this.transform);
         enemy = GetComponent<NavMeshAgent>();
-        input = GetComponent<EnemyMovement>();
         mainCamera = Camera.main;
         postVolume = mainCamera.GetComponent<PostProcessVolume>();
         postProfile = postVolume.profile;
