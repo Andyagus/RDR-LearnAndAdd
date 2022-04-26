@@ -29,7 +29,7 @@ public class ShooterController : MonoBehaviour
     public bool aiming = false;
     public bool deadEye = false;
     public bool zombieAttack = false;
-    public bool lostWeapon = false;
+    private bool lostWeapon = false;
 
     [Header("Camera Settings")]
     private Camera mainCamera;
@@ -398,10 +398,14 @@ public class ShooterController : MonoBehaviour
 
     private void LoseGun()
     {
-        gun.GetComponent<Rigidbody>().isKinematic = false;
-        gun.GetComponent<BoxCollider>().enabled = true;
-        gun.transform.parent = null;
-        lostWeapon = true;
+        if(lostWeapon == false)
+        {
+            
+            gun.GetComponent<Rigidbody>().isKinematic = false;            
+            gun.transform.parent = null;
+            //TODO once you un paret the object it goes back to 0,0,0           
+            lostWeapon = true;
+        }
     }
     private void FoundGun()
     {
