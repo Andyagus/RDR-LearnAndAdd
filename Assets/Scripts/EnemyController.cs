@@ -30,8 +30,8 @@ public class EnemyController : MonoBehaviour
     //public bool outOfRange = false;
     private bool triggerStopAttack;
 
-    public Action<EnemyController> OnEnemyShot = (EnemyController enemy) => {};
-    public Action<EnemyController> OnEnemyAttackPlayer = (EnemyController enemy) => {};
+    public Action OnEnemyShot = () => {};
+    public Action OnEnemyAttackPlayer = () => {};
     public Action<EnemyController> OnEnemyOutOfRangeFromPlayer = (EnemyController enemy) => {};
 
 
@@ -124,7 +124,7 @@ public class EnemyController : MonoBehaviour
 
     public void OnHit()
     {
-        OnEnemyAttackPlayer(gameObject.GetComponent<EnemyController>());
+        OnEnemyAttackPlayer();
     }
 
 
@@ -141,7 +141,7 @@ public class EnemyController : MonoBehaviour
         {
             point.GetComponent<Rigidbody>().AddForce(shooter.transform.forward * 30, ForceMode.Impulse);
             shot = true;
-            OnEnemyShot(this.gameObject.GetComponent<EnemyController>());
+            OnEnemyShot();
             
         }
     }

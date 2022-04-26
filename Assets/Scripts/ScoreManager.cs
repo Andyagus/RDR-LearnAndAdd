@@ -124,136 +124,6 @@ public class ScoreManager : MonoBehaviour
         }
     }
 
-    private void OnEnemyAttackPlayer(EnemyController enemy)
-    {
-        Debug.Log("On enemy attack called");
-        if (gameOver != true)
-        {
-            attackMode = true;
-            PlayerBloom(false);
-            ResetMultiplier();
-            DecreaseHealth();
-            IncreaseVignette();
-            HealthVignetteColor();
-        }
-    }
-
-    public void RestoreHealth()
-    {
-        if(attackMode == true)
-        {
-            canRestoreHealth = true;
-        }
-
-        if(attackMode == false && canRestoreHealth == true)
-        {
-            StartCoroutine(RestoreHealthOverTime());
-            canRestoreHealth = false;
-        } 
-    }
-    
-    private void OnEnemyOutOfRangeFromPlayer(EnemyController enemy)
-    {
-        vignette.intensity.value = 0;
-        //attackMode = false;
-        //TODO ask sunny - because there are multiple enemies called here…
-        //var enemies = new List<EnemyController>();
-        //enemies.Add(enemy);
-        //Debug.Log("enemies out of range: " + enemies.Count);
-        //outOfRange = true;
-
-
-
-        //attackMode = false;
-        //StartCoroutine(RestoreHealthOverTime());
-
-        //Debug.Log("On enemy out of range called");
-        //HealthVignetteColor(false);
-        //canRestoreHealth = false;
-        //RestoreHealth();
-        //Debug.Log("starting coroutine restore health");
-    }
-
-    public void PlayerRunning()
-    {
-        //if (playerRunningAwayfromEnemy == true)
-        //{
-        //    Debug.Log("starting coroutine");
-        //    StartCoroutine(RestoreHealthOverTime());
-        //    playerRunningAwayfromEnemy = false;
-        //}
-    }
-
-    public void DecreaseHealth()
-    {
-        if(health > 0)
-        {
-            health -= healthDecrement;
-        }
-        else if(health <= 0)
-        {
-            OnPlayerDeath();
-            gameOver = true;
-            //player Ragdoll…
-        }
-    }
-
-    public void IncreaseVignette()
-    {
-        vignette.intensity.value += healthDecrement / 10;
-    }
-
-    IEnumerator RestoreHealthOverTime()
-    {
-      
-        var i = 0;
-        while (i < 10)
-        {
-            yield return new WaitForSeconds(1);
-            i++;
-            Debug.Log("Coroutine: " + i);
-        }
-
-        yield return null;
-
-
-    }
-
-    private void ResetMultiplier()
-    {
-        multiplier = 1;
-        multiplierText.text = $"X{multiplier}";
-        multiplierText.fontSize = 36;
-    }
-
-    private void HealthVignetteColor()
-    {
-        DOVirtual.Color(vignette.color.value, postVignetteColor, 0.2f, FadeVignetteColor);
-    }
-
-    public void FadeVignetteColor(Color x)
-    {
-        vignette.color.value = x;
-    }
-
-    //public void RestoreHealth()
-    //{
-    //    if(attackMode == false)
-    //    {
-    //        DOVirtual.Float(health, maxHealth, 10f, RestoreHealthTween);
-    //    }
-    //    //health = 10;
-    //}
-
-
-    //public void RestoreHealthTween(float x)
-    //{
-    //    Debug.Log(x);
-    //    health = x;
-    //    vignette.intensity.value -= x / 10;
-    //}
-
-
     public void OnEnemySpawn(EnemyController enemy)
     {
         enemy.OnEnemyShot += OnEnemyShot;
@@ -261,7 +131,7 @@ public class ScoreManager : MonoBehaviour
         enemy.OnEnemyOutOfRangeFromPlayer += OnEnemyOutOfRangeFromPlayer;
     }
 
-    public void OnEnemyShot(EnemyController enemy)
+    public void OnEnemyShot()
     {
         IncreaseScore();
     }
@@ -285,9 +155,49 @@ public class ScoreManager : MonoBehaviour
                 break;
             case (3):
                 break;
-        }       
+        }
     }
 
+    private void OnEnemyAttackPlayer()
+    {
+        Debug.Log("On enemy attack called");
+        if (gameOver != true)
+        {
+            
+            attackMode = true;            
+            ResetMultiplier();
+            DecreaseHealth();
+            IncreaseVignette();
+        }
+    }
+
+    //vignette tween
+    public void IncreaseVignette()
+    {
+        HealthVignetteColor();
+        vignette.intensity.value += healthDecrement / 10;
+    }
+
+    private void HealthVignetteColor()
+    {
+        DOVirtual.Color(vignette.color.value, postVignetteColor, 0.2f, FadeVignetteColor);
+    }
+
+    public void FadeVignetteColor(Color x)
+    {
+        vignette.color.value = x;
+    }
+    //
+
+    private void ResetMultiplier()
+    {
+        PlayerBloom(false);
+        multiplier = 1;
+        multiplierText.text = $"X{multiplier}";
+        multiplierText.fontSize = 36;
+    }
+
+    
     private void PlayerBloom(bool state)
     {
         bloom.intensity.value = state ? 7f : originalBloomIntensity;
@@ -306,5 +216,48 @@ public class ScoreManager : MonoBehaviour
         bloom.threshold.value = thresholdValue;
     }
 
+    public void DecreaseHealth()
+    {
+        if (health > 0)
+        {
+            health -= healthDecrement;
+        }
+        else if (health <= 0)
+        {
+            OnPlayerDeath();
+            gameOver = true;
+        }
+    }
+
+    private void OnEnemyOutOfRangeFromPlayer(EnemyController enemy)
+    {
+        vignette.intensity.value = 0;
+    }
+
+    public void RestoreHealth()
+    {
+        if(attackMode == true)
+        {
+            canRestoreHealth = true;
+        }
+
+        if(attackMode == false && canRestoreHealth == true)
+        {
+            StartCoroutine(RestoreHealthOverTime());
+            canRestoreHealth = false;
+        } 
+    }
+
+    IEnumerator RestoreHealthOverTime()
+    {      
+        var i = 0;
+        while (i < 10)
+        {
+            yield return new WaitForSeconds(1);
+            i++;
+            Debug.Log("Coroutine: " + i);
+        }
+        yield return null;
+    }
 
 }

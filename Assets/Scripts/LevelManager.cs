@@ -58,8 +58,6 @@ public class LevelManager : MonoBehaviour
         }
     }
 
-
-
     public void OnEnemySpawn(EnemyController enemy)
     {
         enemiesInScene++;
@@ -72,7 +70,7 @@ public class LevelManager : MonoBehaviour
         spawnCount++;
     }
 
-    public void OnEnemyShot(EnemyController enemy)
+    public void OnEnemyShot()
     {
         enemiesShot++;
     }

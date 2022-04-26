@@ -65,7 +65,7 @@ public class ShooterController : MonoBehaviour
 
     [Header("Events")]
     //public Action OnPlayerAttack = () => {};
-    public Action OnZombieLeave = () => { };
+    //public Action OnZombieLeave = () => { };
     private ScoreManager scoreManagerScript;
 
 
@@ -389,7 +389,7 @@ public class ShooterController : MonoBehaviour
         enemy.OnEnemyOutOfRangeFromPlayer += OnEnemyLeave;
     }
 
-    public void OnEnemyAttack(EnemyController enemy)
+    public void OnEnemyAttack()
     {
         ToggleControls(true);
         AttackAnimation();
