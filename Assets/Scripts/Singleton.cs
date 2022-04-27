@@ -4,16 +4,6 @@ using UnityEngine;
 
 public class Singleton<T> : MonoBehaviour where T : MonoBehaviour
 {
-    private void Awake()
-    {
-        Debug.Log("SINGLETON AWAKE");
-    }
-
-    public void SayHi()
-    {
-        Debug.Log("HI I AM SINGLETON");
-    }
-
     public static T instance
     {
         get
@@ -23,7 +13,6 @@ public class Singleton<T> : MonoBehaviour where T : MonoBehaviour
                 _instance = FindOrCreateInstance();
             }
 
-            Debug.Log("FOUND INSTANCE");
             return _instance;
         }
     }

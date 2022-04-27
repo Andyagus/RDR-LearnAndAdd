@@ -6,8 +6,7 @@ using UnityEngine.AI;
 using Cinemachine;
 using DG.Tweening;
 using UnityEngine.Rendering.PostProcessing;
-
-
+ 
 public class EnemyController : MonoBehaviour
 {
     private Rigidbody[] rbs;
@@ -23,16 +22,17 @@ public class EnemyController : MonoBehaviour
     public Vector3 attackPosition;
     public float stopDistancePadding = 0.5f;
     public bool attacking;
+    public float distance;
     public bool withinRange;
     public bool canCreateCam = true;
     public bool aimed = false;
     public bool shot;
     //public bool outOfRange = false;
-    private bool triggerStopAttack;
+    public bool triggerStopAttack;
 
     public Action OnEnemyShot = () => {};
     public Action OnEnemyAttackPlayer = () => {};
-    public Action OnEnemyOutOfRangeFromPlayer = () => {};
+    public Action<EnemyController> OnEnemyOutOfRangeFromPlayer = (EnemyController enemy) => {};
 
 
     void Start()
@@ -70,8 +70,8 @@ public class EnemyController : MonoBehaviour
     {
         var destinationOffset = shooter.transform.forward * 0.9f;
         enemy.destination = shooter.transform.position + destinationOffset;
-        float distance = enemy.remainingDistance;
-
+        distance = enemy.remainingDistance;
+           
         if(distance != 0 && distance <= enemy.stoppingDistance + stopDistancePadding)
         {
             withinRange = true;
@@ -85,10 +85,12 @@ public class EnemyController : MonoBehaviour
         {
             AttackPlayer();
         }
+
         else if (withinRange == false)
         {
-            if(triggerStopAttack == true)
+            if (triggerStopAttack == true)
             {
+
                 StopAttack();
                 triggerStopAttack = false;
             }
@@ -106,9 +108,9 @@ public class EnemyController : MonoBehaviour
 
     private void StopAttack()
     {
-       
+        //Debug.Log("stop attack is called");
         anim.SetBool("attack", false);
-        OnEnemyOutOfRangeFromPlayer();
+        OnEnemyOutOfRangeFromPlayer(GetComponent<EnemyController>());
 
         if (vCam != null)
         {
@@ -142,8 +144,7 @@ public class EnemyController : MonoBehaviour
         {
             point.GetComponent<Rigidbody>().AddForce(shooter.transform.forward * 30, ForceMode.Impulse);
             shot = true;
-            OnEnemyShot();
-            
+            OnEnemyShot();            
         }
     }
 

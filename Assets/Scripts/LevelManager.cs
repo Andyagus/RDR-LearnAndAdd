@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class LevelManager : MonoBehaviour
+public class LevelManager : Singleton<LevelManager>
 {
     public int spawnCount = 0;
     public ShooterController player;
@@ -13,6 +13,7 @@ public class LevelManager : MonoBehaviour
     public int enemiesInScene;
     public bool allSpawned = false;
     public bool allShot = false;
+    public bool gameOver = false;
 
     private void Start()
     {

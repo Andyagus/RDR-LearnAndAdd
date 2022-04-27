@@ -6,7 +6,7 @@ using UnityEngine.Rendering.PostProcessing;
 using TMPro;
 using DG.Tweening;
 
-public class ScoreManager : MonoBehaviour
+public class ScoreManager : Singleton<ScoreManager>
 {
     [Header("TEMPORARY")]
     private bool outOfRangeEventCanCall = true;
@@ -18,6 +18,9 @@ public class ScoreManager : MonoBehaviour
 
     public TextMeshProUGUI scoreText;
     public TextMeshProUGUI multiplierText;
+
+    [Header("Enemy")]
+    private EnemyController enemyPlayerLeft;
 
     [Header("Player Health")]
     public int playerScore;
@@ -88,6 +91,7 @@ public class ScoreManager : MonoBehaviour
 
     private void Update()
     {
+
         //RestoreHealth();
         //PlayerRunning();
 
@@ -128,9 +132,10 @@ public class ScoreManager : MonoBehaviour
 
     public void OnEnemySpawn(EnemyController enemy)
     {
+
         enemy.OnEnemyShot += OnEnemyShot;
         enemy.OnEnemyAttackPlayer += OnEnemyAttackPlayer;
-        enemy.OnEnemyOutOfRangeFromPlayer += OnEnemyOutOfRangeFromPlayer;
+        enemy.OnEnemyOutOfRangeFromPlayer += OnEnemyOutOfRange;
     }
 
     public void OnEnemyShot()
@@ -162,9 +167,10 @@ public class ScoreManager : MonoBehaviour
 
     private void OnEnemyAttackPlayer()
     {
-        if (gameOver != true)
+        if (LevelManager.instance.gameOver != true)
         {
-            
+
+            canRestoreHealth = true;
             attackMode = true;            
             ResetMultiplier();
             DecreaseHealth();
@@ -230,43 +236,58 @@ public class ScoreManager : MonoBehaviour
         else if (health <= 0)
         {
             OnPlayerDeath();
-            gameOver = true;
+
+            LevelManager.instance.gameOver = true;
         }
     }
 
-    private void OnEnemyOutOfRangeFromPlayer()
+    private void OnEnemyOutOfRange(EnemyController enemy)
     {
+        enemyPlayerLeft = enemy;
         attackMode = false;
-        if (outOfRangeEventCanCall)
+        if (canRestoreHealth == true)
         {
-            StartCoroutine(RestoreHealthOverTime());
-            StartCoroutine(ResetAttackCall());
-            outOfRangeEventCanCall = false;
-        }        
-
-        //vignette.intensity.value = 0;
+            ResetAttackCall();
+            canRestoreHealth = false;
+        }
     }
 
-
-    IEnumerator ResetAttackCall()
+    private void ResetAttackCall()
     {
-        yield return new WaitForSeconds(3);
-        outOfRangeEventCanCall = true;
+        //if(distance > )
+        //Debug.Log(distance);
+
+        //checks distance from the player that hit the enemy first.
+        if (enemyPlayerLeft)
+        {
+            Debug.Log(enemyPlayerLeft.distance);
+        }
+
+        StartCoroutine(RestoreHealthOverTime());
     }
+
+    //IEnumerator ResetAttackCall()
+    //{
+    //    yield return new WaitForSeconds(3);
+    //    outOfRangeEventCanCall = true;
+    //}
 
     IEnumerator RestoreHealthOverTime()
-    {      
+    {
+        var i = 0;
 
-        while (health < maxHealth)
+        //while (health < maxHealth)
+        while(i < 10)
         {
             if(attackMode == true)
             {
                 yield break; 
             }
             yield return new WaitForSeconds(1);
-            health+=healthDecrement;
-            IncreaseVignette(false);
-            //Debug.Log("Coroutine: " + i);
+            //health+=healthDecrement;
+            //IncreaseVignette(false);
+            //Debug.Log("Coroutine: " + activeEnemy.distance);
+            i++;
         }
 
         yield return null;

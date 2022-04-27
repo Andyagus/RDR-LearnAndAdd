@@ -198,7 +198,7 @@ public class ShooterController : MonoBehaviour
 
     private void ShotSequence()
     {
-        if (targets.Count > 0)
+        if (targets.Count > 0 && !LevelManager.instance.gameOver)
         {
             DeadEye(true);            
 
@@ -421,7 +421,7 @@ public class ShooterController : MonoBehaviour
         anim.SetTrigger("onAttack");
     }
 
-    public void OnEnemyLeave()
+    public void OnEnemyLeave(EnemyController enemy)
     {
         //Debug.Log("On Enemy Leave");
         ToggleControls(false);
@@ -438,6 +438,7 @@ public class ShooterController : MonoBehaviour
     {
         if (hit.collider.CompareTag("gun"))
         {
+            Debug.Log("On Gun found");
             FoundGun();
         }
     }
