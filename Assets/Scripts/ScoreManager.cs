@@ -23,7 +23,7 @@ public class ScoreManager : MonoBehaviour
     public int playerScore;
     private int maxHealth = 10;
     public float health = 10;
-    float healthDecrement = 1;
+    float healthDecrement = 2;
     public int multiplier = 1;
     public bool gameOver = false;
 
