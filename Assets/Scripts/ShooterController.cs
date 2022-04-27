@@ -421,7 +421,7 @@ public class ShooterController : MonoBehaviour
         anim.SetTrigger("onAttack");
     }
 
-    public void OnEnemyLeave(EnemyController enemy)
+    public void OnEnemyLeave()
     {
         //Debug.Log("On Enemy Leave");
         ToggleControls(false);

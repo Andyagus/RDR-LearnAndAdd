@@ -32,7 +32,7 @@ public class EnemyController : MonoBehaviour
 
     public Action OnEnemyShot = () => {};
     public Action OnEnemyAttackPlayer = () => {};
-    public Action<EnemyController> OnEnemyOutOfRangeFromPlayer = (EnemyController enemy) => {};
+    public Action OnEnemyOutOfRangeFromPlayer = () => {};
 
 
     void Start()
@@ -107,7 +107,7 @@ public class EnemyController : MonoBehaviour
     {
        
         anim.SetBool("attack", false);
-        OnEnemyOutOfRangeFromPlayer(gameObject.GetComponent<EnemyController>());
+        OnEnemyOutOfRangeFromPlayer();
 
         if (vCam != null)
         {

@@ -8,7 +8,9 @@ using DG.Tweening;
 
 public class ScoreManager : MonoBehaviour
 {
-    //[Header("TEMPORARY")]
+    [Header("TEMPORARY")]
+    private bool outOfRangeEventCanCall = true;
+
     //public bool playerRunningAwayfromEnemy = false;
     public int enemiesInScene = 0;
     public bool canRestoreHealth = false;
@@ -21,7 +23,7 @@ public class ScoreManager : MonoBehaviour
     public int playerScore;
     private int maxHealth = 10;
     public float health = 10;
-    float healthDecrement = 2;
+    float healthDecrement = 1;
     public int multiplier = 1;
     public bool gameOver = false;
 
@@ -86,7 +88,7 @@ public class ScoreManager : MonoBehaviour
 
     private void Update()
     {
-        RestoreHealth();
+        //RestoreHealth();
         //PlayerRunning();
 
         playerAiming = Player.aiming;
@@ -160,22 +162,25 @@ public class ScoreManager : MonoBehaviour
 
     private void OnEnemyAttackPlayer()
     {
-        Debug.Log("On enemy attack called");
         if (gameOver != true)
         {
             
             attackMode = true;            
             ResetMultiplier();
             DecreaseHealth();
-            IncreaseVignette();
+            IncreaseVignette(true);
         }
     }
 
     //vignette tween
-    public void IncreaseVignette()
+    public void IncreaseVignette(bool state)
     {
         HealthVignetteColor();
-        vignette.intensity.value += healthDecrement / 10;
+
+
+        var decrement = state ? healthDecrement : -healthDecrement;
+
+        vignette.intensity.value +=  decrement / 10;
     }
 
     private void HealthVignetteColor()
@@ -229,34 +234,44 @@ public class ScoreManager : MonoBehaviour
         }
     }
 
-    private void OnEnemyOutOfRangeFromPlayer(EnemyController enemy)
+    private void OnEnemyOutOfRangeFromPlayer()
     {
-        vignette.intensity.value = 0;
+        attackMode = false;
+        if (outOfRangeEventCanCall)
+        {
+
+            Debug.Log("One Call for outofrange");
+            StartCoroutine("RestoreHealthOverTime");
+            StartCoroutine(ResetAttackCall());
+            outOfRangeEventCanCall = false;
+        }        
+
+        //vignette.intensity.value = 0;
     }
 
-    public void RestoreHealth()
-    {
-        if(attackMode == true)
-        {
-            canRestoreHealth = true;
-        }
 
-        if(attackMode == false && canRestoreHealth == true)
-        {
-            StartCoroutine(RestoreHealthOverTime());
-            canRestoreHealth = false;
-        } 
+    IEnumerator ResetAttackCall()
+    {
+        yield return new WaitForSeconds(3);
+        outOfRangeEventCanCall = true;
     }
 
     IEnumerator RestoreHealthOverTime()
     {      
-        var i = 0;
-        while (i < 10)
+        Debug.Log("Called Restore Health Over Time");
+
+        while (health < maxHealth)
         {
+            if(attackMode == true)
+            {
+                yield break; 
+            }
             yield return new WaitForSeconds(1);
-            i++;
-            Debug.Log("Coroutine: " + i);
+            health+=healthDecrement;
+            IncreaseVignette(false);
+            //Debug.Log("Coroutine: " + i);
         }
+
         yield return null;
     }
 
