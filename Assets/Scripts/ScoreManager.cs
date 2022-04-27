@@ -239,9 +239,7 @@ public class ScoreManager : MonoBehaviour
         attackMode = false;
         if (outOfRangeEventCanCall)
         {
-
-            Debug.Log("One Call for outofrange");
-            StartCoroutine("RestoreHealthOverTime");
+            StartCoroutine(RestoreHealthOverTime());
             StartCoroutine(ResetAttackCall());
             outOfRangeEventCanCall = false;
         }        
@@ -258,7 +256,6 @@ public class ScoreManager : MonoBehaviour
 
     IEnumerator RestoreHealthOverTime()
     {      
-        Debug.Log("Called Restore Health Over Time");
 
         while (health < maxHealth)
         {

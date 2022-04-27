@@ -116,9 +116,9 @@ public class ShooterController : MonoBehaviour
 
         anim.SetFloat("speed", input.Speed);
 
-        if (!aiming && zombieAttack == false)
+        if (!aiming && zombieAttack == false && lostWeapon == false)
         {
-            WeaponPosition();
+            WeaponPosition(); 
         }
 
         if (Input.GetKeyDown(KeyCode.R))
@@ -401,10 +401,10 @@ public class ShooterController : MonoBehaviour
         if(lostWeapon == false)
         {
             
+            lostWeapon = true;
             gun.GetComponent<Rigidbody>().isKinematic = false;            
             gun.transform.parent = null;
             //TODO once you un paret the object it goes back to 0,0,0           
-            lostWeapon = true;
         }
     }
     private void FoundGun()
