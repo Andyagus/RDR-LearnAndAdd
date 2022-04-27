@@ -68,7 +68,8 @@ public class EnemyController : MonoBehaviour
 
     private void FollowPlayer()
     {
-        enemy.destination = shooter.transform.position;
+        var destinationOffset = shooter.transform.forward * 0.9f;
+        enemy.destination = shooter.transform.position + destinationOffset;
         float distance = enemy.remainingDistance;
 
         if(distance != 0 && distance <= enemy.stoppingDistance + stopDistancePadding)
