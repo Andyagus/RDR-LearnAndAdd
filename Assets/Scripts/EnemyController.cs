@@ -19,6 +19,9 @@ public class EnemyController : MonoBehaviour
     private Camera mainCamera;
     public GameObject cubeObject;
     public GameObject enemyArm;
+    public Transform attackPoint;
+    public float attackRange;
+    public LayerMask playerLayers;
 
     public float distance;
     public bool withinRange;
@@ -51,6 +54,7 @@ public class EnemyController : MonoBehaviour
 
     private void Update()
     {
+
         if (!shot)
         {
             FollowPlayer();
@@ -61,6 +65,11 @@ public class EnemyController : MonoBehaviour
             DestroyEnemy();
         }
         
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.DrawWireSphere(attackPoint.position, attackRange);
     }
 
     private void DestroyEnemy()
@@ -96,9 +105,14 @@ public class EnemyController : MonoBehaviour
             enemy.isStopped = true;
             anim.SetBool("attack", true);
             //enemyArm.layer = attackLayer;
+
+            Attacking();
+
+            
+
         }
 
-        
+      
 
 
         //transform.LookAt(shooter.transform);
@@ -127,7 +141,21 @@ public class EnemyController : MonoBehaviour
         //AdjustEnemyAnimation();
     }
 
- 
+
+    private void Attacking()
+    {
+        Collider[] hitPlayerRb = Physics.OverlapSphere(attackPoint.position, attackRange, playerLayers);
+
+        //Debug.Log(hitPlayerRb.Length);
+        if (hitPlayerRb.Length > 0)
+        {
+            Debug.Log(hitPlayerRb[0]);
+            //foreach (var hit in hitPlayerRb)
+            //{
+            //    Debug.Log(hit.gameObject.name);
+            //}
+        }
+    }
 
     private void AdjustEnemyAnimation()
     {
