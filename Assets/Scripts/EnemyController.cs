@@ -18,7 +18,7 @@ public class EnemyController : MonoBehaviour
     private PostProcessProfile postProfile;
     private Camera mainCamera;
     public GameObject cubeObject;
-    public Collider enemyHandCollider;
+    public GameObject enemyArm;
 
     public float distance;
     public bool withinRange;
@@ -81,10 +81,14 @@ public class EnemyController : MonoBehaviour
 
         if(enemy.remainingDistance <= 0.6f)
         {
+            int attackLayer = LayerMask.NameToLayer("Attack");
             Debug.Log("less then 0.6f");
             enemy.isStopped = true;
             anim.SetBool("attack", true);
+            enemyArm.layer = attackLayer;
         }
+
+        
 
 
         //transform.LookAt(shooter.transform);
@@ -111,6 +115,11 @@ public class EnemyController : MonoBehaviour
         //}
 
         //AdjustEnemyAnimation();
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        Debug.Log("trigger");
     }
 
     private void AdjustEnemyAnimation()
