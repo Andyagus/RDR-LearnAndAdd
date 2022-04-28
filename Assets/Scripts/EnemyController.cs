@@ -73,10 +73,20 @@ public class EnemyController : MonoBehaviour
         Debug.Log("Collided");
     }
 
+    private void OnTriggerEnter(Collider other)
+    {
+        Debug.Log("trigger");
+    }
+
+    private void OnControllerColliderHit(ControllerColliderHit hit)
+    {
+        Debug.Log("HIT controller collider");
+    }
+
     private void FollowPlayer()
     {
 
-        Debug.Log("Positions:" + (transform.position - shooter.transform.position));
+        //Debug.Log("Positions:" + (transform.position - shooter.transform.position));
         enemy.destination = shooter.transform.position;
 
         if(enemy.remainingDistance <= 0.6f)
@@ -85,7 +95,7 @@ public class EnemyController : MonoBehaviour
             Debug.Log("less then 0.6f");
             enemy.isStopped = true;
             anim.SetBool("attack", true);
-            enemyArm.layer = attackLayer;
+            //enemyArm.layer = attackLayer;
         }
 
         
@@ -117,10 +127,7 @@ public class EnemyController : MonoBehaviour
         //AdjustEnemyAnimation();
     }
 
-    private void OnTriggerEnter(Collider other)
-    {
-        Debug.Log("trigger");
-    }
+ 
 
     private void AdjustEnemyAnimation()
     {

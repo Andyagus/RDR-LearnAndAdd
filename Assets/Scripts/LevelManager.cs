@@ -39,7 +39,7 @@ public class LevelManager : Singleton<LevelManager>
 
         if(allShot && allSpawned)
         {
-            Debug.Log("Level Complete");
+            //Debug.Log("Level Complete");
         }
     }
 
