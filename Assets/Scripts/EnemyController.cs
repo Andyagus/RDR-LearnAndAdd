@@ -18,22 +18,24 @@ public class EnemyController : MonoBehaviour
     private PostProcessProfile postProfile;
     private Camera mainCamera;
     public GameObject cubeObject;
+    public Collider enemyHandCollider;
 
-    public Vector3 attackPosition;
-    public float stopDistancePadding = 0.5f;
-    public bool attacking;
     public float distance;
     public bool withinRange;
-    public bool canCreateCam = true;
     public bool aimed = false;
     public bool shot;
-    //public bool outOfRange = false;
     public bool triggerStopAttack;
+    public bool attacking = false;
+    public bool LookAtCalled = false;
 
-    public Action OnEnemyShot = () => {};
+    [Header("Events")]
+    public Action OnEnemyInRange = () => { };
+    public Action OnEnemyShot = () => {};   
     public Action OnEnemyAttackPlayer = () => {};
-    public Action<EnemyController> OnEnemyOutOfRangeFromPlayer = (EnemyController enemy) => {};
+    public Action OnEnemyOutOfRangeFromPlayer = () => {};
 
+    public EnemyStates enemyState;
+    public enum EnemyStates { running, walking, stopAndAttack };
 
     void Start()
     {
@@ -66,60 +68,86 @@ public class EnemyController : MonoBehaviour
         GetComponent<NavMeshAgent>().enabled = false;
     }
 
+    private void OnCollisionEnter(Collision collision)
+    {
+        Debug.Log("Collided");
+    }
+
     private void FollowPlayer()
     {
-        var destinationOffset = shooter.transform.forward * 0.9f;
-        enemy.destination = shooter.transform.position + destinationOffset;
-        distance = enemy.remainingDistance;
-           
-        if(distance != 0 && distance <= enemy.stoppingDistance + stopDistancePadding)
-        {
-            withinRange = true;
-        }
-        else
-        {
-            withinRange = false;
-        }
 
-        if (withinRange)
-        {
-            AttackPlayer();
-        }
+        transform.LookAt(shooter.transform);
+        enemy.destination = shooter.transform.position;
+        //var remainingDistance = enemy.remainingDistance;
 
-        else if (withinRange == false)
-        {
-            if (triggerStopAttack == true)
-            {
+        //Debug.Log(remainingDistance);
 
-                StopAttack();
-                triggerStopAttack = false;
-            }
+        //switch (enemy.remainingDistance)
+        //{
+        //    case var expression when remainingDistance <= 50 && remainingDistance > 3:
+        //        enemyState = EnemyStates.running;
+        //        break;
+        //    case var expression when remainingDistance <= 3 && remainingDistance > 1.2:
+        //        enemyState = EnemyStates.walking;
+        //        break;
+        //    case var expression when remainingDistance <= 1.2:
+        //        enemyState = EnemyStates.stopAndAttack;
+        //        break;
+        //    default:
+        //        break;
+        //}
+
+        //AdjustEnemyAnimation();
+    }
+
+    private void AdjustEnemyAnimation()
+    {
+        switch (enemyState)
+        {
+            case EnemyStates.running:
+                RunningTowardsPlayer();
+                break;
+            case EnemyStates.walking:
+                WalkingTowardsPlayer();
+                break;
+            case EnemyStates.stopAndAttack:
+                AttackingPlayer();
+                break;
+
         }
+    }
+
+    private void RunningTowardsPlayer()
+    {
+        enemy.speed = 2;
+        withinRange = false;
+        OnEnemyOutOfRangeFromPlayer();
+    }
+
+    private void WalkingTowardsPlayer()
+    {
+        enemy.speed = 0.75f;
+        withinRange = true;
+
 
     }
 
-    private void AttackPlayer()
+    private void AttackingPlayer()
     {
-        anim.SetBool("attack", true);
         attacking = true;
-        attackPosition = enemy.transform.position;
-        triggerStopAttack = true;
+        enemy.isStopped = true;
+        anim.SetBool("attack", true);
+        //triggerStopAttack = true;
     }
 
     private void StopAttack()
     {
         //Debug.Log("stop attack is called");
         anim.SetBool("attack", false);
-        OnEnemyOutOfRangeFromPlayer(GetComponent<EnemyController>());
 
-        if (vCam != null)
-        {
-            vCam.SetActive(false);
-        }
 
         if (attacking == true)
         {
-            canCreateCam = true;
             attacking = false;
         }
         

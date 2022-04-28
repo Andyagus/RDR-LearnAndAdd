@@ -14,7 +14,7 @@ public class ScoreManager : Singleton<ScoreManager>
     //public bool playerRunningAwayfromEnemy = false;
     public int enemiesInScene = 0;
     public bool canRestoreHealth = false;
-
+    public float enemyPlayerProximity;
 
     public TextMeshProUGUI scoreText;
     public TextMeshProUGUI multiplierText;
@@ -24,8 +24,8 @@ public class ScoreManager : Singleton<ScoreManager>
 
     [Header("Player Health")]
     public int playerScore;
-    private int maxHealth = 10;
-    public float health = 10;
+    private int maxHealth = 50;
+    public float health = 50;
     float healthDecrement = 2;
     public int multiplier = 1;
     public bool gameOver = false;
@@ -53,7 +53,8 @@ public class ScoreManager : Singleton<ScoreManager>
     [Header("Post Vignette Color")]
     public Color postVignetteColor;
     public bool attackMode = false;
-    public bool outOfRange = false;
+    //public bool outOfRange = false;
+    public bool enemyInRange = false;
     //[Header("For ")]
 
     private ShooterController _player;
@@ -95,6 +96,11 @@ public class ScoreManager : Singleton<ScoreManager>
         //RestoreHealth();
         //PlayerRunning();
 
+        if (enemyPlayerLeft)
+        {
+            enemyPlayerProximity = enemyPlayerLeft.distance;
+        }
+
         playerAiming = Player.aiming;
 
         if(playerAiming == true)
@@ -132,11 +138,12 @@ public class ScoreManager : Singleton<ScoreManager>
 
     public void OnEnemySpawn(EnemyController enemy)
     {
-
         enemy.OnEnemyShot += OnEnemyShot;
+        enemy.OnEnemyInRange += OnEnemyInRange;
         enemy.OnEnemyAttackPlayer += OnEnemyAttackPlayer;
         enemy.OnEnemyOutOfRangeFromPlayer += OnEnemyOutOfRange;
     }
+
 
     public void OnEnemyShot()
     {
@@ -165,11 +172,16 @@ public class ScoreManager : Singleton<ScoreManager>
         }
     }
 
+    public void OnEnemyInRange()
+    {
+        attackMode = true;
+        enemyInRange = true;
+    }
+
     private void OnEnemyAttackPlayer()
     {
         if (LevelManager.instance.gameOver != true)
         {
-
             canRestoreHealth = true;
             attackMode = true;            
             ResetMultiplier();
@@ -241,10 +253,11 @@ public class ScoreManager : Singleton<ScoreManager>
         }
     }
 
-    private void OnEnemyOutOfRange(EnemyController enemy)
+    private void OnEnemyOutOfRange()
     {
-        enemyPlayerLeft = enemy;
+        enemyInRange = false;
         attackMode = false;
+
         if (canRestoreHealth == true)
         {
             ResetAttackCall();
@@ -254,43 +267,25 @@ public class ScoreManager : Singleton<ScoreManager>
 
     private void ResetAttackCall()
     {
-        //if(distance > )
-        //Debug.Log(distance);
-
-        //checks distance from the player that hit the enemy first.
-        if (enemyPlayerLeft)
-        {
-            Debug.Log(enemyPlayerLeft.distance);
-        }
-
         StartCoroutine(RestoreHealthOverTime());
     }
 
-    //IEnumerator ResetAttackCall()
-    //{
-    //    yield return new WaitForSeconds(3);
-    //    outOfRangeEventCanCall = true;
-    //}
-
     IEnumerator RestoreHealthOverTime()
-    {
-        var i = 0;
-
-        //while (health < maxHealth)
-        while(i < 10)
+    {        
+        while(health < maxHealth)
         {
-            if(attackMode == true)
+            //end couroutine even if enemy not out of range...
+            if (enemyInRange)
             {
+                Debug.Log("BREAKING COROUTINE");
                 yield break; 
             }
+             
             yield return new WaitForSeconds(1);
-            //health+=healthDecrement;
-            //IncreaseVignette(false);
-            //Debug.Log("Coroutine: " + activeEnemy.distance);
-            i++;
+            health++;
+            vignette.intensity.value -= 0.1f;
         }
 
-        yield return null;
     }
 
 }
