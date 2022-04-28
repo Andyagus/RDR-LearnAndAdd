@@ -76,8 +76,21 @@ public class EnemyController : MonoBehaviour
     private void FollowPlayer()
     {
 
-        transform.LookAt(shooter.transform);
+        Debug.Log("Positions:" + (transform.position - shooter.transform.position));
         enemy.destination = shooter.transform.position;
+
+        if(enemy.remainingDistance <= 0.6f)
+        {
+            Debug.Log("less then 0.6f");
+            enemy.isStopped = true;
+            anim.SetBool("attack", true);
+        }
+
+
+        //transform.LookAt(shooter.transform);
+        //enemy.destination = shooter.transform.position;
+
+        //AttackingPlayer();
         //var remainingDistance = enemy.remainingDistance;
 
         //Debug.Log(remainingDistance);
