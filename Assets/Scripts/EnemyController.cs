@@ -20,7 +20,7 @@ public class EnemyController : MonoBehaviour
     public GameObject cubeObject;
     public GameObject enemyArm;
     public Transform attackPoint;
-    public float attackRange;
+    private float attackRange = 0.12f;
     public LayerMask playerLayers;
 
     public float distance;
@@ -30,6 +30,7 @@ public class EnemyController : MonoBehaviour
     public bool triggerStopAttack;
     public bool attacking = false;
     public bool LookAtCalled = false;
+    public bool playerHit = false;
 
     [Header("Events")]
     public Action OnEnemyInRange = () => { };
@@ -37,8 +38,8 @@ public class EnemyController : MonoBehaviour
     public Action OnEnemyAttackPlayer = () => {};
     public Action OnEnemyOutOfRangeFromPlayer = () => {};
 
-    public EnemyStates enemyState;
-    public enum EnemyStates { running, walking, stopAndAttack };
+    public EnemyState enemyState;
+    public enum EnemyState { running, walking, attacking };
 
     void Start()
     {
@@ -94,84 +95,112 @@ public class EnemyController : MonoBehaviour
 
     private void FollowPlayer()
     {
-
-        //Debug.Log("Positions:" + (transform.position - shooter.transform.position));
         enemy.destination = shooter.transform.position;
+        transform.LookAt(shooter.transform);
 
-        if(enemy.remainingDistance <= 0.6f)
+        //Debug.Log(enemy.remainingDistance);
+
+        var enemyWalkingDistance = 3;
+
+        //TODO ask sunny: how to set to local variable "EnemyState state" and then pass to method        
+
+        if (enemy.remainingDistance > enemyWalkingDistance)
         {
-            int attackLayer = LayerMask.NameToLayer("Attack");
-            Debug.Log("less then 0.6f");
-            enemy.isStopped = true;
-            anim.SetBool("attack", true);
-            //enemyArm.layer = attackLayer;
-
-            Attacking();
-
-            
-
+            enemyState = EnemyState.running;
         }
+
+        if (enemy.remainingDistance > enemy.stoppingDistance && enemy.remainingDistance < enemyWalkingDistance)
+        {
+            enemyState = EnemyState.walking;
+        }
+
+        if (enemy.remainingDistance != 0)
+        {
+            if (enemy.remainingDistance <= enemy.stoppingDistance)
+            {
+                if (!enemy.hasPath || enemy.velocity.sqrMagnitude == 0)
+                {
+                    enemyState = EnemyState.attacking;
+                }
+            }
+        }
+
+        AdjustEnemyBehavior(enemyState);
+
+       
 
       
 
-
-        //transform.LookAt(shooter.transform);
-        //enemy.destination = shooter.transform.position;
-
-        //AttackingPlayer();
-        //var remainingDistance = enemy.remainingDistance;
-
-        //Debug.Log(remainingDistance);
-
-        //switch (enemy.remainingDistance)
-        //{
-        //    case var expression when remainingDistance <= 50 && remainingDistance > 3:
-        //        enemyState = EnemyStates.running;
-        //        break;
-        //    case var expression when remainingDistance <= 3 && remainingDistance > 1.2:
-        //        enemyState = EnemyStates.walking;
-        //        break;
-        //    case var expression when remainingDistance <= 1.2:
-        //        enemyState = EnemyStates.stopAndAttack;
-        //        break;
-        //    default:
-        //        break;
-        //}
-
-        //AdjustEnemyAnimation();
+       
     }
 
 
-    private void Attacking()
+    private void AdjustEnemyBehavior(EnemyState state)
     {
+        switch (state)
+        {
+            case EnemyState.attacking:
+                AttackPlayer();
+                break;
+            case EnemyState.running:
+                RunToPlayer();
+                break;
+            case EnemyState.walking:
+                WalkToPlayer();
+                break;
+            default:
+                Console.Write("No action");
+                break;
+        }
+    }
+
+    //animation trigger
+    public void OnHit()
+    {
+        playerHit = true;
+    }
+
+    private void AttackPlayer()
+    {
+        enemy.isStopped = true;
+        anim.SetBool("attack", true);
+
         Collider[] hitPlayerRb = Physics.OverlapSphere(attackPoint.position, attackRange, playerLayers);
 
-        //Debug.Log(hitPlayerRb.Length);
-        if (hitPlayerRb.Length > 0)
+        //if(playerHit == r)
+        if(playerHit == true && hitPlayerRb.Length > 0)
         {
-            Debug.Log(hitPlayerRb[0]);
-            //foreach (var hit in hitPlayerRb)
-            //{
-            //    Debug.Log(hit.gameObject.name);
-            //}
+            Debug.Log("ATTACK PLAYER");
+            OnEnemyAttackPlayer();
+
+            playerHit = false;
+            foreach (var collider in hitPlayerRb)
+            {
+                Debug.Log(collider);
+            }
+        }
+
+        if (hitPlayerRb.Length == 0)
+        {
+            Debug.Log("Calling Walk to player");
+
+            WalkToPlayer();
+        }
+
+    }
+
+    private void WalkToPlayer()
+    {
+        //enemy.speed = 5;
+        if (enemy.isStopped)
+        {
+            enemy.isStopped = !enemy.isStopped;
         }
     }
 
-    private void AdjustEnemyAnimation()
+    private void RunToPlayer()
     {
-        switch (enemyState)
-        {
-            case EnemyStates.running:
-                RunningTowardsPlayer();
-                break;
-            case EnemyStates.walking:
-                WalkingTowardsPlayer();
-                break;
-            case EnemyStates.stopAndAttack:
-                AttackingPlayer();
-                break;
-
-        }
+        //enemy.speed = 6;
     }
 
     private void RunningTowardsPlayer()
@@ -189,14 +218,6 @@ public class EnemyController : MonoBehaviour
 
     }
 
-    private void AttackingPlayer()
-    {
-        attacking = true;
-        enemy.isStopped = true;
-        anim.SetBool("attack", true);
-        //triggerStopAttack = true;
-    }
-
     private void StopAttack()
     {
         //Debug.Log("stop attack is called");
@@ -210,11 +231,7 @@ public class EnemyController : MonoBehaviour
         
     }
 
-    public void OnHit()
-    {
-        OnEnemyAttackPlayer();
-    }
-
+  
 
     public void Ragdoll(bool state, Transform point)
     {

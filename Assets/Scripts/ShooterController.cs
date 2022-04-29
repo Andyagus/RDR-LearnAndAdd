@@ -141,12 +141,6 @@ public class ShooterController : MonoBehaviour
             AddTargets();
         }
 
-        //enemy
-        //if (enemy.attacking)
-        //{
-        //    anim.SetTrigger("onAttack");
-        //    //Debug.Log("enemy is attacking");
-        //}
 
     }
 
@@ -385,6 +379,7 @@ public class ShooterController : MonoBehaviour
 
     public void OnEnemySpawn(EnemyController enemy)
     {
+        //Debug.Log("Shooter controller");
         enemy.OnEnemyAttackPlayer += OnEnemyAttack;
         enemy.OnEnemyOutOfRangeFromPlayer += OnEnemyLeave;
     }

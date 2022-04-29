@@ -182,6 +182,7 @@ public class ScoreManager : Singleton<ScoreManager>
     {
         if (LevelManager.instance.gameOver != true)
         {
+
             canRestoreHealth = true;
             attackMode = true;            
             ResetMultiplier();
