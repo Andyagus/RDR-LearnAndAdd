@@ -31,12 +31,13 @@ public class EnemyController : MonoBehaviour
     public bool attacking = false;
     public bool LookAtCalled = false;
     public bool playerHit = false;
+    public bool inRange;
 
     [Header("Events")]
-    public Action OnEnemyInRange = () => { };
     public Action OnEnemyShot = () => {};   
+    public Action OnEnemyOutOfRange = () => {};
+    public Action OnEnemyInRange = () => { };
     public Action OnEnemyAttackPlayer = () => {};
-    public Action OnEnemyOutOfRangeFromPlayer = () => {};
 
     public EnemyState enemyState;
     public enum EnemyState { running, walking, attacking };
@@ -55,6 +56,8 @@ public class EnemyController : MonoBehaviour
 
     private void Update()
     {
+
+        //Debug.Log(enemy.speed);
 
         if (!shot)
         {
@@ -127,11 +130,6 @@ public class EnemyController : MonoBehaviour
 
         AdjustEnemyBehavior(enemyState);
 
-       
-
-      
-
-       
     }
 
 
@@ -170,7 +168,6 @@ public class EnemyController : MonoBehaviour
         //if(playerHit == r)
         if(playerHit == true && hitPlayerRb.Length > 0)
         {
-            Debug.Log("ATTACK PLAYER");
             OnEnemyAttackPlayer();
 
             playerHit = false;
@@ -180,18 +177,26 @@ public class EnemyController : MonoBehaviour
             }
         }
 
+        //after player hits reset position;
         if (hitPlayerRb.Length == 0)
         {
-            Debug.Log("Calling Walk to player");
 
-            WalkToPlayer();
+            return;
         }
 
     }
 
     private void WalkToPlayer()
     {
-        //enemy.speed = 5;
+                
+        enemy.speed = 0.5f;
+
+        if(inRange == false)
+        {
+            OnEnemyInRange();
+            inRange = true;
+        }
+
         if (enemy.isStopped)
         {
             enemy.isStopped = !enemy.isStopped;
@@ -200,23 +205,15 @@ public class EnemyController : MonoBehaviour
 
     private void RunToPlayer()
     {
-        //enemy.speed = 6;
+        if(inRange == true)
+        {
+            OnEnemyOutOfRange();
+            inRange = false;
+        }
+        enemy.speed = 1f;
     }
 
-    private void RunningTowardsPlayer()
-    {
-        enemy.speed = 2;
-        withinRange = false;
-        OnEnemyOutOfRangeFromPlayer();
-    }
-
-    private void WalkingTowardsPlayer()
-    {
-        enemy.speed = 0.75f;
-        withinRange = true;
-
-
-    }
+   
 
     private void StopAttack()
     {

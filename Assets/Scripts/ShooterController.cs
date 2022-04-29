@@ -381,7 +381,7 @@ public class ShooterController : MonoBehaviour
     {
         //Debug.Log("Shooter controller");
         enemy.OnEnemyAttackPlayer += OnEnemyAttack;
-        enemy.OnEnemyOutOfRangeFromPlayer += OnEnemyLeave;
+        enemy.OnEnemyOutOfRange += OnEnemyLeave;
     }
 
     public void OnEnemyAttack()
@@ -447,6 +447,7 @@ public class ShooterController : MonoBehaviour
     private void OnPlayerDeath()
     {
         anim.enabled = false;
+        GetComponent<CharacterController>().enabled = false;
 
     }
 }
