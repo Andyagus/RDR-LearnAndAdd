@@ -81,21 +81,6 @@ public class EnemyController : MonoBehaviour
         GetComponent<NavMeshAgent>().enabled = false;
     }
 
-    private void OnCollisionEnter(Collision collision)
-    {
-        Debug.Log("Collided");
-    }
-
-    private void OnTriggerEnter(Collider other)
-    {
-        Debug.Log("trigger");
-    }
-
-    private void OnControllerColliderHit(ControllerColliderHit hit)
-    {
-        Debug.Log("HIT controller collider");
-    }
-
     private void FollowPlayer()
     {
         enemy.destination = shooter.transform.position;
@@ -129,6 +114,12 @@ public class EnemyController : MonoBehaviour
         }
 
         AdjustEnemyBehavior(enemyState);
+
+    }
+
+    private void ProixmityCheck()
+    {
+        var proximity = shooter.transform.position - enemy.transform.position;
 
     }
 
@@ -173,7 +164,7 @@ public class EnemyController : MonoBehaviour
             playerHit = false;
             foreach (var collider in hitPlayerRb)
             {
-                Debug.Log(collider);
+                //Debug.Log(collider);
             }
         }
 

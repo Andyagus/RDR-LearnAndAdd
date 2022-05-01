@@ -223,7 +223,6 @@ public class ScoreManager : Singleton<ScoreManager>
         else if (health <= 0)
         {
             OnPlayerDeath();
-
             LevelManager.instance.gameOver = true;
         }
     }
@@ -231,27 +230,20 @@ public class ScoreManager : Singleton<ScoreManager>
     public void OnEnemyInRange()
     {
         enemyInRange = true;
-        canRestoreHealth = true;
     }
-
 
     private void OnEnemyOutOfRange()
     {
-        enemyInRange = false;
 
-        if (canRestoreHealth == true)
+        if(enemyInRange)
         {
-            StartCoroutine(RestoreHealthOverTime());
-            canRestoreHealth = false;
+            enemyInRange = false;
+            if(health != maxHealth)
+            {
+                StartCoroutine(RestoreHealthOverTime());
+            }
         }
     }
-
-    //private void RestoreHealth()
-    //{
-
-       
-
-    //}
 
     IEnumerator RestoreHealthOverTime()
     {
@@ -259,7 +251,6 @@ public class ScoreManager : Singleton<ScoreManager>
         {
             if (enemyInRange == true)
             {
-                Debug.Log("BREAKING COROUTINE");
                 yield break;
             }
 
