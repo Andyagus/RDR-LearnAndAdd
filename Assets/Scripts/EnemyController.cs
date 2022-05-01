@@ -238,8 +238,4 @@ public class EnemyController : MonoBehaviour
         }
     }
 
-    //static void FindEnemies()
-    //{
-
-    //}
 }

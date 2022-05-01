@@ -11,8 +11,6 @@ public class ScoreManager : Singleton<ScoreManager>
 
     [Header("Restore Health")]
     public bool enemyInRange = false;
-    public bool isHealthRestoring = false;
-    public bool canRestoreHealth = false;
 
     [Header("Player Health/Score")]
     public TextMeshProUGUI scoreText;
@@ -234,7 +232,6 @@ public class ScoreManager : Singleton<ScoreManager>
 
     private void OnEnemyOutOfRange()
     {
-
         if(enemyInRange)
         {
             enemyInRange = false;
