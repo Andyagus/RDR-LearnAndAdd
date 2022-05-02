@@ -59,6 +59,9 @@ public class ShooterController : MonoBehaviour
     private Vector3 gunIdleRotation;
     private Vector3 gunAimPosition = new Vector3(0.2401146f, .006083928f, -0.1040046f);
     private Vector3 gunAimRotation = new Vector3(-6.622f, 97.47501f, 94.774f);
+    public GameObject gunParent;
+    public int hitForceAmt;
+    public bool gunOnGround;
 
 
     [Header("Enemy")]
@@ -75,6 +78,7 @@ public class ShooterController : MonoBehaviour
 
     void Start()
     {
+        
         input = GetComponent<MovementInput>();
 
         anim = GetComponent<Animator>();
@@ -106,6 +110,7 @@ public class ShooterController : MonoBehaviour
     
     void Update()
     {
+        Debug.Log("lost weapon: " + lostWeapon);
         if (aiming)
         {
             PositionXIndicator();
@@ -121,10 +126,11 @@ public class ShooterController : MonoBehaviour
         anim.SetFloat("speed", input.Speed);
 
 
-        //issue for lsot weapon
+        //TODO issue for lost weapon
         if (!aiming && zombieAttack == false && lostWeapon == false)
         {
-            //WeaponPosition(); 
+            Debug.Log("Calling weapon Position");
+            WeaponPosition();
         }
 
         if (Input.GetKeyDown(KeyCode.R))
@@ -398,31 +404,34 @@ public class ShooterController : MonoBehaviour
 
         if(lostWeapon == false)
         {
-            GameObject gunPosition = new GameObject("Gun Position");
-            gunPosition.transform.position = transform.position;
-            LoseGun(gunPosition);
-        }
-        
-     
+            LoseGun();
+        }            
     }
 
-    private void LoseGun(GameObject gunPos)
-    {
-        
+    private void LoseGun()
+    {        
         lostWeapon = true;
-        gun.SetParent(null);
-        gun.SetParent(gunPos.transform);
-        gun.GetComponent<Rigidbody>().isKinematic = false;
+        gunParent.transform.position = transform.position;
+        gunParent.GetComponent<Rigidbody>().isKinematic = false;
+        gunParent.GetComponent<Rigidbody>().AddForce(-transform.forward * 10, ForceMode.Impulse);
+        //gunParent = new GameObject("Gun Parent");
+        //gun.SetParent(gunParent.transform, true);
+        //var gunRb = gun.GetComponent<Rigidbody>();
+        //Rigidbody gunParentRb = gunParent.AddComponent<Rigidbody>() as Rigidbody;
+        //Debug.DrawRay(gunParentRb.transform.position, -transform.forward * 100, Color.red);
+        //gunParentRb.AddForce(-transform.forward * 10, ForceMode.Impulse);
+        //gunRb.isKinematic = false;
 
-        //TODO once you un paret the object it goes back to 0,0,0           
-        
     }
+
     private void FoundGun()
     {
         lostWeapon = false;
+        //gunOnGround = false;
         gun.GetComponent<Rigidbody>().isKinematic = true;
         zombieAttack = false;
         gun.transform.parent = rightHand;
+        Destroy(gunParent);
         anim.SetTrigger("gotRifle");
     }
 
@@ -446,10 +455,10 @@ public class ShooterController : MonoBehaviour
 
     private void OnControllerColliderHit(ControllerColliderHit hit)
     {
-        if (hit.collider.CompareTag("gun"))
+        if (hit.collider.CompareTag("gun") && gunOnGround)
         {
             Debug.Log("On Gun found");
-            FoundGun();
+            //FoundGun();
         }
     }
 
