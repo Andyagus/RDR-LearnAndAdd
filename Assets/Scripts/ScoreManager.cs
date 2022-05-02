@@ -15,7 +15,7 @@ public class ScoreManager : Singleton<ScoreManager>
     [Header("Player Health/Score")]
     public TextMeshProUGUI scoreText;
     public TextMeshProUGUI multiplierText;
-    private int maxHealth = 10;
+    private int maxHealth = 100;
     public float health;
     float healthDecrement = 2;
     public int playerScore;
@@ -74,9 +74,6 @@ public class ScoreManager : Singleton<ScoreManager>
 
     private void Update()
     {
-        Debug.Log(enemyInRange);
-
-
         //TODO rework this ugly in update method
         var playerAiming = Player.aiming;
 
@@ -244,9 +241,14 @@ public class ScoreManager : Singleton<ScoreManager>
 
     IEnumerator RestoreHealthOverTime()
     {
-        while (health < 10)
+        while (health < maxHealth)
         {
             if (enemyInRange == true)
+            {
+                yield break;
+            }
+
+            if(health == 10)
             {
                 yield break;
             }
