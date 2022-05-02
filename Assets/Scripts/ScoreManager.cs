@@ -152,13 +152,30 @@ public class ScoreManager : Singleton<ScoreManager>
     {
         if (LevelManager.instance.gameOver != true)
         {
-
-            //canRestoreHealth = true;
-            //attackMode = true;            
             ResetMultiplier();
             DecreaseHealth();
             IncreaseVignette(true);
         }
+
+        if (LevelManager.instance.gameOver)
+        {
+            GameOverRedFilter();
+        }
+
+
+    }
+
+    public void GameOverRedFilter()
+    {
+        colorGrading = ppProfile.GetSetting<ColorGrading>();
+        DOVirtual.Color(colorGrading.colorFilter.value, Color.red, 2f, GameOverRedTween);
+    }
+
+    public void GameOverRedTween(Color x)
+    {
+        Debug.Log("Calling Tween");
+        colorGrading.colorFilter.value = x;
+
     }
 
     //vignette tween
