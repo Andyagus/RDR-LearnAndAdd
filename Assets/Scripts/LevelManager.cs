@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class LevelManager : Singleton<LevelManager>
 {
@@ -14,9 +15,12 @@ public class LevelManager : Singleton<LevelManager>
     public bool allSpawned = false;
     public bool allShot = false;
     public bool gameOver = false;
+    public TextMeshProUGUI gameOverText;
+
 
     private void Start()
     {
+        FindScoreManager();
         FindSpawners();
         FindPlayer();
     }
@@ -41,6 +45,12 @@ public class LevelManager : Singleton<LevelManager>
         {
             //Debug.Log("Level Complete");
         }
+    }
+
+    public void FindScoreManager()
+    {
+        var scoreManager = FindObjectOfType<ScoreManager>();
+        scoreManager.OnPlayerDeath += OnGameOver;
     }
 
     public void FindPlayer()
@@ -76,5 +86,9 @@ public class LevelManager : Singleton<LevelManager>
         enemiesShot++;
     }
 
+    public void OnGameOver()
+    {
+        gameOverText.gameObject.SetActive(true);
+    }    
 
 }

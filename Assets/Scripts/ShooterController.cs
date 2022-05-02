@@ -41,6 +41,7 @@ public class ShooterController : MonoBehaviour
     public GameObject stateDrivenCam;
     public GameObject deathCam;
 
+
     [Header("Targets")]
     public List<Transform> targets = new List<Transform>();
 
@@ -69,6 +70,7 @@ public class ShooterController : MonoBehaviour
     //public Action OnPlayerAttack = () => {};
     //public Action OnZombieLeave = () => { };
     private ScoreManager scoreManagerScript;
+
 
 
     void Start()
@@ -118,9 +120,11 @@ public class ShooterController : MonoBehaviour
 
         anim.SetFloat("speed", input.Speed);
 
+
+        //issue for lsot weapon
         if (!aiming && zombieAttack == false && lostWeapon == false)
         {
-            WeaponPosition(); 
+            //WeaponPosition(); 
         }
 
         if (Input.GetKeyDown(KeyCode.R))
@@ -388,21 +392,30 @@ public class ShooterController : MonoBehaviour
 
     public void OnEnemyAttack()
     {
+        
         ToggleControls(true);
         AttackAnimation();
-        LoseGun();    
-    }
 
-    private void LoseGun()
-    {
         if(lostWeapon == false)
         {
-            
-            lostWeapon = true;
-            gun.GetComponent<Rigidbody>().isKinematic = false;            
-            gun.transform.parent = null;
-            //TODO once you un paret the object it goes back to 0,0,0           
+            GameObject gunPosition = new GameObject("Gun Position");
+            gunPosition.transform.position = transform.position;
+            LoseGun(gunPosition);
         }
+        
+     
+    }
+
+    private void LoseGun(GameObject gunPos)
+    {
+        
+        lostWeapon = true;
+        gun.SetParent(null);
+        gun.SetParent(gunPos.transform);
+        gun.GetComponent<Rigidbody>().isKinematic = false;
+
+        //TODO once you un paret the object it goes back to 0,0,0           
+        
     }
     private void FoundGun()
     {
@@ -448,7 +461,6 @@ public class ShooterController : MonoBehaviour
 
     private void OnPlayerDeath()
     {
-
         /*
          * with there was better way to include death cam in state driven camera, but am 
          * deactivated the animator when ragdoll is called.
@@ -457,8 +469,9 @@ public class ShooterController : MonoBehaviour
         deathCam.gameObject.SetActive(true);
         stateDrivenCam.gameObject.SetActive(false);
         anim.enabled = false;
+        input.enabled = false;       
+        reticle.color = Color.clear;
         GetComponent<CharacterController>().enabled = false;
-
 
     }
 }

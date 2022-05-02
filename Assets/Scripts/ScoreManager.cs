@@ -38,7 +38,8 @@ public class ScoreManager : Singleton<ScoreManager>
     private Vignette vignette;
 
     [Header("Events")]
-    public Action OnPlayerDeath = () => { }; 
+    public Action OnPlayerDeath = () => { };
+
     private ShooterController _player;
     private ShooterController Player
     {
