@@ -40,7 +40,7 @@ public class EnemyController : MonoBehaviour
     public Action OnEnemyAttackPlayer = () => {};
 
     public EnemyState enemyState;
-    public enum EnemyState { running, walking, attacking };
+    public enum EnemyState { running, walking, attacking, gameOver};
 
     void Start()
     {
@@ -90,7 +90,8 @@ public class EnemyController : MonoBehaviour
 
         var enemyWalkingDistance = 3;
 
-        //TODO ask sunny: how to set to local variable "EnemyState state" and then pass to method        
+        //TODO ask sunny: how to set to local variable "EnemyState state" and then pass to method
+        //TODO ask sunny: how to implement game over static variable implementation ok? 
 
         if (enemy.remainingDistance > enemyWalkingDistance)
         {
@@ -112,14 +113,13 @@ public class EnemyController : MonoBehaviour
                 }
             }
         }
+        
+        if (LevelManager.instance.gameOver)
+        {
+            enemyState = EnemyState.gameOver;
+        }
 
         AdjustEnemyBehavior(enemyState);
-
-    }
-
-    private void ProixmityCheck()
-    {
-        var proximity = shooter.transform.position - enemy.transform.position;
 
     }
 
@@ -136,6 +136,9 @@ public class EnemyController : MonoBehaviour
                 break;
             case EnemyState.walking:
                 WalkToPlayer();
+                break;
+            case EnemyState.gameOver:
+                GameOver();
                 break;
             default:
                 Console.Write("No action");
@@ -156,19 +159,12 @@ public class EnemyController : MonoBehaviour
 
         Collider[] hitPlayerRb = Physics.OverlapSphere(attackPoint.position, attackRange, playerLayers);
 
-        //if(playerHit == r)
         if(playerHit == true && hitPlayerRb.Length > 0)
         {
             OnEnemyAttackPlayer();
-
             playerHit = false;
-            foreach (var collider in hitPlayerRb)
-            {
-                //Debug.Log(collider);
-            }
         }
 
-        //after player hits reset position;
         if (hitPlayerRb.Length == 0)
         {
 
@@ -203,22 +199,6 @@ public class EnemyController : MonoBehaviour
         }
         enemy.speed = 1f;
     }
-
-   
-
-    private void StopAttack()
-    {
-        //Debug.Log("stop attack is called");
-        anim.SetBool("attack", false);
-
-
-        if (attacking == true)
-        {
-            attacking = false;
-        }
-        
-    }
-
   
 
     public void Ragdoll(bool state, Transform point)
@@ -236,6 +216,13 @@ public class EnemyController : MonoBehaviour
             shot = true;
             OnEnemyShot();            
         }
+    }
+
+    public void GameOver()
+    {
+        anim.SetTrigger("GameOver");
+        enemy.isStopped = true;
+        enemy.ResetPath();
     }
 
 }

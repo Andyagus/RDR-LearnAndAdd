@@ -446,8 +446,11 @@ public class ShooterController : MonoBehaviour
 
     private void OnPlayerDeath()
     {
-        anim.enabled = false;
-        GetComponent<CharacterController>().enabled = false;
+
+        Debug.Log("OnPlayerDeath Called");
+        anim.SetBool("isDead", true);
+        //anim.enabled = false;
+        //GetComponent<CharacterController>().enabled = false;
 
     }
 }

@@ -15,9 +15,9 @@ public class ScoreManager : Singleton<ScoreManager>
     [Header("Player Health/Score")]
     public TextMeshProUGUI scoreText;
     public TextMeshProUGUI multiplierText;
-    private int maxHealth = 100;
+    private int maxHealth = 10;
     public float health;
-    float healthDecrement = 2;
+    float attackDamage = 2;
     public int playerScore;
     public int multiplier = 1;
 
@@ -74,6 +74,7 @@ public class ScoreManager : Singleton<ScoreManager>
 
     private void Update()
     {
+
         //TODO rework this ugly in update method
         var playerAiming = Player.aiming;
 
@@ -166,7 +167,7 @@ public class ScoreManager : Singleton<ScoreManager>
         HealthVignetteColor();
 
 
-        var decrement = state ? healthDecrement : -healthDecrement;
+        float decrement = state ? attackDamage : -attackDamage;
 
         vignette.intensity.value +=  decrement / 10;
     }
@@ -211,11 +212,9 @@ public class ScoreManager : Singleton<ScoreManager>
 
     public void DecreaseHealth()
     {
-        if (health > 0)
-        {
-            health -= healthDecrement;
-        }
-        else if (health <= 0)
+        health -= attackDamage;
+
+        if (health <= 0)
         {
             OnPlayerDeath();
             LevelManager.instance.gameOver = true;
@@ -254,8 +253,8 @@ public class ScoreManager : Singleton<ScoreManager>
             }
 
             yield return new WaitForSeconds(1);
-            health+=healthDecrement;
-            vignette.intensity.value -= 0.1f;
+            health+=attackDamage;
+            IncreaseVignette(false);
         }
 
     }
