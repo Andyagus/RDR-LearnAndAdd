@@ -38,6 +38,8 @@ public class ShooterController : MonoBehaviour
     public float aimTime;
     private float originalFov;
     private float zoomFov = 20;
+    public GameObject stateDrivenCam;
+    public GameObject deathCam;
 
     [Header("Targets")]
     public List<Transform> targets = new List<Transform>();
@@ -447,10 +449,16 @@ public class ShooterController : MonoBehaviour
     private void OnPlayerDeath()
     {
 
-        Debug.Log("OnPlayerDeath Called");
-        anim.SetBool("isDead", true);
-        //anim.enabled = false;
-        //GetComponent<CharacterController>().enabled = false;
+        /*
+         * with there was better way to include death cam in state driven camera, but am 
+         * deactivated the animator when ragdoll is called.
+         * anim.SetTrigger("onDeath");
+        */
+        deathCam.gameObject.SetActive(true);
+        stateDrivenCam.gameObject.SetActive(false);
+        anim.enabled = false;
+        GetComponent<CharacterController>().enabled = false;
+
 
     }
 }
