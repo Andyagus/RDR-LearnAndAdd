@@ -54,7 +54,7 @@ public class ShooterController : MonoBehaviour
     [Space]
 
     [Header("Gun")]
-    public Transform gun;
+    public GameObject gun;
     private Vector3 gunIdlePosition;
     private Vector3 gunIdleRotation;
     private Vector3 gunAimPosition = new Vector3(0.2401146f, .006083928f, -0.1040046f);
@@ -93,8 +93,8 @@ public class ShooterController : MonoBehaviour
         colorGrading = postProfile.GetSetting<ColorGrading>();
         originalVignetteColor = postProfile.GetSetting<Vignette>().color.value;
 
-        gunIdlePosition = gun.localPosition;
-        gunIdleRotation = gun.localEulerAngles;
+        gunIdlePosition = gun.transform.localPosition;
+        gunIdleRotation = gun.transform.localEulerAngles;
 
         
 
@@ -110,7 +110,11 @@ public class ShooterController : MonoBehaviour
     
     void Update()
     {
-        Debug.Log("lost weapon: " + lostWeapon);
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            Debug.Log("CLICKED");
+
+        }
         if (aiming)
         {
             PositionXIndicator();
@@ -129,8 +133,9 @@ public class ShooterController : MonoBehaviour
         //TODO issue for lost weapon
         if (!aiming && zombieAttack == false && lostWeapon == false)
         {
-            Debug.Log("Calling weapon Position");
+            Debug.Log("Weapon Position Called");
             WeaponPosition();
+
         }
 
         if (Input.GetKeyDown(KeyCode.R))
@@ -240,8 +245,8 @@ public class ShooterController : MonoBehaviour
         bool state = input.Speed > 0;
         var pos = state ? gunAimPosition : gunIdlePosition;
         var rot = state ? gunAimRotation : gunAimRotation;
-        gun.DOLocalMove(pos, .3f);
-        gun.DOLocalRotate(rot, .3f);
+        gun.transform.DOLocalMove(pos, .3f);
+        gun.transform.DOLocalRotate(rot, .3f);
     }
 
     private void FixedUpdate()
@@ -314,9 +319,9 @@ public class ShooterController : MonoBehaviour
         var pos = state ? gunAimPosition : gunIdlePosition;
         var rot = state ? gunAimRotation : gunIdleRotation;
 
-        gun.DOComplete();
-        gun.DOLocalMove(pos, 0.1f);
-        gun.DOLocalRotate(rot, 0.1f);
+        gun.transform.DOComplete();
+        gun.transform.DOLocalMove(pos, 0.1f);
+        gun.transform.DOLocalRotate(rot, 0.1f);
 
         //post effects
         float originalTimeScale = state ? 1 : 0.7f;
@@ -409,14 +414,37 @@ public class ShooterController : MonoBehaviour
     }
 
     private void LoseGun()
-    {        
+    {
         lostWeapon = true;
-        gunParent.transform.position = transform.position;
+        gun.transform.parent = gunParent.transform;
+        gun.GetComponent<Rigidbody>().isKinematic = false;
+        gunParent.transform.position = gun.transform.position;
         gunParent.GetComponent<Rigidbody>().isKinematic = false;
-        gunParent.GetComponent<Rigidbody>().AddForce(-transform.forward * 10, ForceMode.Impulse);
-        //gunParent = new GameObject("Gun Parent");
-        //gun.SetParent(gunParent.transform, true);
+        gunParent.GetComponent<Rigidbody>().AddForce(Vector3.forward * 10, ForceMode.Impulse);
+
+
+        //var gunRb = gun.GetComponent<Rigidbody>().isKinematic = false;
+        //Debug.Log("LOSE GUN CALLED");
+        //var shooterPosition = gameObject.transform.position;
+        //gun.transform.parent = null;
+
+        //Debug.Log(gun);
+
+        //Debug.Log(gun.transform.position);
+        //gun.transform.TransformPoint(Vector3.forward* 100);
+
+        //Vector3 tempPosition = transform.position;
         //var gunRb = gun.GetComponent<Rigidbody>();
+        //gunRb.isKinematic = false;
+
+        //gun.transform.position = new Vector3(tempPosition.x, tempPosition.y, tempPosition.z);
+
+
+
+
+        //gunRb.AddForce(-transform.forward * 100, ForceMode.Impulse);
+
+
         //Rigidbody gunParentRb = gunParent.AddComponent<Rigidbody>() as Rigidbody;
         //Debug.DrawRay(gunParentRb.transform.position, -transform.forward * 100, Color.red);
         //gunParentRb.AddForce(-transform.forward * 10, ForceMode.Impulse);
