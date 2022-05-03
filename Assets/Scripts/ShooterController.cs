@@ -55,7 +55,7 @@ public class ShooterController : MonoBehaviour
 
     [Header("Gun")]
     [SerializeField] private LayerMask platformLayerMask;
-    [SerializeField] private LayerMask ignoreGunLayerMask;
+    [SerializeField] private LayerMask enemyLayerMask;
     public GameObject gun;
     private GameObject gunParent;
     private Vector3 gunIdlePosition;
@@ -181,43 +181,34 @@ public class ShooterController : MonoBehaviour
         input.LookAt(mainCamera.transform.forward + (mainCamera.transform.right * .1f));
 
         RaycastHit hit;
-        Physics.Raycast(mainCamera.transform.position, mainCamera.transform.forward, out hit, maxDistance: Mathf.Infinity);
-
+        Physics.Raycast(mainCamera.transform.position, mainCamera.transform.forward, out hit, Mathf.Infinity, layerMask: enemyLayerMask);
+        Debug.DrawRay(mainCamera.transform.position, mainCamera.transform.forward, Color.red);
+        //Debug.Log(Physics.Raycast(mainCamera.transform.position, mainCamera.transform.forward, out hit, maxDistance: 1f, layerMask: enemyLayerMask));
 
         reticle.color = Color.white;
-        
 
         if (hit.transform == null)
         {
-            Debug.Log("Hit transform is null");
             return;
-        }
-
-        if (!hit.transform.CompareTag("gun"))
-        {
-            Debug.Log(hit.transform.gameObject);
         }
 
         if (!hit.transform.CompareTag("Enemy"))
         {
-            Debug.Log("hit transform is not enemy");
             return;
         }
 
-        Debug.Log("hit transform is enemy");
+        reticle.color = Color.red;
 
-        //reticle.color = Color.red;
+        if (!targets.Contains(hit.transform) && !hit.transform.GetComponentInParent<EnemyController>().aimed)
+        {
+            hit.transform.GetComponentInParent<EnemyController>().aimed = true;
+            targets.Add(hit.transform);
+            Vector3 worldToScreenPointPos = Camera.main.WorldToScreenPoint(hit.transform.position);
 
-        //if (!targets.Contains(hit.transform) && !hit.transform.GetComponentInParent<EnemyController>().aimed)
-        //{
-        //    hit.transform.GetComponentInParent<EnemyController>().aimed = true;
-        //    targets.Add(hit.transform);
-        //    Vector3 worldToScreenPointPos = Camera.main.WorldToScreenPoint(hit.transform.position);
-
-        //    var indicator = Instantiate(xIndicatorPrefab, canvas);
-        //    indicator.transform.position = worldToScreenPointPos;
-        //    indicatorList.Add(indicator.transform);
-        //}
+            var indicator = Instantiate(xIndicatorPrefab, canvas);
+            indicator.transform.position = worldToScreenPointPos;
+            indicatorList.Add(indicator.transform);
+        }
     }
 
     private void ShotSequence()
