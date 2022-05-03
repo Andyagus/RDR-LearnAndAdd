@@ -59,7 +59,6 @@ public class ShooterController : MonoBehaviour
     private Vector3 gunIdleRotation;
     private Vector3 gunAimPosition = new Vector3(0.2401146f, .006083928f, -0.1040046f);
     private Vector3 gunAimRotation = new Vector3(-6.622f, 97.47501f, 94.774f);
-    public GameObject gunParent;
     public int hitForceAmt;
     public bool gunOnGround;
 
@@ -110,6 +109,8 @@ public class ShooterController : MonoBehaviour
     
     void Update()
     {
+        CheckGunDistance();
+
         if (Input.GetKeyDown(KeyCode.Space))
         {
             Debug.Log("CLICKED");
@@ -133,9 +134,7 @@ public class ShooterController : MonoBehaviour
         //TODO issue for lost weapon
         if (!aiming && zombieAttack == false && lostWeapon == false)
         {
-            Debug.Log("Weapon Position Called");
             WeaponPosition();
-
         }
 
         if (Input.GetKeyDown(KeyCode.R))
@@ -159,6 +158,22 @@ public class ShooterController : MonoBehaviour
         }
 
 
+    }
+
+    private void CheckGunDistance()
+    {
+        RaycastHit hit;
+        if(Physics.Raycast(gun.transform.position, -Vector3.up, out hit))
+        {
+            if (hit.collider.gameObject.CompareTag("plane"))
+            {
+
+                if (hit.distance <= 0.2f)
+                {
+                    gunOnGround = true;
+                }
+            }
+        }
     }
 
     private void PositionXIndicator()
@@ -416,6 +431,9 @@ public class ShooterController : MonoBehaviour
     private void LoseGun()
     {
         lostWeapon = true;
+        GameObject gunParent = new GameObject("gunParent");
+        Rigidbody gunParentRb = gunParent.AddComponent<Rigidbody>() as Rigidbody;
+        gunParentRb.isKinematic = true;
         gun.transform.parent = gunParent.transform;
         gun.GetComponent<Rigidbody>().isKinematic = false;
         gunParent.transform.position = gun.transform.position;
@@ -423,32 +441,7 @@ public class ShooterController : MonoBehaviour
         gunParent.GetComponent<Rigidbody>().AddForce(Vector3.forward * 10, ForceMode.Impulse);
 
 
-        //var gunRb = gun.GetComponent<Rigidbody>().isKinematic = false;
-        //Debug.Log("LOSE GUN CALLED");
-        //var shooterPosition = gameObject.transform.position;
-        //gun.transform.parent = null;
-
-        //Debug.Log(gun);
-
-        //Debug.Log(gun.transform.position);
-        //gun.transform.TransformPoint(Vector3.forward* 100);
-
-        //Vector3 tempPosition = transform.position;
-        //var gunRb = gun.GetComponent<Rigidbody>();
-        //gunRb.isKinematic = false;
-
-        //gun.transform.position = new Vector3(tempPosition.x, tempPosition.y, tempPosition.z);
-
-
-
-
-        //gunRb.AddForce(-transform.forward * 100, ForceMode.Impulse);
-
-
-        //Rigidbody gunParentRb = gunParent.AddComponent<Rigidbody>() as Rigidbody;
-        //Debug.DrawRay(gunParentRb.transform.position, -transform.forward * 100, Color.red);
-        //gunParentRb.AddForce(-transform.forward * 10, ForceMode.Impulse);
-        //gunRb.isKinematic = false;
+        
 
     }
 
@@ -459,8 +452,9 @@ public class ShooterController : MonoBehaviour
         gun.GetComponent<Rigidbody>().isKinematic = true;
         zombieAttack = false;
         gun.transform.parent = rightHand;
-        Destroy(gunParent);
+        //Destroy(gunParent);
         anim.SetTrigger("gotRifle");
+        //isGrounded(gun);
     }
 
     private void AttackAnimation()
@@ -483,9 +477,8 @@ public class ShooterController : MonoBehaviour
 
     private void OnControllerColliderHit(ControllerColliderHit hit)
     {
-        if (hit.collider.CompareTag("gun"))
+        if (hit.collider.CompareTag("gun") && gunOnGround == true)
         {
-            Debug.Log("On Gun found");
             FoundGun();
         }
     }
@@ -511,4 +504,12 @@ public class ShooterController : MonoBehaviour
         GetComponent<CharacterController>().enabled = false;
 
     }
+
+    //private bool isGrounded(GameObject obj)
+    //{
+
+    //    Debug.Log(obj.gameObject.GetComponent<Collider>().bounds.extents.y);
+    //    return true;
+    //}
+    
 }
