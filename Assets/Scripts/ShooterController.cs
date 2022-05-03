@@ -54,7 +54,9 @@ public class ShooterController : MonoBehaviour
     [Space]
 
     [Header("Gun")]
+    [SerializeField] private LayerMask platformLayerMask;
     public GameObject gun;
+    private GameObject gunParent;
     private Vector3 gunIdlePosition;
     private Vector3 gunIdleRotation;
     private Vector3 gunAimPosition = new Vector3(0.2401146f, .006083928f, -0.1040046f);
@@ -162,18 +164,24 @@ public class ShooterController : MonoBehaviour
 
     private void CheckGunDistance()
     {
-        RaycastHit hit;
-        if(Physics.Raycast(gun.transform.position, -Vector3.up, out hit))
-        {
-            if (hit.collider.gameObject.CompareTag("plane"))
-            {
+        //RaycastHit hit;
+        //if(Physics.Raycast(gun.transform.position, -Vector3.up, out hit))
+        //{
+        //    if (hit.collider.gameObject.CompareTag("plane"))
+        //    {
 
-                if (hit.distance <= 0.2f)
-                {
-                    gunOnGround = true;
-                }
-            }
-        }
+        //        if (hit.distance <= 0.4f)
+        //        {
+        //            gunOnGround = true;
+        //        }
+        //        else
+        //        {
+        //            gunOnGround = false;
+        //        }
+        //    }
+        //}
+
+        isGrounded();
     }
 
     private void PositionXIndicator()
@@ -272,10 +280,6 @@ public class ShooterController : MonoBehaviour
         {
             colorGrading.colorFilter.value = Color.Lerp(colorGrading.colorFilter.value, currentColor, aimTime);
         }
-        //else if (zombieAttack)
-        //{
-        //    colorGrading.colorFilter.value = Color.red;
-        //}
 
     }
 
@@ -431,7 +435,7 @@ public class ShooterController : MonoBehaviour
     private void LoseGun()
     {
         lostWeapon = true;
-        GameObject gunParent = new GameObject("gunParent");
+        gunParent = new GameObject("gunParent");
         Rigidbody gunParentRb = gunParent.AddComponent<Rigidbody>() as Rigidbody;
         gunParentRb.isKinematic = true;
         gun.transform.parent = gunParent.transform;
@@ -448,7 +452,6 @@ public class ShooterController : MonoBehaviour
     private void FoundGun()
     {
         lostWeapon = false;
-        //gunOnGround = false;
         gun.GetComponent<Rigidbody>().isKinematic = true;
         zombieAttack = false;
         gun.transform.parent = rightHand;
@@ -505,11 +508,29 @@ public class ShooterController : MonoBehaviour
 
     }
 
-    //private bool isGrounded(GameObject obj)
-    //{
+    private bool isGrounded()
+    {
+        float extraHeightPadding = 0.5f;
+        var gunCollider = gun.GetComponent<Collider>();
+        RaycastHit hit;
+        Color rayColor;
 
-    //    Debug.Log(obj.gameObject.GetComponent<Collider>().bounds.extents.y);
-    //    return true;
-    //}
-    
+        Physics.BoxCast(gunCollider.bounds.center, gunCollider.bounds.size, Vector3.down, out hit,
+            gun.transform.rotation, extraHeightPadding, platformLayerMask);
+
+        //implement box cast draw ray…
+
+        if (hit.collider)
+        {
+            Debug.Log("there is a collider");
+        }
+        else
+        {
+            Debug.Log("there isn't a collider");
+        }
+
+        return hit.collider != null;
+
+    }
+
 }

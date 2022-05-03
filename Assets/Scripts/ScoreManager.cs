@@ -174,7 +174,6 @@ public class ScoreManager : Singleton<ScoreManager>
 
     public void GameOverRedTween(Color x)
     {
-        Debug.Log("Calling Tween");
         colorGrading.colorFilter.value = x;
 
     }
