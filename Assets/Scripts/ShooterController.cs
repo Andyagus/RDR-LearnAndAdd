@@ -434,9 +434,8 @@ public class ShooterController : MonoBehaviour
         gun.GetComponent<Rigidbody>().isKinematic = true;
         zombieAttack = false;
         gun.transform.parent = rightHand;
-        //Destroy(gunParent);
+        Destroy(gunParent);
         anim.SetTrigger("gotRifle");
-        //isGrounded(gun);
     }
 
     private void AttackAnimation()
@@ -446,7 +445,6 @@ public class ShooterController : MonoBehaviour
 
     public void OnEnemyLeave()
     {
-        //Debug.Log("On Enemy Leave");
         ToggleControls(false);
     }
 
@@ -454,12 +452,10 @@ public class ShooterController : MonoBehaviour
     {
         
         zombieAttack = state;
-        //Debug.Log("Zombie Attack: " + state);
     }
 
     private void OnControllerColliderHit(ControllerColliderHit hit)
     {
-        Debug.Log(hit);
         if (GunIsGrounded() && hit.collider.CompareTag("gun"))
         {
             FoundGun();
@@ -492,7 +488,7 @@ public class ShooterController : MonoBehaviour
     {
 
         RaycastHit hit;
-        Physics.Raycast(gun.transform.position, -Vector3.up, out hit, 0.4f, platformLayerMask);        
+        Physics.Raycast(gun.transform.position, -Vector3.up, out hit, 1f, platformLayerMask);        
         return hit.collider != null;
     }
 
