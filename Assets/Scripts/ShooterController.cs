@@ -182,9 +182,7 @@ public class ShooterController : MonoBehaviour
 
         RaycastHit hit;
         Physics.Raycast(mainCamera.transform.position, mainCamera.transform.forward, out hit, Mathf.Infinity, layerMask: enemyLayerMask);
-        Debug.DrawRay(mainCamera.transform.position, mainCamera.transform.forward, Color.red);
-        //Debug.Log(Physics.Raycast(mainCamera.transform.position, mainCamera.transform.forward, out hit, maxDistance: 1f, layerMask: enemyLayerMask));
-
+        
         reticle.color = Color.white;
 
         if (hit.transform == null)
