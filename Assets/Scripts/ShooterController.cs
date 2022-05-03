@@ -111,7 +111,7 @@ public class ShooterController : MonoBehaviour
     
     void Update()
     {
-        CheckGunDistance();
+        
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
@@ -129,6 +129,7 @@ public class ShooterController : MonoBehaviour
             return;
         }
 
+        GunIsGrounded();
 
         anim.SetFloat("speed", input.Speed);
 
@@ -160,28 +161,6 @@ public class ShooterController : MonoBehaviour
         }
 
 
-    }
-
-    private void CheckGunDistance()
-    {
-        //RaycastHit hit;
-        //if(Physics.Raycast(gun.transform.position, -Vector3.up, out hit))
-        //{
-        //    if (hit.collider.gameObject.CompareTag("plane"))
-        //    {
-
-        //        if (hit.distance <= 0.4f)
-        //        {
-        //            gunOnGround = true;
-        //        }
-        //        else
-        //        {
-        //            gunOnGround = false;
-        //        }
-        //    }
-        //}
-
-        isGrounded();
     }
 
     private void PositionXIndicator()
@@ -480,7 +459,8 @@ public class ShooterController : MonoBehaviour
 
     private void OnControllerColliderHit(ControllerColliderHit hit)
     {
-        if (hit.collider.CompareTag("gun") && gunOnGround == true)
+        Debug.Log(hit);
+        if (GunIsGrounded() && hit.collider.CompareTag("gun"))
         {
             FoundGun();
         }
@@ -508,29 +488,12 @@ public class ShooterController : MonoBehaviour
 
     }
 
-    private bool isGrounded()
+    private bool GunIsGrounded()
     {
-        float extraHeightPadding = 0.5f;
-        var gunCollider = gun.GetComponent<Collider>();
+
         RaycastHit hit;
-        Color rayColor;
-
-        Physics.BoxCast(gunCollider.bounds.center, gunCollider.bounds.size, Vector3.down, out hit,
-            gun.transform.rotation, extraHeightPadding, platformLayerMask);
-
-        //implement box cast draw ray…
-
-        if (hit.collider)
-        {
-            Debug.Log("there is a collider");
-        }
-        else
-        {
-            Debug.Log("there isn't a collider");
-        }
-
+        Physics.Raycast(gun.transform.position, -Vector3.up, out hit, 0.4f, platformLayerMask);        
         return hit.collider != null;
-
     }
 
 }
