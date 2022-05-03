@@ -483,10 +483,10 @@ public class ShooterController : MonoBehaviour
 
     private void OnControllerColliderHit(ControllerColliderHit hit)
     {
-        if (hit.collider.CompareTag("gun") && gunOnGround)
+        if (hit.collider.CompareTag("gun"))
         {
             Debug.Log("On Gun found");
-            //FoundGun();
+            FoundGun();
         }
     }
 
