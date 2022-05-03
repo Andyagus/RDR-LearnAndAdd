@@ -55,6 +55,7 @@ public class ShooterController : MonoBehaviour
 
     [Header("Gun")]
     [SerializeField] private LayerMask platformLayerMask;
+    [SerializeField] private LayerMask ignoreGunLayerMask;
     public GameObject gun;
     private GameObject gunParent;
     private Vector3 gunIdlePosition;
@@ -180,33 +181,43 @@ public class ShooterController : MonoBehaviour
         input.LookAt(mainCamera.transform.forward + (mainCamera.transform.right * .1f));
 
         RaycastHit hit;
-        Physics.Raycast(mainCamera.transform.position, mainCamera.transform.forward, out hit);
+        Physics.Raycast(mainCamera.transform.position, mainCamera.transform.forward, out hit, maxDistance: Mathf.Infinity);
 
 
         reticle.color = Color.white;
+        
 
         if (hit.transform == null)
         {
+            Debug.Log("Hit transform is null");
             return;
+        }
+
+        if (!hit.transform.CompareTag("gun"))
+        {
+            Debug.Log(hit.transform.gameObject);
         }
 
         if (!hit.transform.CompareTag("Enemy"))
         {
+            Debug.Log("hit transform is not enemy");
             return;
         }
 
-        reticle.color = Color.red;
+        Debug.Log("hit transform is enemy");
 
-        if (!targets.Contains(hit.transform) && !hit.transform.GetComponentInParent<EnemyController>().aimed)
-        {
-            hit.transform.GetComponentInParent<EnemyController>().aimed = true;
-            targets.Add(hit.transform);
-            Vector3 worldToScreenPointPos = Camera.main.WorldToScreenPoint(hit.transform.position);
+        //reticle.color = Color.red;
 
-            var indicator = Instantiate(xIndicatorPrefab, canvas);
-            indicator.transform.position = worldToScreenPointPos;
-            indicatorList.Add(indicator.transform);
-        }
+        //if (!targets.Contains(hit.transform) && !hit.transform.GetComponentInParent<EnemyController>().aimed)
+        //{
+        //    hit.transform.GetComponentInParent<EnemyController>().aimed = true;
+        //    targets.Add(hit.transform);
+        //    Vector3 worldToScreenPointPos = Camera.main.WorldToScreenPoint(hit.transform.position);
+
+        //    var indicator = Instantiate(xIndicatorPrefab, canvas);
+        //    indicator.transform.position = worldToScreenPointPos;
+        //    indicatorList.Add(indicator.transform);
+        //}
     }
 
     private void ShotSequence()

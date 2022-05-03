@@ -95,7 +95,6 @@ public class EnemyController : MonoBehaviour
 
         if (enemy.remainingDistance > enemyWalkingDistance)
         {
-            Debug.Log("Enemy should be running");
             enemyState = EnemyState.running;
         }
 
