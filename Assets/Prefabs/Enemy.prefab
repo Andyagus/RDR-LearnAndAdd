@@ -1098,6 +1098,7 @@ MonoBehaviour:
   attacking: 0
   LookAtCalled: 0
   playerHit: 0
+  inRange: 0
   enemyState: 0
 --- !u!195 &1027808922
 NavMeshAgent:
@@ -1113,7 +1114,7 @@ NavMeshAgent:
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 120
-  m_StoppingDistance: 0.8
+  m_StoppingDistance: 1
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1
