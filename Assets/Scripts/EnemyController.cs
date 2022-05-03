@@ -20,7 +20,7 @@ public class EnemyController : MonoBehaviour
     public GameObject cubeObject;
     public GameObject enemyArm;
     public Transform attackPoint;
-    private float attackRange = 0.12f;
+    private float attackRange = 0.2f;
     public LayerMask playerLayers;
 
     public float distance;
@@ -95,6 +95,7 @@ public class EnemyController : MonoBehaviour
 
         if (enemy.remainingDistance > enemyWalkingDistance)
         {
+            Debug.Log("Enemy should be running");
             enemyState = EnemyState.running;
         }
 
@@ -175,7 +176,8 @@ public class EnemyController : MonoBehaviour
 
     private void WalkToPlayer()
     {
-                
+        anim.SetBool("attack", false);
+
         enemy.speed = 0.5f;
 
         if(inRange == false)
@@ -192,7 +194,9 @@ public class EnemyController : MonoBehaviour
 
     private void RunToPlayer()
     {
-        if(inRange == true)
+        anim.SetBool("attack", false);
+
+        if (inRange == true)
         {
             OnEnemyOutOfRange();
             inRange = false;
