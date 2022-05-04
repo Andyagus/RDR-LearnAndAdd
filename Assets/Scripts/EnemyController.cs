@@ -86,8 +86,6 @@ public class EnemyController : MonoBehaviour
         enemy.destination = shooter.transform.position;
         transform.LookAt(shooter.transform);
 
-        //Debug.Log(enemy.remainingDistance);
-
         var enemyWalkingDistance = 3;
 
         //TODO ask sunny: how to set to local variable "EnemyState state" and then pass to method
@@ -170,7 +168,6 @@ public class EnemyController : MonoBehaviour
 
             return;
         }
-
     }
 
     private void WalkToPlayer()

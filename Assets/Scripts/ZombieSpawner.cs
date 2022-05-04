@@ -14,23 +14,9 @@ public class ZombieSpawner : MonoBehaviour
     public Action<int> OnSpawnComplete = (int x) => {};
     public Action<EnemyController> OnEnemySpawn = (EnemyController enemy) => {};
 
-    //public - spawn frequency int
-    //spawn limit int 
-
-    private void Awake()
-    {
-    }
-
-    // Start is called before the first frame update
     void Start()
     {
         StartCoroutine(SpawnZombies());
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
     }
 
     public IEnumerator SpawnZombies()

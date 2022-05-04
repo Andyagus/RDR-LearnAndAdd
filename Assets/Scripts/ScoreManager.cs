@@ -248,6 +248,7 @@ public class ScoreManager : Singleton<ScoreManager>
         if(enemyInRange)
         {
             enemyInRange = false;
+
             if(health != maxHealth)
             {
                 StartCoroutine(RestoreHealthOverTime());

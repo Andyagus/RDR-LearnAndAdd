@@ -24,7 +24,7 @@ public class ShooterController : MonoBehaviour
     public Color deadEyeColor;
     private Color currentColor = Color.white;
     public Color originalVignetteColor;
-
+    
     [Header("Booleans")]
     public bool aiming = false;
     public bool deadEye = false;
@@ -134,8 +134,6 @@ public class ShooterController : MonoBehaviour
 
         anim.SetFloat("speed", input.Speed);
 
-
-        //TODO issue for lost weapon
         if (!aiming && zombieAttack == false && lostWeapon == false)
         {
             WeaponPosition();
@@ -422,10 +420,6 @@ public class ShooterController : MonoBehaviour
         gunParent.transform.position = gun.transform.position;
         gunParent.GetComponent<Rigidbody>().isKinematic = false;
         gunParent.GetComponent<Rigidbody>().AddForce(Vector3.forward * 10, ForceMode.Impulse);
-
-
-        
-
     }
 
     private void FoundGun()
@@ -485,8 +479,7 @@ public class ShooterController : MonoBehaviour
     }
 
     private bool GunIsGrounded()
-    {
-
+    { 
         RaycastHit hit;
         Physics.Raycast(gun.transform.position, -Vector3.up, out hit, 1f, platformLayerMask);        
         return hit.collider != null;
