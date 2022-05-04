@@ -8,8 +8,6 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using UnityEngine.Rendering.PostProcessing;
 
-//andy script`
-
 public class ShooterController : MonoBehaviour
 {
     private MovementInput input;

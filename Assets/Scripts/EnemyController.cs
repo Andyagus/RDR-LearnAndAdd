@@ -32,12 +32,13 @@ public class EnemyController : MonoBehaviour
     public bool LookAtCalled = false;
     public bool playerHit = false;
     public bool inRange;
+    public int attackStrength = 2;
 
     [Header("Events")]
     public Action OnEnemyShot = () => {};   
     public Action OnEnemyOutOfRange = () => {};
     public Action OnEnemyInRange = () => { };
-    public Action OnEnemyAttackPlayer = () => {};
+    public Action<int> OnEnemyAttack = (int attackStrength) => {};
 
     public EnemyState enemyState;
     public enum EnemyState { running, walking, attacking, gameOver};
@@ -159,7 +160,7 @@ public class EnemyController : MonoBehaviour
 
         if(playerHit == true && hitPlayerRb.Length > 0)
         {
-            OnEnemyAttackPlayer();
+            OnEnemyAttack(attackStrength);
             playerHit = false;
         }
 

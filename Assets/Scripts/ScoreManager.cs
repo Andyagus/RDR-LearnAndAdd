@@ -9,36 +9,21 @@ using DG.Tweening;
 public class ScoreManager : Singleton<ScoreManager>
 {
 
-    [Header("Restore Health")]
-    public bool enemyInRange = false;
-
     [Header("Player Health/Score")]
     public TextMeshProUGUI scoreText;
     public TextMeshProUGUI multiplierText;
-    private int maxHealth = 10;
-    public float health;
-    float attackDamage = 2;
     public int playerScore;
     public int multiplier = 1;
 
-    [Header("Cam Settings for vignette and bloom", order = 0)]
-    private Bloom bloom;
+    [Header("Camera and Post Processing", order = 0)]
     private Camera mainCamera;
-    public Color postVignetteColor;
+    private Bloom bloom;
     private Color originalBloomColor;
     private PostProcessVolume ppVolume;
     private PostProcessProfile ppProfile;
     public bool playerAimed;
     public bool canStartBloom = true;
     private float originalBloomIntensity;
-
-    [Header("Player Health Color Grading", order = 2)]
-    public PostProcessProfile originalProfile;    
-    private ColorGrading colorGrading;
-    private Vignette vignette;
-
-    [Header("Events")]
-    public Action OnPlayerDeath = () => { };
 
     private ShooterController _player;
     private ShooterController Player
@@ -58,19 +43,13 @@ public class ScoreManager : Singleton<ScoreManager>
     private void Start()
     {
         FindEnemies();
-
-        health = maxHealth;
-
-        multiplier = 1;
-
-        //initialize camera settings
         mainCamera = Camera.main;
+        multiplier = 1;
         ppVolume = mainCamera.GetComponent<PostProcessVolume>();
         ppProfile = ppVolume.profile;
         bloom = ppProfile.GetSetting<Bloom>();
         originalBloomColor = bloom.color.value;
         originalBloomIntensity = bloom.intensity.value;
-        vignette = ppProfile.GetSetting<Vignette>();
     }
 
     private void Update()
@@ -115,9 +94,8 @@ public class ScoreManager : Singleton<ScoreManager>
     public void OnEnemySpawn(EnemyController enemy)
     {        
         enemy.OnEnemyShot += OnEnemyShot;
-        enemy.OnEnemyInRange += OnEnemyInRange;
-        enemy.OnEnemyOutOfRange += OnEnemyOutOfRange;
-        enemy.OnEnemyAttackPlayer += OnEnemyAttackPlayer;
+        //need enemy attack for multiplier 
+        enemy.OnEnemyAttack += OnEnemyAttackPlayer;
     }
 
 
@@ -154,51 +132,10 @@ public class ScoreManager : Singleton<ScoreManager>
         if (LevelManager.instance.gameOver != true)
         {
             ResetMultiplier();
-            DecreaseHealth();
-            IncreaseVignette(true);
         }
-
-        if (LevelManager.instance.gameOver)
-        {
-            GameOverRedFilter();
-        }
-
-
     }
 
-    public void GameOverRedFilter()
-    {
-        colorGrading = ppProfile.GetSetting<ColorGrading>();
-        DOVirtual.Color(colorGrading.colorFilter.value, Color.red, 2f, GameOverRedTween);
-    }
 
-    public void GameOverRedTween(Color x)
-    {
-        colorGrading.colorFilter.value = x;
-
-    }
-
-    //vignette tween
-    public void IncreaseVignette(bool state)
-    {
-        HealthVignetteColor();
-
-
-        float decrement = state ? attackDamage : -attackDamage;
-
-        vignette.intensity.value +=  decrement / 10;
-    }
-
-    private void HealthVignetteColor()
-    {
-        DOVirtual.Color(vignette.color.value, postVignetteColor, 0.2f, FadeVignetteColor);
-    }
-
-    public void FadeVignetteColor(Color x)
-    {
-        vignette.color.value = x;
-    }
-    //
 
     private void ResetMultiplier()
     {
@@ -227,54 +164,6 @@ public class ScoreManager : Singleton<ScoreManager>
         bloom.threshold.value = thresholdValue;
     }
 
-    public void DecreaseHealth()
-    {
-        health -= attackDamage;
 
-        if (health <= 0)
-        {
-            OnPlayerDeath();
-            LevelManager.instance.gameOver = true;
-        }
-    }
-
-    public void OnEnemyInRange()
-    {
-        enemyInRange = true;
-    }
-
-    private void OnEnemyOutOfRange()
-    {
-        if(enemyInRange)
-        {
-            enemyInRange = false;
-
-            if(health != maxHealth)
-            {
-                StartCoroutine(RestoreHealthOverTime());
-            }
-        }
-    }
-
-    IEnumerator RestoreHealthOverTime()
-    {
-        while (health < maxHealth)
-        {
-            if (enemyInRange == true)
-            {
-                yield break;
-            }
-
-            if(health == 10)
-            {
-                yield break;
-            }
-
-            yield return new WaitForSeconds(1);
-            health+=attackDamage;
-            IncreaseVignette(false);
-        }
-
-    }
 
 }
