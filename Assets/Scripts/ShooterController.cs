@@ -70,8 +70,6 @@ public class ShooterController : MonoBehaviour
     public Transform rightHand;
 
     [Header("Events")]
-    //public Action OnPlayerAttack = () => {};
-    //public Action OnZombieLeave = () => { };
     private ScoreManager scoreManagerScript;
 
 
@@ -96,14 +94,11 @@ public class ShooterController : MonoBehaviour
         gunIdlePosition = gun.transform.localPosition;
         gunIdleRotation = gun.transform.localEulerAngles;
 
-        
-
         Cursor.visible = false;
         HorizontalOffset(originalOffsetAmount);
 
         enemy = GameObject.FindObjectOfType<EnemyController>();
         FindEnemiesInScene();
-        FindScoreManager();
 
     }
 
@@ -371,6 +366,7 @@ public class ShooterController : MonoBehaviour
     private void VignetteAmount(float x)
     {
         var vignette = postProfile.GetSetting<Vignette>();
+        //setting back the vignette color
         vignette.color.value = originalVignetteColor;
         vignette.intensity.value = x;
     }
@@ -391,8 +387,8 @@ public class ShooterController : MonoBehaviour
     public void OnEnemySpawn(EnemyController enemy)
     {
         //Debug.Log("Shooter controller");
-        enemy.OnEnemyAttackPlayer += OnEnemyAttack;
-        enemy.OnEnemyOutOfRange += OnEnemyLeave;
+        //enemy.OnEnemyAttack += OnEnemyAttack;
+        //enemy.OnEnemyOutOfRange += OnEnemyLeave;
     }
 
     public void OnEnemyAttack()
@@ -454,11 +450,6 @@ public class ShooterController : MonoBehaviour
         }
     }
 
-    private void FindScoreManager()
-    {
-        scoreManagerScript = GameObject.FindObjectOfType<ScoreManager>();
-        scoreManagerScript.OnPlayerDeath += OnPlayerDeath;
-    }
 
     private void OnPlayerDeath()
     {

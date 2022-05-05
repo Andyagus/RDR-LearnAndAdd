@@ -2,7 +2,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.Rendering.PostProcessing;
+using DG.Tweening;
 
 public class ShooterHealth : MonoBehaviour
 {
@@ -19,6 +21,13 @@ public class ShooterHealth : MonoBehaviour
     private Vignette vignette;
     private ColorGrading colorGrading;
     public Color postVignetteColor;
+    private float tweenFadeTime;
+
+    [Header("Health Bar")]
+    public Slider healthSlider; 
+
+    [Header("Information from events")]
+    private int attackStrength;
 
     public Action OnPlayerDeath = () => { };
 
@@ -27,9 +36,11 @@ public class ShooterHealth : MonoBehaviour
         FindEnemies();
         mainCamera = Camera.main;
         currentHealth = maxHealth;
+        healthSlider.value = maxHealth;
         postProcessVolume = mainCamera.GetComponent<PostProcessVolume>();
         postProcessProfile = postProcessVolume.profile;
         vignette = postProcessProfile.GetSetting<Vignette>();
+        Debug.Log("slider value: " + healthSlider.value);
     }
 
     private void FindEnemies()
@@ -61,62 +72,49 @@ public class ShooterHealth : MonoBehaviour
 
     private void OnEnemyAttack(int attackStrength)
     {
-        DecreaseHealth(attackStrength);
-        IncreaseVignette(true);
+        this.attackStrength = attackStrength;
+        DecreaseHealth();
+        AdjustVignetteAmount(true);
     }
 
     private void OnEnemyInRange()
     {
-
+        //for restore health enemy list
     }
 
     private void OnEnemyOutOfRange()
     {
-
+        //for restore health enemy list
     }
 
-    public void DecreaseHealth(int attackStrength)
+    public void DecreaseHealth()
     {
         currentHealth -= attackStrength;
-
+        healthSlider.value -= attackStrength;
         if (currentHealth <= 0)
         {
             OnPlayerDeath();
         }
     }
+  
+    //handle vignette
 
-
-    //All the vignette stuff
-
-    public void IncreaseVignette(bool state)
+    public void AdjustVignetteAmount(bool state)
     {
-        HealthVignetteColor();
-        float decrement = state ? attackDamage : -attackDamage;
-        vignette.intensity.value += decrement / 10;
+        ChangeVignetteColor();
+        float attackStrength = (float)this.attackStrength/10;         
+        attackStrength = state ? attackStrength : -attackStrength;
+        vignette.intensity.value += attackStrength;
     }
 
-    private void HealthVignetteColor()
+    private void ChangeVignetteColor()
     {
-        DOVirtual.Color(vignette.color.value, postVignetteColor, 0.2f, FadeVignetteColor);
+        DOVirtual.Color(vignette.color.value, Color.red, tweenFadeTime, ChangeVignetteColorTween);
     }
 
-    public void FadeVignetteColor(Color x)
+    private void ChangeVignetteColorTween(Color color)
     {
-        vignette.color.value = x;
-    }
-
-    //for game over -- should activate on player death
-
-    public void GameOverRedFilter()
-    {
-        colorGrading = ppProfile.GetSetting<ColorGrading>();
-        DOVirtual.Color(colorGrading.colorFilter.value, Color.red, 2f, GameOverRedTween);
-    }
-
-    public void GameOverRedTween(Color x)
-    {
-        colorGrading.colorFilter.value = x;
-
+        vignette.color.value = color;
     }
 
 }

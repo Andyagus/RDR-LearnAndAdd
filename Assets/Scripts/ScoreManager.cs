@@ -95,7 +95,7 @@ public class ScoreManager : Singleton<ScoreManager>
     {        
         enemy.OnEnemyShot += OnEnemyShot;
         //need enemy attack for multiplier 
-        enemy.OnEnemyAttack += OnEnemyAttackPlayer;
+        enemy.OnEnemyAttack += OnEnemyAttack;
     }
 
 
@@ -127,7 +127,7 @@ public class ScoreManager : Singleton<ScoreManager>
     }
 
 
-    private void OnEnemyAttackPlayer()
+    private void OnEnemyAttack(int attackStrength)
     {
         if (LevelManager.instance.gameOver != true)
         {

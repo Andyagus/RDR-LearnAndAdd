@@ -7,7 +7,7 @@ using TMPro;
 public class LevelManager : Singleton<LevelManager>
 {
     public int spawnCount = 0;
-    public ShooterController player;
+    public ShooterHealth playerHealth;
     public ZombieSpawner[] zombieSpawners;
     public EnemyController[] enemies;
     public int enemiesShot;
@@ -20,7 +20,6 @@ public class LevelManager : Singleton<LevelManager>
 
     private void Start()
     {
-        FindScoreManager();
         FindSpawners();
         FindPlayer();
     }
@@ -47,15 +46,9 @@ public class LevelManager : Singleton<LevelManager>
         }
     }
 
-    public void FindScoreManager()
-    {
-        var scoreManager = FindObjectOfType<ScoreManager>();
-        scoreManager.OnPlayerDeath += OnGameOver;
-    }
-
     public void FindPlayer()
     {
-        player = FindObjectOfType<ShooterController>();
+        playerHealth = FindObjectOfType<ShooterHealth>();
     }
 
     public void FindSpawners()
@@ -86,9 +79,20 @@ public class LevelManager : Singleton<LevelManager>
         enemiesShot++;
     }
 
-    public void OnGameOver()
+    public void OnPlayerDeath()
     {
+        gameOver = true;
         gameOverText.gameObject.SetActive(true);
-    }    
+    }
+
+    public void GameOverRedFilter()
+    {
+
+    }
+
+    public void GameOverRedTween(Color x)
+    {
+
+    }
 
 }
