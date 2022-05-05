@@ -36,8 +36,8 @@ public class EnemyController : MonoBehaviour
 
     [Header("Events")]
     public Action OnEnemyShot = () => {};   
-    public Action OnEnemyOutOfRange = () => {};
-    public Action OnEnemyInRange = () => { };
+    public Action<EnemyController> OnEnemyOutOfRange = (EnemyController enemy) => {};
+    public Action<EnemyController> OnEnemyInRange = (EnemyController enemy) => { };
     public Action<int> OnEnemyAttack = (int attackStrength) => {};
 
     public EnemyState enemyState;
@@ -179,7 +179,7 @@ public class EnemyController : MonoBehaviour
 
         if(inRange == false)
         {
-            OnEnemyInRange();
+            OnEnemyInRange(GetComponent<EnemyController>());
             inRange = true;
         }
 
@@ -195,7 +195,7 @@ public class EnemyController : MonoBehaviour
 
         if (inRange == true)
         {
-            OnEnemyOutOfRange();
+            OnEnemyOutOfRange(GetComponent<EnemyController>());
             inRange = false;
         }
         enemy.speed = 1f;

@@ -8,6 +8,9 @@ using DG.Tweening;
 
 public class ShooterHealth : MonoBehaviour
 {
+    [Header("Proximity Track")]
+    public HashSet<int> enemySet;
+
     [Header("Camera")]
     private Camera mainCamera;
 
@@ -24,7 +27,9 @@ public class ShooterHealth : MonoBehaviour
     private float tweenFadeTime;
 
     [Header("Health Bar")]
-    public Slider healthSlider; 
+    public Slider healthSlider;
+    public Gradient sliderGradient;
+    public Image sliderFill;
 
     [Header("Information from events")]
     private int attackStrength;
@@ -33,14 +38,20 @@ public class ShooterHealth : MonoBehaviour
 
     private void Start()
     {
-        FindEnemies();
-        mainCamera = Camera.main;
         currentHealth = maxHealth;
-        healthSlider.value = maxHealth;
+        mainCamera = Camera.main;
+        FindEnemies();
+        SetMaxHealth();       
         postProcessVolume = mainCamera.GetComponent<PostProcessVolume>();
         postProcessProfile = postProcessVolume.profile;
         vignette = postProcessProfile.GetSetting<Vignette>();
-        Debug.Log("slider value: " + healthSlider.value);
+        enemySet = new HashSet<int>();
+    }
+
+    private void Update()
+    {
+        //create list of enenmies in scene?
+        Debug.Log(enemySet.Count);
     }
 
     private void FindEnemies()
@@ -77,27 +88,46 @@ public class ShooterHealth : MonoBehaviour
         AdjustVignetteAmount(true);
     }
 
-    private void OnEnemyInRange()
+    private void OnEnemyInRange(EnemyController enemy)
     {
-        //for restore health enemy list
+
+        Debug.Log("Enemy In Range, ID: " + enemy.GetInstanceID());
+        enemySet.Add(enemy.GetInstanceID());
+
     }
 
-    private void OnEnemyOutOfRange()
+    private void OnEnemyOutOfRange(EnemyController enemy)
     {
-        //for restore health enemy list
+        Debug.Log("Enemy Out of range, ID: " + enemy.GetInstanceID());
+        enemySet.Remove(enemy.GetInstanceID());
     }
 
     public void DecreaseHealth()
     {
         currentHealth -= attackStrength;
-        healthSlider.value -= attackStrength;
+        SetHealth(currentHealth);
+
         if (currentHealth <= 0)
         {
             OnPlayerDeath();
         }
     }
-  
-    //handle vignette
+
+    //player health bar
+
+    private void SetMaxHealth()
+    {
+        healthSlider.value = maxHealth;
+        sliderFill.color = sliderGradient.Evaluate(1f);
+    }
+
+    private void SetHealth(float health)
+    {
+        healthSlider.value = health;
+        sliderFill.color = sliderGradient.Evaluate(healthSlider.normalizedValue);
+    }
+
+    //change vignette amount
 
     public void AdjustVignetteAmount(bool state)
     {
