@@ -135,8 +135,6 @@ public class ScoreManager : Singleton<ScoreManager>
         }
     }
 
-
-
     private void ResetMultiplier()
     {
         PlayerBloom(false);
@@ -144,7 +142,6 @@ public class ScoreManager : Singleton<ScoreManager>
         multiplierText.text = $"X{multiplier}";
         multiplierText.fontSize = 36;
     }
-
     
     private void PlayerBloom(bool state)
     {
@@ -163,7 +160,5 @@ public class ScoreManager : Singleton<ScoreManager>
     {
         bloom.threshold.value = thresholdValue;
     }
-
-
 
 }

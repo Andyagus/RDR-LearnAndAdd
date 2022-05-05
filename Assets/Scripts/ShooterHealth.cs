@@ -50,8 +50,10 @@ public class ShooterHealth : MonoBehaviour
 
     private void Update()
     {
-        //create list of enenmies in scene?
-        Debug.Log(enemySet.Count);
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            StartCoroutine(RestoreHealth());
+        }
     }
 
     private void FindEnemies()
@@ -84,7 +86,7 @@ public class ShooterHealth : MonoBehaviour
     private void OnEnemyAttack(int attackStrength)
     {
         this.attackStrength = attackStrength;
-        DecreaseHealth();
+        ImpactHealth(true);
         AdjustVignetteAmount(true);
     }
 
@@ -102,16 +104,24 @@ public class ShooterHealth : MonoBehaviour
         enemySet.Remove(enemy.GetInstanceID());
     }
 
-    public void DecreaseHealth()
+    public void ImpactHealth(bool state)
     {
-        currentHealth -= attackStrength;
-        SetHealth(currentHealth);
+        var impact = state ? -attackStrength : attackStrength;
+        SetHealth(impact);
 
-        if (currentHealth <= 0)
-        {
-            OnPlayerDeath();
-        }
     }
+
+    //change this to effect health
+    //public void DecreaseHealth()
+    //{
+    //    currentHealth -= attackStrength;
+    //    SetHealth(currentHealth);
+
+    //    if (currentHealth <= 0)
+    //    {
+    //        OnPlayerDeath();
+    //    }
+    //}
 
     //player health bar
 
@@ -123,9 +133,21 @@ public class ShooterHealth : MonoBehaviour
 
     private void SetHealth(float health)
     {
-        healthSlider.value = health;
+        currentHealth += health;
+        healthSlider.value = currentHealth;
         sliderFill.color = sliderGradient.Evaluate(healthSlider.normalizedValue);
     }
+
+    //restore health
+    private IEnumerator RestoreHealth()
+    {
+        while (currentHealth < maxHealth)
+        {
+            yield return new WaitForSeconds(1);
+            ImpactHealth(false);
+        }
+    }
+
 
     //change vignette amount
 
@@ -146,5 +168,5 @@ public class ShooterHealth : MonoBehaviour
     {
         vignette.color.value = color;
     }
-
+    
 }
