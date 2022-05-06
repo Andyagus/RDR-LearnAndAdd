@@ -39,6 +39,9 @@ public class ShooterController : MonoBehaviour
     public GameObject stateDrivenCam;
     public GameObject deathCam;
 
+    [Header("Proximity Track")]
+    public HashSet<int> enemySet;
+    public int enemySetCount;
 
     [Header("Targets")]
     public List<Transform> targets = new List<Transform>();
@@ -73,7 +76,6 @@ public class ShooterController : MonoBehaviour
     private ScoreManager scoreManagerScript;
 
 
-
     void Start()
     {
         
@@ -100,18 +102,16 @@ public class ShooterController : MonoBehaviour
         enemy = GameObject.FindObjectOfType<EnemyController>();
         FindEnemiesInScene();
 
+        enemySet = new HashSet<int>();
+
+
     }
 
-    
+
     void Update()
     {
-        
 
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            Debug.Log("CLICKED");
 
-        }
         if (aiming)
         {
             PositionXIndicator();
@@ -150,10 +150,10 @@ public class ShooterController : MonoBehaviour
         if (aiming)
         {
             AddTargets();
-        }
-
+        }      
 
     }
+
 
     private void PositionXIndicator()
     {
@@ -335,9 +335,7 @@ public class ShooterController : MonoBehaviour
 
         currentColor = state ? deadEyeColor : Color.white;
     }
-
-
-    
+   
     private void CameraZoom(float zoomAmt)
     {
         thirdPersonCam.m_Lens.FieldOfView = zoomAmt;
@@ -386,9 +384,10 @@ public class ShooterController : MonoBehaviour
 
     public void OnEnemySpawn(EnemyController enemy)
     {
-        //Debug.Log("Shooter controller");
         //enemy.OnEnemyAttack += OnEnemyAttack;
-        //enemy.OnEnemyOutOfRange += OnEnemyLeave;
+
+        //enemy.OnEnemyInRange += OnEnemyInRange;
+        //enemy.OnEnemyOutOfRange += OnEnemyOutOfRange;
     }
 
     public void OnEnemyAttack()

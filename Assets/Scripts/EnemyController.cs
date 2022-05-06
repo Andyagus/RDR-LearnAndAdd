@@ -149,7 +149,7 @@ public class EnemyController : MonoBehaviour
     public void OnHit()
     {
         playerHit = true;
-    }
+    } 
 
     private void AttackPlayer()
     {

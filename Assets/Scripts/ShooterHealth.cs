@@ -8,8 +8,8 @@ using DG.Tweening;
 
 public class ShooterHealth : MonoBehaviour
 {
-    [Header("Proximity Track")]
-    public HashSet<int> enemySet;
+    [Header("Restore Health")]
+    //private bool restoreHealth;
 
     [Header("Camera")]
     private Camera mainCamera;
@@ -41,20 +41,19 @@ public class ShooterHealth : MonoBehaviour
         currentHealth = maxHealth;
         mainCamera = Camera.main;
         FindEnemies();
-        SetMaxHealth();       
+        GetProximityManager();
+
+        SetMaxHealth();
+
         postProcessVolume = mainCamera.GetComponent<PostProcessVolume>();
         postProcessProfile = postProcessVolume.profile;
         vignette = postProcessProfile.GetSetting<Vignette>();
-        enemySet = new HashSet<int>();
     }
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            StartCoroutine(RestoreHealth());
-        }
     }
+
 
     private void FindEnemies()
     {
@@ -65,6 +64,35 @@ public class ShooterHealth : MonoBehaviour
         }
     }
 
+    private void GetProximityManager()
+    {
+        var proximityManager = GetComponent<EnemyProximityManager>();
+        proximityManager.OnNoEnemyInRange += OnNoEnemyInRange;
+        proximityManager.OnEnemyInRange += OnEnemyInRange;
+    }
+
+    private void OnNoEnemyInRange()
+    {
+        StartCoroutine(RestoreHealthOverTime());
+    }
+
+    private void OnEnemyInRange()
+    {
+        StopCoroutine(RestoreHealthOverTime());
+    }
+
+    private IEnumerator RestoreHealthOverTime()
+    {
+        while (currentHealth != maxHealth)
+        {
+            ImpactHealth(false);
+            yield return new WaitForSeconds(1);
+        }
+
+        Debug.Log("Breaking out of coroutine");
+    }
+
+
     private void OnEnemySpawn(EnemyController enemy)
     {
         AddEnemyEvents(enemy);
@@ -74,8 +102,7 @@ public class ShooterHealth : MonoBehaviour
     {
         enemy.OnEnemyShot += OnEnemyShot;
         enemy.OnEnemyAttack += OnEnemyAttack;
-        enemy.OnEnemyInRange += OnEnemyInRange;
-        enemy.OnEnemyOutOfRange += OnEnemyOutOfRange;
+
     }
 
     private void OnEnemyShot()
@@ -90,40 +117,14 @@ public class ShooterHealth : MonoBehaviour
         AdjustVignetteAmount(true);
     }
 
-    private void OnEnemyInRange(EnemyController enemy)
-    {
 
-        Debug.Log("Enemy In Range, ID: " + enemy.GetInstanceID());
-        enemySet.Add(enemy.GetInstanceID());
-
-    }
-
-    private void OnEnemyOutOfRange(EnemyController enemy)
-    {
-        Debug.Log("Enemy Out of range, ID: " + enemy.GetInstanceID());
-        enemySet.Remove(enemy.GetInstanceID());
-    }
+    //player health count
 
     public void ImpactHealth(bool state)
     {
         var impact = state ? -attackStrength : attackStrength;
         SetHealth(impact);
-
     }
-
-    //change this to effect health
-    //public void DecreaseHealth()
-    //{
-    //    currentHealth -= attackStrength;
-    //    SetHealth(currentHealth);
-
-    //    if (currentHealth <= 0)
-    //    {
-    //        OnPlayerDeath();
-    //    }
-    //}
-
-    //player health bar
 
     private void SetMaxHealth()
     {
@@ -136,18 +137,12 @@ public class ShooterHealth : MonoBehaviour
         currentHealth += health;
         healthSlider.value = currentHealth;
         sliderFill.color = sliderGradient.Evaluate(healthSlider.normalizedValue);
-    }
 
-    //restore health
-    private IEnumerator RestoreHealth()
-    {
-        while (currentHealth < maxHealth)
+        if (currentHealth <= 0)
         {
-            yield return new WaitForSeconds(1);
-            ImpactHealth(false);
+            OnPlayerDeath();
         }
     }
-
 
     //change vignette amount
 

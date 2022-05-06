@@ -883,7 +883,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 419099223}
-  m_LocalRotation: {x: 0.12388438, y: 0.0503845, z: -0.0062985597, w: 0.99099666}
+  m_LocalRotation: {x: 0.123884305, y: 0.0503845, z: -0.006298556, w: 0.99099666}
   m_LocalPosition: {x: -1.37, y: 2, z: 3.6000001}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
@@ -1072,7 +1072,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 460102724}
-  m_LocalRotation: {x: 0.12388436, y: 0.0503845, z: -0.0062985723, w: 0.99099666}
+  m_LocalRotation: {x: 0.12388431, y: 0.050384495, z: -0.006298577, w: 0.9909967}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -1114,7 +1114,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0.000061035156}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 4, y: 5}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &479235153
@@ -4633,6 +4633,7 @@ MonoBehaviour:
   aimTime: 0.2
   stateDrivenCam: {fileID: 923302430}
   deathCam: {fileID: 406472747}
+  enemySetCount: 0
   targets: []
   reticle: {fileID: 140639891}
   xIndicatorPrefab: {fileID: 5461032404049466586, guid: ba2041d63138748a8b6279818e4a5b33,
@@ -4769,6 +4770,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   colliders: []
+--- !u!114 &1173127130
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1173127121}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d2a4af46f645e49a1bd28046ea24ad30, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1254204284
 GameObject:
   m_ObjectHideFlags: 3
@@ -4837,7 +4850,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1254204284}
-  m_LocalRotation: {x: 0.11514356, y: 0.050438065, z: -0.00585419, w: 0.9920503}
+  m_LocalRotation: {x: 0.11514356, y: 0.050438065, z: -0.0058541964, w: 0.9920503}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -5711,7 +5724,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1700486477}
-  m_LocalRotation: {x: 0.10639929, y: 0.05048768, z: -0.0054095704, w: 0.99302614}
+  m_LocalRotation: {x: 0.10639929, y: 0.05048768, z: -0.0054095527, w: 0.99302614}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:

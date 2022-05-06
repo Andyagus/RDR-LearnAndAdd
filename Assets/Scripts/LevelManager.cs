@@ -21,7 +21,7 @@ public class LevelManager : Singleton<LevelManager>
     private void Start()
     {
         FindSpawners();
-        FindPlayer();
+        FindPlayerHealth();
     }
 
     private void Update()
@@ -46,9 +46,10 @@ public class LevelManager : Singleton<LevelManager>
         }
     }
 
-    public void FindPlayer()
-    {
+    public void FindPlayerHealth()
+    {        
         playerHealth = FindObjectOfType<ShooterHealth>();
+        playerHealth.OnPlayerDeath += OnPlayerDeath;
     }
 
     public void FindSpawners()
@@ -81,6 +82,7 @@ public class LevelManager : Singleton<LevelManager>
 
     public void OnPlayerDeath()
     {
+        Debug.Log("On player death");
         gameOver = true;
         gameOverText.gameObject.SetActive(true);
     }
