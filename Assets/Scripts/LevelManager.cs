@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+using DG.Tweening;
 using TMPro;
+using UnityEngine;
+using UnityEngine.Rendering.PostProcessing;
 
 public class LevelManager : Singleton<LevelManager>
 {
@@ -17,16 +18,31 @@ public class LevelManager : Singleton<LevelManager>
     public bool gameOver = false;
     public TextMeshProUGUI gameOverText;
 
+    [Header("Cam controls")]
+    private Camera mainCamera;
+    private PostProcessVolume postProcessVolume;
+    private PostProcessProfile postProcessProfile;
+    private ColorGrading colorGrading;
+    public GameObject deathCam;
 
     private void Start()
     {
         FindSpawners();
         FindPlayerHealth();
+        SetUpPostEffects();
     }
 
     private void Update()
     {
         LevelComplete();
+    }
+
+    private void SetUpPostEffects()
+    {
+        mainCamera = Camera.main;
+        postProcessVolume = mainCamera.GetComponent<PostProcessVolume>();
+        postProcessProfile = postProcessVolume.profile;
+        colorGrading = postProcessProfile.GetSetting<ColorGrading>();        
     }
 
     public void LevelComplete()
@@ -82,19 +98,31 @@ public class LevelManager : Singleton<LevelManager>
 
     public void OnPlayerDeath()
     {
-        Debug.Log("On player death");
         gameOver = true;
+        SetGameOverUI();
+    }
+
+    private void SetGameOverUI()
+    {
         gameOverText.gameObject.SetActive(true);
+        GameOverRedFilter();
+        SwitchCamera();
+    }
+
+    private void SwitchCamera()
+    {
+        deathCam.SetActive(true);
     }
 
     public void GameOverRedFilter()
     {
-
+        DOVirtual.Color(colorGrading.colorFilter.value, Color.red, 0.4f, GameOverRedTween); ;
     }
 
-    public void GameOverRedTween(Color x)
+    public void GameOverRedTween(Color color)
     {
-
+        Debug.Log(color);
+        colorGrading.colorFilter.value = color;
     }
 
 }

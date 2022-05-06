@@ -22,7 +22,6 @@ public class ShooterHealth : MonoBehaviour
     private PostProcessVolume postProcessVolume;
     private PostProcessProfile postProcessProfile;
     private Vignette vignette;
-    private ColorGrading colorGrading;
     public Color postVignetteColor;
     private float tweenFadeTime;
 

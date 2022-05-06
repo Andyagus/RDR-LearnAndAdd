@@ -384,13 +384,13 @@ public class ShooterController : MonoBehaviour
 
     public void OnEnemySpawn(EnemyController enemy)
     {
-        //enemy.OnEnemyAttack += OnEnemyAttack;
+        enemy.OnEnemyAttack += OnEnemyAttack;
 
         //enemy.OnEnemyInRange += OnEnemyInRange;
         //enemy.OnEnemyOutOfRange += OnEnemyOutOfRange;
     }
 
-    public void OnEnemyAttack()
+    public void OnEnemyAttack(int attackAmount)
     {
         
         ToggleControls(true);
