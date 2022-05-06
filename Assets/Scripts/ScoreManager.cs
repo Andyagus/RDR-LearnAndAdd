@@ -129,7 +129,7 @@ public class ScoreManager : Singleton<ScoreManager>
 
     private void OnEnemyAttack(int attackStrength)
     {
-        if (LevelManager.instance.gameOver != true)
+        if (!LevelManager.instance.gameOver)
         {
             ResetMultiplier();
         }

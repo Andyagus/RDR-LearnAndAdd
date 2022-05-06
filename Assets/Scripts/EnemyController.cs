@@ -146,9 +146,17 @@ public class EnemyController : MonoBehaviour
     }
 
     //animation trigger
-    public void OnHit()
+    public void OnHit(int numberBool)
     {
-        playerHit = true;
+        switch (numberBool)
+        {
+            case 1:
+                playerHit = true;
+                break;
+            case 2:
+                playerHit = false;
+                break;
+        }
     } 
 
     private void AttackPlayer()
@@ -161,6 +169,8 @@ public class EnemyController : MonoBehaviour
         if(playerHit == true && hitPlayerRb.Length > 0)
         {
             OnEnemyAttack(attackStrength);
+            //discuss with sunny added false here - because animation false doesn'thappen fast enough
+
             playerHit = false;
         }
 

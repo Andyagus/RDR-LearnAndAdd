@@ -101,7 +101,7 @@ public class ShooterController : MonoBehaviour
 
         enemy = GameObject.FindObjectOfType<EnemyController>();
         FindEnemiesInScene();
-
+        GetPlayerHealth();
         enemySet = new HashSet<int>();
 
 
@@ -390,6 +390,13 @@ public class ShooterController : MonoBehaviour
         //enemy.OnEnemyOutOfRange += OnEnemyOutOfRange;
     }
 
+    private void GetPlayerHealth()
+    {
+        var shooterHealth = GetComponent<ShooterHealth>();
+        shooterHealth.OnPlayerDeath += OnPlayerDeath;
+    }
+
+
     public void OnEnemyAttack(int attackAmount)
     {
         
@@ -449,7 +456,6 @@ public class ShooterController : MonoBehaviour
         }
     }
 
-
     private void OnPlayerDeath()
     {
         /*
@@ -457,8 +463,6 @@ public class ShooterController : MonoBehaviour
          * deactivated the animator when ragdoll is called.
          * anim.SetTrigger("onDeath");
         */
-        deathCam.gameObject.SetActive(true);
-        stateDrivenCam.gameObject.SetActive(false);
         anim.enabled = false;
         input.enabled = false;       
         reticle.color = Color.clear;

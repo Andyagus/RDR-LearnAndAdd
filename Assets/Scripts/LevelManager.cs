@@ -121,8 +121,7 @@ public class LevelManager : Singleton<LevelManager>
 
     public void GameOverRedTween(Color color)
     {
-        Debug.Log(color);
-        colorGrading.colorFilter.value = color;
+         colorGrading.colorFilter.value = color;
     }
 
 }

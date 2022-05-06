@@ -116,7 +116,6 @@ public class ShooterHealth : MonoBehaviour
         AdjustVignetteAmount(true);
     }
 
-
     //player health count
 
     public void ImpactHealth(bool state)
