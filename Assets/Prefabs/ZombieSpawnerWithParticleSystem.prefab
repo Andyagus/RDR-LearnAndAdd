@@ -94,7 +94,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2322486410762523310}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.1287117, y: 1.3145614, z: 12.404985}
+  m_LocalPosition: {x: -1.1287117, y: 0.5, z: 12.404985}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 2322486411208455533}
@@ -114,6 +114,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   zombiePrefab: {fileID: 1431817759891498668, guid: a98c1dd48c0c542eb8f6612aa1bd5540,
+    type: 3}
+  cylinderPrefab: {fileID: 6358184253222019120, guid: 03473118dd2484d038f9f403b35ba479,
     type: 3}
   spawnZombie: 1
   frequency: 10
@@ -143,14 +145,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2322486411208455522}
-  m_LocalRotation: {x: -0.7071068, y: -0, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: -0.2412883, y: 0.045438647, z: 2.0550146}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.2412883, y: 1.25, z: 2.0550146}
   m_LocalScale: {x: 1.61307, y: 2.150761, z: 0.5376902}
   m_Children:
   - {fileID: 2322486410280593350}
   m_Father: {fileID: 2322486410762523304}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!198 &2322486411208455532
 ParticleSystem:
   m_ObjectHideFlags: 0
@@ -4804,7 +4806,7 @@ ParticleSystemRenderer:
   m_SortingFudge: 0
   m_NormalDirection: 1
   m_ShadowBias: 0
-  m_RenderAlignment: 1
+  m_RenderAlignment: 2
   m_Pivot: {x: 0, y: 0, z: 0}
   m_Flip: {x: 0, y: 0, z: 0}
   m_UseCustomVertexStreams: 0

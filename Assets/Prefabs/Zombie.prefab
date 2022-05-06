@@ -580,6 +580,9 @@ MonoBehaviour:
   playerLayers:
     serializedVersion: 2
     m_Bits: 512
+  destinationTest: {x: 0, y: 0, z: 0}
+  cylinderPrefab: {fileID: 6358184253222019120, guid: 03473118dd2484d038f9f403b35ba479,
+    type: 3}
   distance: 0
   withinRange: 0
   aimed: 0
@@ -589,6 +592,7 @@ MonoBehaviour:
   LookAtCalled: 0
   playerHit: 0
   inRange: 0
+  attackStrength: 2
   enemyState: 0
 --- !u!195 &1431817759891498586
 NavMeshAgent:

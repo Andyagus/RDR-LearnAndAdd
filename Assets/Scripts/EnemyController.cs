@@ -23,6 +23,9 @@ public class EnemyController : MonoBehaviour
     private float attackRange = 0.2f;
     public LayerMask playerLayers;
 
+    public Vector3 destinationTest;
+    public GameObject cylinderPrefab;
+
     public float distance;
     public bool withinRange;
     public bool aimed = false;
@@ -45,6 +48,7 @@ public class EnemyController : MonoBehaviour
 
     void Start()
     {
+        
         anim = GetComponent<Animator>();
         shooter = FindObjectOfType<ShooterController>();
         rbs = GetComponentsInChildren<Rigidbody>();
@@ -53,11 +57,14 @@ public class EnemyController : MonoBehaviour
         mainCamera = Camera.main;
         postVolume = mainCamera.GetComponent<PostProcessVolume>();
         postProfile = postVolume.profile;
+
+        FindZombieSpawner();
     }
 
     private void Update()
     {
 
+        enemy.destination = destinationTest;
         //Debug.Log(enemy.speed);
 
         if (!shot)
@@ -72,6 +79,23 @@ public class EnemyController : MonoBehaviour
         
     }
 
+    //dont need this can use start method…
+    private void FindZombieSpawner()
+    {
+        var zombieSpawners = GameObject.FindObjectsOfType<ZombieSpawner>();
+        foreach (var spawner in zombieSpawners)
+        {
+            spawner.OnZombieRelease += OnZombieRelease;
+        }
+    }
+
+    private void OnZombieRelease(Vector3 spawnPos)
+    {
+        
+        destinationTest = new Vector3(spawnPos.x + 15, spawnPos.y, spawnPos.z + 15);
+        Instantiate(cylinderPrefab, destinationTest, Quaternion.identity);
+    }
+
     private void OnDrawGizmosSelected()
     {
         Gizmos.DrawWireSphere(attackPoint.position, attackRange);
@@ -82,15 +106,17 @@ public class EnemyController : MonoBehaviour
         GetComponent<NavMeshAgent>().enabled = false;
     }
 
-    private void FollowPlayer()
+    private void StartNavmesh()
     {
         enemy.destination = shooter.transform.position;
         transform.LookAt(shooter.transform);
 
-        var enemyWalkingDistance = 3;
+    }
 
-        //TODO ask sunny: how to set to local variable "EnemyState state" and then pass to method
-        //TODO ask sunny: how to implement game over static variable implementation ok? 
+    private void FollowPlayer()
+    {
+
+        var enemyWalkingDistance = 3;
 
         if (enemy.remainingDistance > enemyWalkingDistance)
         {

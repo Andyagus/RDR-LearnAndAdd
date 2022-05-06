@@ -1176,6 +1176,7 @@ MonoBehaviour:
   LookAtCalled: 0
   playerHit: 0
   inRange: 0
+  attackStrength: 2
   enemyState: 0
 --- !u!195 &1027808922
 NavMeshAgent:
@@ -1184,7 +1185,7 @@ NavMeshAgent:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1027808876}
-  m_Enabled: 1
+  m_Enabled: 0
   m_AgentTypeID: 0
   m_Radius: 0.23
   m_Speed: 5
