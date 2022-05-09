@@ -14,15 +14,17 @@ public class ZombieSpawner : MonoBehaviour
     public float frequency = .01f;
     public int limit = 10;
     public Vector3 spawnPos;
+    public Vector3 initialDestination;
     public Action<int> OnSpawnComplete = (int x) => {};
     public Action<EnemyController> OnEnemySpawn = (EnemyController enemy) => {};
     public Action<Vector3> OnZombieRelease = (Vector3 spawnPos) => { };
 
     void Start()
     {
-
         particleSystemTransform = gameObject.transform.GetChild(0);
-        Debug.Log(particleSystemTransform.rotation.eulerAngles.y);
+        int offsetAmt = 5;
+        var offset = particleSystemTransform.forward * offsetAmt;
+        initialDestination = particleSystemTransform.position + offset;
         StartCoroutine(SpawnZombies());
     }
 
@@ -43,8 +45,9 @@ public class ZombieSpawner : MonoBehaviour
             //Time.timeScale = 0;
             zombie.gameObject.name = $"zombie {spawnNumber}";
             var enemy = zombie.GetComponent<EnemyController>();
+            OnZombieRelease(initialDestination);
             OnEnemySpawn(enemy);
-            OnZombieRelease(ZombieSpawnPosition());
+            Debug.Log("Enemy Spawn");
         }
         OnSpawnComplete(limit);
         yield return null;

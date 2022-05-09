@@ -23,8 +23,12 @@ public class EnemyController : MonoBehaviour
     private float attackRange = 0.2f;
     public LayerMask playerLayers;
 
-    public Vector3 destinationTest;
+
+    //public bool updatedDestination = false;
+    public Vector3 initialDestination;
     public GameObject cylinderPrefab;
+    public bool changeDestination; 
+
 
     public float distance;
     public bool withinRange;
@@ -46,9 +50,13 @@ public class EnemyController : MonoBehaviour
     public EnemyState enemyState;
     public enum EnemyState { running, walking, attacking, gameOver};
 
+    private void Awake()
+    {
+        FindZombieSpawner();
+    }
+
     void Start()
     {
-        
         anim = GetComponent<Animator>();
         shooter = FindObjectOfType<ShooterController>();
         rbs = GetComponentsInChildren<Rigidbody>();
@@ -57,15 +65,20 @@ public class EnemyController : MonoBehaviour
         mainCamera = Camera.main;
         postVolume = mainCamera.GetComponent<PostProcessVolume>();
         postProfile = postVolume.profile;
-
-        FindZombieSpawner();
     }
 
     private void Update()
     {
-
-        enemy.destination = destinationTest;
-        //Debug.Log(enemy.speed);
+        if (changeDestination)
+        {
+            enemy.destination = shooter.transform.position;
+            var lookRotation = Quaternion.LookRotation(shooter.transform.position - transform.position, Vector3.up);
+            transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime);
+        }
+        else
+        {
+            enemy.destination = initialDestination;
+        }
 
         if (!shot)
         {
@@ -75,11 +88,9 @@ public class EnemyController : MonoBehaviour
         if(shot == true)
         {
             DestroyEnemy();
-        }
-        
+        }        
     }
 
-    //dont need this can use start method…
     private void FindZombieSpawner()
     {
         var zombieSpawners = GameObject.FindObjectsOfType<ZombieSpawner>();
@@ -89,11 +100,21 @@ public class EnemyController : MonoBehaviour
         }
     }
 
-    private void OnZombieRelease(Vector3 spawnPos)
+    private void OnZombieRelease(Vector3 initialDestination)
     {
-        
-        destinationTest = new Vector3(spawnPos.x + 15, spawnPos.y, spawnPos.z + 15);
-        Instantiate(cylinderPrefab, destinationTest, Quaternion.identity);
+        this.initialDestination = initialDestination;
+        StartCoroutine(SwitchDestination());
+    }
+
+    private IEnumerator SwitchDestination()
+    {
+        yield return new WaitForSeconds(2);
+        StartNavmesh();
+    }
+
+    private void StartNavmesh()
+    {
+        changeDestination = true;
     }
 
     private void OnDrawGizmosSelected()
@@ -106,12 +127,7 @@ public class EnemyController : MonoBehaviour
         GetComponent<NavMeshAgent>().enabled = false;
     }
 
-    private void StartNavmesh()
-    {
-        enemy.destination = shooter.transform.position;
-        transform.LookAt(shooter.transform);
 
-    }
 
     private void FollowPlayer()
     {

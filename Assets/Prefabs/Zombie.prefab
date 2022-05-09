@@ -580,9 +580,10 @@ MonoBehaviour:
   playerLayers:
     serializedVersion: 2
     m_Bits: 512
-  destinationTest: {x: 0, y: 0, z: 0}
+  initialDestination: {x: 0, y: 0, z: 0}
   cylinderPrefab: {fileID: 6358184253222019120, guid: 03473118dd2484d038f9f403b35ba479,
     type: 3}
+  changeDestination: 0
   distance: 0
   withinRange: 0
   aimed: 0
@@ -608,10 +609,10 @@ NavMeshAgent:
   m_Acceleration: 2
   avoidancePriority: 50
   m_AngularSpeed: 2
-  m_StoppingDistance: 0.8
+  m_StoppingDistance: 0.7
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
-  m_AutoRepath: 1
+  m_AutoRepath: 0
   m_Height: 1.85
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
