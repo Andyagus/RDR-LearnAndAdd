@@ -5,16 +5,20 @@ using UnityEngine;
 
 public class ZombieSpawner : MonoBehaviour
 {
-    
+    [Header("Static Variables")]
+    private bool gizmosCreated = false;
+    List<GameObject> cylinderPrefabs = new List<GameObject>();
+
     public GameObject zombiePrefab;
     public GameObject cylinderPrefab;
     private Transform particleSystemTransform;
+    private Transform sphereIndicator;
     public static int spawnNumber = 0;
     public bool spawnZombie = true;
     public float frequency = .01f;
     public int limit = 10;
     public Vector3 spawnPos;
-    int spawnOffsetAmt = 4;
+    int spawnOffsetAmt = 2;
     public Vector3 initialDestination;
     public Action<int> OnSpawnComplete = (int x) => {};
     public Action<EnemyController> OnEnemySpawn = (EnemyController enemy) => {};
@@ -23,12 +27,63 @@ public class ZombieSpawner : MonoBehaviour
     void Start()
     {
         particleSystemTransform = gameObject.transform.GetChild(0).transform.GetChild(0);
+        sphereIndicator = gameObject.transform.GetChild(0).transform.GetChild(0).transform.GetChild(0);
         StartCoroutine(SpawnZombies());
     }
 
     private void Update()
     {
-        Debug.DrawRay(particleSystemTransform.position, particleSystemTransform.forward * spawnOffsetAmt, Color.green);
+        DrawDemonstrationGizmos();
+    }
+
+    private void DrawDemonstrationGizmos()
+    {
+        if (LevelManager.instance.showDemonstrationGizmos)
+        {
+            Debug.DrawRay(particleSystemTransform.position, particleSystemTransform.forward * spawnOffsetAmt, Color.green);
+
+            if (gizmosCreated == false){
+                var cylinder1 = Instantiate(cylinderPrefab, ZombieSpawnPosition(), Quaternion.identity);
+                var cylinder2 = Instantiate(cylinderPrefab, WalkToLocation(), Quaternion.identity);
+                cylinderPrefabs.Add(cylinder1);
+                cylinderPrefabs.Add(cylinder2);
+                gizmosCreated = true;
+                sphereIndicator.gameObject.SetActive(true);
+            }
+        }
+        if(LevelManager.instance.showDemonstrationGizmos == false)
+        {
+            sphereIndicator.gameObject.SetActive(false);
+
+            if (gizmosCreated == true)
+            {
+                foreach(var cylinder in cylinderPrefabs)
+                {
+                    Destroy(cylinder);
+                }
+                gizmosCreated = false;
+            }
+        }
+
+
+        //if (LevelManager.instance.showDemonstrationGizmos)
+        //{
+        //    var cylinder1 = Instantiate(cylinderPrefab, ZombieSpawnPosition(), Quaternion.identity);
+        //    var cylinder2 = Instantiate(cylinderPrefab, WalkToLocation(), Quaternion.identity);
+
+        //    cylinderPrefabs.Add(cylinder1);
+        //    cylinderPrefabs.Add(cylinder2);
+        //}
+
+        //if (LevelManager.instance.showDemonstrationGizmos == false)
+        //{
+        //    Debug.Log("Draw Demonstration Gizmos is False");
+        //    foreach(var cylinder in cylinderPrefabs)
+        //    {
+        //        Debug.Log("DESTROY CYLINDER");
+        //        Destroy(cylinder);
+        //    }
+        //}
     }
 
     private Vector3 ZombieSpawnPosition()

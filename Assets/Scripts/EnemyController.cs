@@ -72,8 +72,6 @@ public class EnemyController : MonoBehaviour
     private void Update()
     {
 
-        Debug.Log(gameObject.GetInstanceID() + ": " +  walkToLocation);
-
         if (!shot)
         {
             
@@ -126,7 +124,10 @@ public class EnemyController : MonoBehaviour
             enemy.destination = walkToLocation;
         }
 
-        if (enemy.remainingDistance <= 2f && enemy.remainingDistance != 0)
+        //TODO not happy how I am controlling a remaining distance thing here - as well as an offset in the zombie spawner
+        //not worth my time diving into complete path etc…
+
+        if (enemy.remainingDistance <= 1.4f && enemy.remainingDistance != 0)
         {
             moveTowardsPlayer = true;
             
@@ -159,7 +160,7 @@ public class EnemyController : MonoBehaviour
             enemyState = EnemyState.walking;
         }
 
-        if (enemy.remainingDistance != 0)
+        if (enemy.remainingDistance != 0 && moveTowardsPlayer)
         {
             if (enemy.remainingDistance <= enemy.stoppingDistance)
             {

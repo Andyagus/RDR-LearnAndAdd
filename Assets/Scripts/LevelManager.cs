@@ -13,6 +13,7 @@ public class LevelManager : Singleton<LevelManager>
     public EnemyController[] enemies;
     public int enemiesShot;
     public int enemiesInScene;
+    public bool showDemonstrationGizmos;
     public bool allSpawned = false;
     public bool allShot = false;
     public bool gameOver = false;
