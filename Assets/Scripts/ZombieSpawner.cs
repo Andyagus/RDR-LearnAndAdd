@@ -14,7 +14,7 @@ public class ZombieSpawner : MonoBehaviour
     public float frequency = .01f;
     public int limit = 10;
     public Vector3 spawnPos;
-    int spawnOffsetAmt = 5;
+    int spawnOffsetAmt = 4;
     public Vector3 initialDestination;
     public Action<int> OnSpawnComplete = (int x) => {};
     public Action<EnemyController> OnEnemySpawn = (EnemyController enemy) => {};

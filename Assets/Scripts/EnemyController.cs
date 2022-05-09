@@ -98,8 +98,6 @@ public class EnemyController : MonoBehaviour
 
     private void OnZombieRelease(Vector3 spawnPos, Vector3 walkToLocation)
     {
-        Instantiate(cylinderPrefab, spawnPos, Quaternion.identity);
-        Instantiate(cylinderPrefab, walkToLocation, Quaternion.identity);
         newZombieSpawn = true;
 
         if(setInitialLocation == false)
@@ -112,11 +110,36 @@ public class EnemyController : MonoBehaviour
 
     private void CheckDestinationPosition()
     {
-        enemy.destination = walkToLocation;
-        //if (newZombieSpawn == true)
-        //{
-        //    //enemy.destination = 
-        //}
+        ///<summary>
+        ///how I made it work:
+        /// When the zombie is spawned pass in two vector3's through the event,
+        /// spawn location and position to walk towards
+        /// set the position to walk towards as the initial destination -
+        /// when you get a certain amount close to the initial destination, then switching
+        /// the destination to equal the player destination 
+        /// TODO • Implement Path Complete       
+        /// TODO • Unhappy with the booleans in the CheckDestinationPosition() method 
+        /// </summary>
+
+        if(setInitialLocation == true)
+        {
+            enemy.destination = walkToLocation;
+        }
+
+        if (enemy.remainingDistance <= 2f && enemy.remainingDistance != 0)
+        {
+            moveTowardsPlayer = true;
+            
+        }
+
+        if (moveTowardsPlayer)
+        {
+            enemy.destination = shooter.transform.position;
+            var lookRotation = Quaternion.LookRotation(shooter.transform.position - transform.position, Vector3.up);
+            transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime);
+
+        }
+
     }
 
     private void FollowPlayer()
@@ -154,52 +177,10 @@ public class EnemyController : MonoBehaviour
 
         AdjustEnemyBehavior(enemyState);
 
-    }
-
-    
-
-    //private Vector3 SetAgentDestination(Vector3 walkToLocation)
-    //{
-
-    //    Vector3 destinationToWalkTowards = walkToLocation;
+    }  
 
 
-    //    if (moveTowardsPlayer)
-    //    {
-    //        destinationToWalkTowards = shooter.transform.position;
-    //    }
-
-    //    return destinationToWalkTowards;
-
-
-    //enemy.des
-
-    //if (moveTowardsPlayer)
-    //{
-    //    enemy.destination = shooter.transform.position;
-    //    var lookRotation = Quaternion.LookRotation(shooter.transform.position - transform.position, Vector3.up);
-    //    transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime);
-
-    //}
-    //else
-    //{
-
-    //    enemy.speed = 0.5f;
-    //    enemy.destination = startPosition;
-
-    //    if (enemy.remainingDistance <= 2f && enemy.remainingDistance != 0)
-    //    {
-    //        moveTowardsPlayer = true;
-    //    }
-    //}
-
-
-//}
-
-//TODO Enemy Movement Script
-
-
-private void OnDrawGizmosSelected()
+    private void OnDrawGizmosSelected()
     {
         Gizmos.DrawWireSphere(attackPoint.position, attackRange);
     }
@@ -209,11 +190,7 @@ private void OnDrawGizmosSelected()
         GetComponent<NavMeshAgent>().enabled = false;
     }
 
-   
-
-
-
-
+  
 
     private void AdjustEnemyBehavior(EnemyState state)
     {
