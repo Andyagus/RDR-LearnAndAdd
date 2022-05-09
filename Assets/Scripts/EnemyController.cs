@@ -27,8 +27,10 @@ public class EnemyController : MonoBehaviour
     //public bool updatedDestination = false;
     public Vector3 startPosition;
     public GameObject cylinderPrefab;
-    public bool moveTowardsPlayer; 
-
+    public bool moveTowardsPlayer;
+    public bool newZombieSpawn = false;
+    public bool setInitialLocation;
+    public Vector3 walkToLocation;
 
     public float distance;
     public bool withinRange;
@@ -70,11 +72,11 @@ public class EnemyController : MonoBehaviour
     private void Update()
     {
 
-        MoveTowardsDestination();
-
+        Debug.Log(gameObject.GetInstanceID() + ": " +  walkToLocation);
 
         if (!shot)
         {
+            
             FollowPlayer();
         }
 
@@ -82,33 +84,6 @@ public class EnemyController : MonoBehaviour
         {
             DestroyEnemy();
         }        
-    }
-
-    private void MoveTowardsDestination()
-    {
-
-        if (moveTowardsPlayer)
-        {
-            enemy.destination = shooter.transform.position;
-            var lookRotation = Quaternion.LookRotation(shooter.transform.position - transform.position, Vector3.up);
-            transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime);
-
-        }
-        else
-        {
-            
-            enemy.destination = startPosition;
-
-            //Debug.Log(enemy.remainingDistance);
-            //Debug.Log(enemy.remainingDistance < 0.1f) ;
-
-            if (enemy.remainingDistance <= 2f && enemy.remainingDistance != 0)
-            {
-                moveTowardsPlayer = true;
-            }
-        }
-
-
     }
 
 
@@ -121,36 +96,33 @@ public class EnemyController : MonoBehaviour
         }
     }
 
-    private void OnZombieRelease(Vector3 initialDestination)
+    private void OnZombieRelease(Vector3 spawnPos, Vector3 walkToLocation)
     {
-        this.startPosition = initialDestination;
+        Instantiate(cylinderPrefab, spawnPos, Quaternion.identity);
+        Instantiate(cylinderPrefab, walkToLocation, Quaternion.identity);
+        newZombieSpawn = true;
+
+        if(setInitialLocation == false)
+        {
+            this.walkToLocation = walkToLocation;
+        }
+
+        setInitialLocation = true;
     }
 
-    //private IEnumerator SwitchDestination()
-    //{
-    //    yield return new WaitForSeconds(2);
-    //    StartNavmesh();
-    //}
-
-    private void StartNavmesh()
+    private void CheckDestinationPosition()
     {
-        moveTowardsPlayer = true;
+        enemy.destination = walkToLocation;
+        //if (newZombieSpawn == true)
+        //{
+        //    //enemy.destination = 
+        //}
     }
-
-    private void OnDrawGizmosSelected()
-    {
-        Gizmos.DrawWireSphere(attackPoint.position, attackRange);
-    }
-
-    private void DestroyEnemy()
-    {
-        GetComponent<NavMeshAgent>().enabled = false;
-    }
-
-
 
     private void FollowPlayer()
     {
+
+        CheckDestinationPosition();
 
         var enemyWalkingDistance = 3;
 
@@ -174,7 +146,7 @@ public class EnemyController : MonoBehaviour
                 }
             }
         }
-        
+
         if (LevelManager.instance.gameOver)
         {
             enemyState = EnemyState.gameOver;
@@ -183,6 +155,64 @@ public class EnemyController : MonoBehaviour
         AdjustEnemyBehavior(enemyState);
 
     }
+
+    
+
+    //private Vector3 SetAgentDestination(Vector3 walkToLocation)
+    //{
+
+    //    Vector3 destinationToWalkTowards = walkToLocation;
+
+
+    //    if (moveTowardsPlayer)
+    //    {
+    //        destinationToWalkTowards = shooter.transform.position;
+    //    }
+
+    //    return destinationToWalkTowards;
+
+
+    //enemy.des
+
+    //if (moveTowardsPlayer)
+    //{
+    //    enemy.destination = shooter.transform.position;
+    //    var lookRotation = Quaternion.LookRotation(shooter.transform.position - transform.position, Vector3.up);
+    //    transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime);
+
+    //}
+    //else
+    //{
+
+    //    enemy.speed = 0.5f;
+    //    enemy.destination = startPosition;
+
+    //    if (enemy.remainingDistance <= 2f && enemy.remainingDistance != 0)
+    //    {
+    //        moveTowardsPlayer = true;
+    //    }
+    //}
+
+
+//}
+
+//TODO Enemy Movement Script
+
+
+private void OnDrawGizmosSelected()
+    {
+        Gizmos.DrawWireSphere(attackPoint.position, attackRange);
+    }
+
+    private void DestroyEnemy()
+    {
+        GetComponent<NavMeshAgent>().enabled = false;
+    }
+
+   
+
+
+
 
 
     private void AdjustEnemyBehavior(EnemyState state)
@@ -231,8 +261,8 @@ public class EnemyController : MonoBehaviour
         if(playerHit == true && hitPlayerRb.Length > 0)
         {
             OnEnemyAttack(attackStrength);
-            //discuss with sunny added false here - because animation false doesn'thappen fast enough
 
+            //TODO discuss with sunny added false here - because animation false doesn'thappen fast enough
             playerHit = false;
         }
 
@@ -290,6 +320,8 @@ public class EnemyController : MonoBehaviour
             OnEnemyShot();            
         }
     }
+
+    //TODO connect to singleton
 
     public void GameOver()
     {

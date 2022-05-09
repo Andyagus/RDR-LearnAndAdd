@@ -14,24 +14,36 @@ public class ZombieSpawner : MonoBehaviour
     public float frequency = .01f;
     public int limit = 10;
     public Vector3 spawnPos;
+    int spawnOffsetAmt = 5;
     public Vector3 initialDestination;
     public Action<int> OnSpawnComplete = (int x) => {};
     public Action<EnemyController> OnEnemySpawn = (EnemyController enemy) => {};
-    public Action<Vector3> OnZombieRelease = (Vector3 spawnPos) => { };
+    public Action<Vector3, Vector3> OnZombieRelease = (Vector3 spawnPos, Vector3 WalkToLocation) => { };
 
     void Start()
     {
-        particleSystemTransform = gameObject.transform.GetChild(0);
-        int offsetAmt = 4;
-        var offset = particleSystemTransform.forward * offsetAmt;
-        initialDestination = particleSystemTransform.position + offset;
+        particleSystemTransform = gameObject.transform.GetChild(0).transform.GetChild(0);
         StartCoroutine(SpawnZombies());
+    }
+
+    private void Update()
+    {
+        Debug.DrawRay(particleSystemTransform.position, particleSystemTransform.forward * spawnOffsetAmt, Color.green);
     }
 
     private Vector3 ZombieSpawnPosition()
     {
         spawnPos = new Vector3(particleSystemTransform.position.x, 0f, particleSystemTransform.position.z);
         return spawnPos;
+    }
+
+    private Vector3 WalkToLocation()
+    {
+        var offset = particleSystemTransform.forward * spawnOffsetAmt;
+        initialDestination = particleSystemTransform.position + offset;
+
+        return initialDestination;
+
     }
 
     public IEnumerator SpawnZombies()
@@ -44,9 +56,9 @@ public class ZombieSpawner : MonoBehaviour
             var zombie = Instantiate(zombiePrefab, ZombieSpawnPosition(), particleSystemTransform.rotation);
             zombie.gameObject.name = $"zombie {spawnNumber}";
             var enemy = zombie.GetComponent<EnemyController>();
-            OnZombieRelease(initialDestination);
+            OnZombieRelease(ZombieSpawnPosition(), WalkToLocation());
             OnEnemySpawn(enemy);
-            Debug.Log("Enemy Spawn");
+
         }
         OnSpawnComplete(limit);
         yield return null;
