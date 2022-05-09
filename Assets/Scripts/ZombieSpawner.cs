@@ -22,7 +22,7 @@ public class ZombieSpawner : MonoBehaviour
     void Start()
     {
         particleSystemTransform = gameObject.transform.GetChild(0);
-        int offsetAmt = 5;
+        int offsetAmt = 4;
         var offset = particleSystemTransform.forward * offsetAmt;
         initialDestination = particleSystemTransform.position + offset;
         StartCoroutine(SpawnZombies());
@@ -42,7 +42,6 @@ public class ZombieSpawner : MonoBehaviour
             yield return new WaitForSeconds(frequency);
             spawnNumber++;
             var zombie = Instantiate(zombiePrefab, ZombieSpawnPosition(), particleSystemTransform.rotation);
-            //Time.timeScale = 0;
             zombie.gameObject.name = $"zombie {spawnNumber}";
             var enemy = zombie.GetComponent<EnemyController>();
             OnZombieRelease(initialDestination);

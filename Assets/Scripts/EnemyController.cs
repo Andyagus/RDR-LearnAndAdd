@@ -25,9 +25,9 @@ public class EnemyController : MonoBehaviour
 
 
     //public bool updatedDestination = false;
-    public Vector3 initialDestination;
+    public Vector3 startPosition;
     public GameObject cylinderPrefab;
-    public bool changeDestination; 
+    public bool moveTowardsPlayer; 
 
 
     public float distance;
@@ -69,16 +69,9 @@ public class EnemyController : MonoBehaviour
 
     private void Update()
     {
-        if (changeDestination)
-        {
-            enemy.destination = shooter.transform.position;
-            var lookRotation = Quaternion.LookRotation(shooter.transform.position - transform.position, Vector3.up);
-            transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime);
-        }
-        else
-        {
-            enemy.destination = initialDestination;
-        }
+
+        MoveTowardsDestination();
+
 
         if (!shot)
         {
@@ -91,6 +84,34 @@ public class EnemyController : MonoBehaviour
         }        
     }
 
+    private void MoveTowardsDestination()
+    {
+
+        if (moveTowardsPlayer)
+        {
+            enemy.destination = shooter.transform.position;
+            var lookRotation = Quaternion.LookRotation(shooter.transform.position - transform.position, Vector3.up);
+            transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime);
+
+        }
+        else
+        {
+            
+            enemy.destination = startPosition;
+
+            //Debug.Log(enemy.remainingDistance);
+            //Debug.Log(enemy.remainingDistance < 0.1f) ;
+
+            if (enemy.remainingDistance <= 2f && enemy.remainingDistance != 0)
+            {
+                moveTowardsPlayer = true;
+            }
+        }
+
+
+    }
+
+
     private void FindZombieSpawner()
     {
         var zombieSpawners = GameObject.FindObjectsOfType<ZombieSpawner>();
@@ -102,19 +123,18 @@ public class EnemyController : MonoBehaviour
 
     private void OnZombieRelease(Vector3 initialDestination)
     {
-        this.initialDestination = initialDestination;
-        StartCoroutine(SwitchDestination());
+        this.startPosition = initialDestination;
     }
 
-    private IEnumerator SwitchDestination()
-    {
-        yield return new WaitForSeconds(2);
-        StartNavmesh();
-    }
+    //private IEnumerator SwitchDestination()
+    //{
+    //    yield return new WaitForSeconds(2);
+    //    StartNavmesh();
+    //}
 
     private void StartNavmesh()
     {
-        changeDestination = true;
+        moveTowardsPlayer = true;
     }
 
     private void OnDrawGizmosSelected()
