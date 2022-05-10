@@ -75,9 +75,6 @@ public class ShooterController : MonoBehaviour
     public Rigidbody attackRb;
     public Transform rightHand;
 
-    [Header("Events")]
-    private ScoreManager scoreManagerScript;
-
 
     void Start()
     {
@@ -133,8 +130,6 @@ public class ShooterController : MonoBehaviour
 
         if (!aiming && zombieAttack == false && lostWeapon == false)
         {
-            Debug.Log("Calling Weapon Position");
-
             WeaponPosition();
         }
 
@@ -153,16 +148,16 @@ public class ShooterController : MonoBehaviour
             ShotSequence();
         }
 
-        if (Input.GetKeyDown(KeyCode.X))
-        {
-            LoseGun();
+        //if (Input.GetKeyDown(KeyCode.X))
+        //{
+        //    LoseGun();
             
-        }
+        //}
 
-        if (Input.GetKeyDown(KeyCode.Z))
-        {
-            FoundGun();
-        }
+        //if (Input.GetKeyDown(KeyCode.Z))
+        //{
+        //    FoundGun();
+        //}
 
         if (aiming)
         {
@@ -247,7 +242,7 @@ public class ShooterController : MonoBehaviour
         }
         else
         {
-            //Debug.Log("EXIT OUT OF LOOP");
+            //Debug.Log("Else");
             Aim(false);
             //DeadEye(false);
         }
@@ -422,10 +417,11 @@ public class ShooterController : MonoBehaviour
 
     public void OnEnemyAttack(int attackAmount)
     {
-
+        Debug.Log("ON ENEMY ATTACK CALLED");
         ToggleControls(true);
-        StopShotSequence();
         AttackAnimation();
+        StopShotSequence();
+
 
         if (lostWeapon == false)
         {
@@ -435,16 +431,16 @@ public class ShooterController : MonoBehaviour
 
     private void StopShotSequence()
     {
+        sequence.Kill();
         Aim(false);
         DeadEye(false);
         zombieAttack = false;
-        sequence.Kill();
     }
 
     private void LoseGun()
     {
         //TODO review with sunny tmrw MAY 11
-        Debug.Log("Lose gun called");
+        Debug.Log("Lose Gun");
         lostWeapon = true;
         gunParent = Instantiate(gunParentPrefab, gun.transform.position, Quaternion.identity);
         var gunParentRb = gunParent.GetComponent<Rigidbody>();

@@ -49,11 +49,6 @@ public class ShooterHealth : MonoBehaviour
         vignette = postProcessProfile.GetSetting<Vignette>();
     }
 
-    private void Update()
-    {
-    }
-
-
     private void FindEnemies()
     {
         var zombieSpawners = GameObject.FindObjectsOfType<ZombieSpawner>();
