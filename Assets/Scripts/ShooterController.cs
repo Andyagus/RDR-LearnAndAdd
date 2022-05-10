@@ -67,6 +67,8 @@ public class ShooterController : MonoBehaviour
     public int hitForceAmt;
     public bool gunOnGround;
 
+    [Header("Attack")]
+    private Sequence sequence;
 
     [Header("Enemy")]
     public EnemyController enemy;
@@ -111,8 +113,7 @@ public class ShooterController : MonoBehaviour
 
     void Update()
     {
-
-        //Debug.Log(gun.transform.position);
+        
         if (aiming)
         {
             PositionXIndicator();
@@ -203,15 +204,18 @@ public class ShooterController : MonoBehaviour
 
     private void ShotSequence()
     {
-        if (targets.Count > 0 && !LevelManager.instance.gameOver)
+        Debug.Log("Called Shot Sequence");
+
+        if (targets.Count > 0 && !LevelManager.instance.gameOver && !zombieAttack)
         {
             DeadEye(true);            
 
-            Sequence sequence = DOTween.Sequence();
+            sequence = DOTween.Sequence();
 
             for (var i = 0; i < targets.Count; i++) 
             {
-
+                
+                Debug.Log("inside sequence loop " + i);
                 var currentTarget = targets[i];
                 var currentIndicator = indicatorList[i];
 
@@ -230,7 +234,9 @@ public class ShooterController : MonoBehaviour
         }
         else
         {
-            Aim(false); 
+            //Debug.Log("EXIT OUT OF LOOP");
+            Aim(false);
+            //DeadEye(false);
         }
     }
 
@@ -402,6 +408,7 @@ public class ShooterController : MonoBehaviour
     {
         
         ToggleControls(true);
+        StopShotSequence(); 
         AttackAnimation();
 
         if(lostWeapon == false)
@@ -410,16 +417,23 @@ public class ShooterController : MonoBehaviour
         }            
     }
 
+    private void StopShotSequence()
+    {
+        Aim(false);
+        DeadEye(false);
+        zombieAttack = false;
+        sequence.Kill();
+    }
+
     private void LoseGun()
     {
         //TODO review with sunny tmrw MAY 11
 
         lostWeapon = true;
-
         gunParent = Instantiate(gunParentPrefab, gun.transform.position, Quaternion.identity);
         var gunParentRb = gunParent.GetComponent<Rigidbody>();
-        gunParentRb.AddForce(Vector3.forward * 10, ForceMode.Impulse);
         var gunRb = gun.GetComponent<Rigidbody>();
+        gunParentRb.AddForce(Vector3.forward * 10, ForceMode.Impulse);
         gunRb.isKinematic = false;
         gun.transform.parent = gunParent.transform;
 
