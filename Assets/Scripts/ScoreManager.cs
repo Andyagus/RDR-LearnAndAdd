@@ -99,7 +99,7 @@ public class ScoreManager : Singleton<ScoreManager>
     }
 
 
-    public void OnEnemyShot()
+    public void OnEnemyShot(EnemyController enemy)
     {
         IncreaseScore();
     }

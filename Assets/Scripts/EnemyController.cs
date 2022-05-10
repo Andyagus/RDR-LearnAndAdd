@@ -44,7 +44,7 @@ public class EnemyController : MonoBehaviour
     public int attackStrength = 2;
 
     [Header("Events")]
-    public Action OnEnemyShot = () => {};   
+    public Action<EnemyController> OnEnemyShot = (EnemyController enemy) => {};   
     public Action<EnemyController> OnEnemyOutOfRange = (EnemyController enemy) => {};
     public Action<EnemyController> OnEnemyInRange = (EnemyController enemy) => { };
     public Action<int> OnEnemyAttack = (int attackStrength) => {};
@@ -189,6 +189,8 @@ public class EnemyController : MonoBehaviour
     private void DestroyEnemy()
     {
         GetComponent<NavMeshAgent>().enabled = false;
+        //GetComponent<EnemyController>().enabled = false;
+        //inRange = false;
     }
 
   
@@ -295,7 +297,7 @@ public class EnemyController : MonoBehaviour
         {
             point.GetComponent<Rigidbody>().AddForce(shooter.transform.forward * 30, ForceMode.Impulse);
             shot = true;
-            OnEnemyShot();            
+            OnEnemyShot(enemy.GetComponent<EnemyController>());            
         }
     }
 

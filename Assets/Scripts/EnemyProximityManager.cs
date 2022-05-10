@@ -38,6 +38,7 @@ public class EnemyProximityManager : MonoBehaviour
     {
         enemy.OnEnemyInRange += EnemyInRange;
         enemy.OnEnemyOutOfRange += EnemyOutOfRange;
+        enemy.OnEnemyShot += EnemyShot;
     }
 
     private void EnemyInRange(EnemyController enemy)
@@ -55,6 +56,11 @@ public class EnemyProximityManager : MonoBehaviour
         {
             OnNoEnemyInRange();
         }
+    }
+
+    private void EnemyShot(EnemyController enemy)
+    {
+        enemySet.Remove(enemy.GetInstanceID());
     }
 
     private void LogListOfEnemiesInRange()

@@ -92,7 +92,7 @@ public class LevelManager : Singleton<LevelManager>
         spawnCount++;
     }
 
-    public void OnEnemyShot()
+    public void OnEnemyShot(EnemyController enemy)
     {
         enemiesShot++;
     }
