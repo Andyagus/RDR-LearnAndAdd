@@ -125,7 +125,9 @@ public class ShooterController : MonoBehaviour
             return;
         }
 
+
         GunIsGrounded();
+        Debug.Log("Gun is grounded: " + GunIsGrounded());
 
         anim.SetFloat("speed", input.Speed);
 
@@ -147,6 +149,17 @@ public class ShooterController : MonoBehaviour
         if (Input.GetMouseButtonUp(1) && aiming)
         {
             ShotSequence();
+        }
+
+        if (Input.GetKeyDown(KeyCode.X))
+        {
+            LoseGun();
+            
+        }
+
+        if (Input.GetKeyDown(KeyCode.Z))
+        {
+            FoundGun();
         }
 
         if (aiming)
@@ -435,8 +448,8 @@ public class ShooterController : MonoBehaviour
         var gunRb = gun.GetComponent<Rigidbody>();
         gunParentRb.AddForce(Vector3.forward * 10, ForceMode.Impulse);
         gunRb.isKinematic = false;
+        gun.GetComponent<BoxCollider>().enabled = true;       
         gun.transform.parent = gunParent.transform;
-
     }
 
     private void FoundGun()
@@ -444,6 +457,7 @@ public class ShooterController : MonoBehaviour
         Debug.Log("Found Gun");
         lostWeapon = false;
         gun.GetComponent<Rigidbody>().isKinematic = true;
+        gun.GetComponent<BoxCollider>().enabled = false;
         zombieAttack = false;
         gun.transform.parent = rightHand;
         Destroy(gunParent);
@@ -491,7 +505,7 @@ public class ShooterController : MonoBehaviour
     private bool GunIsGrounded()
     { 
         RaycastHit hit;
-        Physics.Raycast(gun.transform.position, -Vector3.up, out hit, 1f, platformLayerMask);        
+        Physics.Raycast(gun.transform.position, -Vector3.up, out hit, 0.2f, platformLayerMask);        
         return hit.collider != null;
     }
 
