@@ -88,7 +88,6 @@ public class ShooterHealth : MonoBehaviour
             yield return new WaitForSeconds(1);
         }
 
-        Debug.Log("Breaking out of coroutine");
     }
 
 

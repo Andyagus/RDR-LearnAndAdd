@@ -58,6 +58,7 @@ public class ShooterController : MonoBehaviour
     [SerializeField] private LayerMask platformLayerMask;
     [SerializeField] private LayerMask enemyLayerMask;
     public GameObject gun;
+    public GameObject gunParentPrefab;
     private GameObject gunParent;
     private Vector3 gunIdlePosition;
     private Vector3 gunIdleRotation;
@@ -111,7 +112,7 @@ public class ShooterController : MonoBehaviour
     void Update()
     {
 
-
+        //Debug.Log(gun.transform.position);
         if (aiming)
         {
             PositionXIndicator();
@@ -411,25 +412,36 @@ public class ShooterController : MonoBehaviour
 
     private void LoseGun()
     {
+        //TODO review with sunny tmrw MAY 11
+
         lostWeapon = true;
-        gunParent = new GameObject("gunParent");
-        Rigidbody gunParentRb = gunParent.AddComponent<Rigidbody>() as Rigidbody;
-        gunParentRb.isKinematic = true;
+
+        gunParent = Instantiate(gunParentPrefab, gun.transform.position, Quaternion.identity);
+        var gunParentRb = gunParent.GetComponent<Rigidbody>();
+        gunParentRb.AddForce(Vector3.forward * 10, ForceMode.Impulse);
+        var gunRb = gun.GetComponent<Rigidbody>();
+        gunRb.isKinematic = false;
         gun.transform.parent = gunParent.transform;
-        gun.GetComponent<Rigidbody>().isKinematic = false;
-        gunParent.transform.position = gun.transform.position;
-        gunParent.GetComponent<Rigidbody>().isKinematic = false;
-        gunParent.GetComponent<Rigidbody>().AddForce(Vector3.forward * 10, ForceMode.Impulse);
+
     }
 
     private void FoundGun()
     {
+        Debug.Log("Found Gun");
         lostWeapon = false;
         gun.GetComponent<Rigidbody>().isKinematic = true;
         zombieAttack = false;
         gun.transform.parent = rightHand;
         Destroy(gunParent);
         anim.SetTrigger("gotRifle");
+    }
+
+    private void OnControllerColliderHit(ControllerColliderHit hit)
+    {
+        if (GunIsGrounded() && hit.collider.CompareTag("gun"))
+        {
+            FoundGun();
+        }
     }
 
     private void AttackAnimation()
@@ -446,14 +458,6 @@ public class ShooterController : MonoBehaviour
     {
         
         zombieAttack = state;
-    }
-
-    private void OnControllerColliderHit(ControllerColliderHit hit)
-    {
-        if (GunIsGrounded() && hit.collider.CompareTag("gun"))
-        {
-            FoundGun();
-        }
     }
 
     private void OnPlayerDeath()

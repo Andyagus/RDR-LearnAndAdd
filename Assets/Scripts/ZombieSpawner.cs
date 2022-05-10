@@ -64,26 +64,6 @@ public class ZombieSpawner : MonoBehaviour
                 gizmosCreated = false;
             }
         }
-
-
-        //if (LevelManager.instance.showDemonstrationGizmos)
-        //{
-        //    var cylinder1 = Instantiate(cylinderPrefab, ZombieSpawnPosition(), Quaternion.identity);
-        //    var cylinder2 = Instantiate(cylinderPrefab, WalkToLocation(), Quaternion.identity);
-
-        //    cylinderPrefabs.Add(cylinder1);
-        //    cylinderPrefabs.Add(cylinder2);
-        //}
-
-        //if (LevelManager.instance.showDemonstrationGizmos == false)
-        //{
-        //    Debug.Log("Draw Demonstration Gizmos is False");
-        //    foreach(var cylinder in cylinderPrefabs)
-        //    {
-        //        Debug.Log("DESTROY CYLINDER");
-        //        Destroy(cylinder);
-        //    }
-        //}
     }
 
     private Vector3 ZombieSpawnPosition()
