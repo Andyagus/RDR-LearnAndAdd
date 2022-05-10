@@ -27,7 +27,7 @@ public class ShooterController : MonoBehaviour
     public bool aiming = false;
     public bool deadEye = false;
     public bool zombieAttack = false;
-    private bool lostWeapon = false;
+    public bool lostWeapon = false;
 
     [Header("Camera Settings")]
     private Camera mainCamera;
@@ -127,12 +127,14 @@ public class ShooterController : MonoBehaviour
 
 
         GunIsGrounded();
-        Debug.Log("Gun is grounded: " + GunIsGrounded());
+        //Debug.Log("Lost Weapon: " + lostWeapon);
 
         anim.SetFloat("speed", input.Speed);
 
         if (!aiming && zombieAttack == false && lostWeapon == false)
         {
+            Debug.Log("Calling Weapon Position");
+
             WeaponPosition();
         }
 
@@ -168,7 +170,6 @@ public class ShooterController : MonoBehaviour
         }      
 
     }
-
 
     private void PositionXIndicator()
     {
@@ -217,7 +218,6 @@ public class ShooterController : MonoBehaviour
 
     private void ShotSequence()
     {
-        Debug.Log("Called Shot Sequence");
 
         if (targets.Count > 0 && !LevelManager.instance.gameOver && !zombieAttack)
         {
@@ -324,13 +324,16 @@ public class ShooterController : MonoBehaviour
         float zoom = state ? zoomFov : originalFov;
         DOVirtual.Float(thirdPersonCam.m_Lens.FieldOfView, zoom, aimTime, CameraZoom);
 
+        if (!lostWeapon)
+        {
+            var pos = state ? gunAimPosition : gunIdlePosition;
+            var rot = state ? gunAimRotation : gunIdleRotation;
 
-        var pos = state ? gunAimPosition : gunIdlePosition;
-        var rot = state ? gunAimRotation : gunIdleRotation;
+            gun.transform.DOComplete();
+            gun.transform.DOLocalMove(pos, 0.1f);
+            gun.transform.DOLocalRotate(rot, 0.1f);
+        }
 
-        gun.transform.DOComplete();
-        gun.transform.DOLocalMove(pos, 0.1f);
-        gun.transform.DOLocalRotate(rot, 0.1f);
 
         //post effects
         float originalTimeScale = state ? 1 : 0.7f;
@@ -419,15 +422,15 @@ public class ShooterController : MonoBehaviour
 
     public void OnEnemyAttack(int attackAmount)
     {
-        
+
         ToggleControls(true);
-        StopShotSequence(); 
+        StopShotSequence();
         AttackAnimation();
 
-        if(lostWeapon == false)
+        if (lostWeapon == false)
         {
             LoseGun();
-        }            
+        }
     }
 
     private void StopShotSequence()
@@ -441,7 +444,7 @@ public class ShooterController : MonoBehaviour
     private void LoseGun()
     {
         //TODO review with sunny tmrw MAY 11
-
+        Debug.Log("Lose gun called");
         lostWeapon = true;
         gunParent = Instantiate(gunParentPrefab, gun.transform.position, Quaternion.identity);
         var gunParentRb = gunParent.GetComponent<Rigidbody>();
