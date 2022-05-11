@@ -39,10 +39,6 @@ public class ShooterController : MonoBehaviour
     public GameObject stateDrivenCam;
     public GameObject deathCam;
 
-    [Header("Proximity Track")]
-    public HashSet<int> enemySet;
-    public int enemySetCount;
-
     [Header("Targets")]
     public List<Transform> targets = new List<Transform>();
 
@@ -102,7 +98,6 @@ public class ShooterController : MonoBehaviour
         enemy = GameObject.FindObjectOfType<EnemyController>();
         FindEnemiesInScene();
         GetPlayerHealth();
-        enemySet = new HashSet<int>();
 
 
     }
