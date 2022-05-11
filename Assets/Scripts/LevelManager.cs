@@ -117,6 +117,7 @@ public class LevelManager : Singleton<LevelManager>
 
     public void GameOverRedFilter()
     {
+        Debug.Log("Color Grading " + colorGrading.colorFilter.value);
         DOVirtual.Color(colorGrading.colorFilter.value, Color.red, 0.4f, GameOverRedTween); ;
     }
 

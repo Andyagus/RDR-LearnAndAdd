@@ -246,6 +246,7 @@ public class ShooterController : MonoBehaviour
         //TODO fix the lerp after
         if (!zombieAttack)
         {
+            Debug.Log("Fixed Update: " + colorGrading.colorFilter.value);
             colorGrading.colorFilter.value = Color.Lerp(colorGrading.colorFilter.value, currentColor, aimTime);
         }
 

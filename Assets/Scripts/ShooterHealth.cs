@@ -148,8 +148,11 @@ public class ShooterHealth : MonoBehaviour
         vignette.intensity.value += attackStrength;
     }
 
+
+    //TODO
     private void ChangeVignetteColor()
     {
+        Debug.Log("Change Vignette Color " + vignette.color.value);
         DOVirtual.Color(vignette.color.value, Color.red, tweenFadeTime, ChangeVignetteColorTween);
     }
 

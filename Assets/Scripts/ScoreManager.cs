@@ -149,6 +149,7 @@ public class ScoreManager : Singleton<ScoreManager>
         bloom.intensity.value = state ? 7f : originalBloomIntensity;
         bloom.color.value = state ? Color.yellow : originalBloomColor;
         var thresholdValue = state ? .80f : 1f;
+        Debug.Log("PlayerBloom " + bloom.threshold.value);
         DOVirtual.Float(bloom.threshold.value, thresholdValue, .4f, BloomTween);
 
         if (!state)
