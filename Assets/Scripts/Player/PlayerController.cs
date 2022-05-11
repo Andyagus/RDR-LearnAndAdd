@@ -30,6 +30,15 @@ public class PlayerController : MonoBehaviour
         {           
             OnPlayerAiming();            
         }
+
+        if (Input.GetMouseButtonUp(1) && aiming)
+        {
+            //shoot event
+            OnPlayerShoot();
+            
+        }
+
+
     }
 
     private void GetPlayerHealth()

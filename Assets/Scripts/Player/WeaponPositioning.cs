@@ -21,11 +21,16 @@ public class WeaponPositioning : MonoBehaviour
     public bool zombieAttack = false;
     public bool lostWeapon = false;
 
+    private PlayerController playerControllerScript;
+
+    
     private void Start()
     {
+
         gunIdlePosition = gun.transform.localPosition;
         gunIdleRotation = gun.transform.localEulerAngles;
 
+        playerControllerScript = GetComponent<PlayerController>();
     }
 
     private void Update()

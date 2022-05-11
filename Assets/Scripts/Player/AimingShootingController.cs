@@ -26,7 +26,7 @@ public class AimingShootingController : MonoBehaviour
     private PlayerEnemy playerEnemyScript;
     private WeaponPositioning weaponPositioningScript;
     private PlayerController playerControllerScript;
-
+    private CameraController cameraControllerScript;
 
     private void Start()
     {
@@ -34,6 +34,7 @@ public class AimingShootingController : MonoBehaviour
         playerControllerScript = GetComponent<PlayerController>();
         playerEnemyScript = GetComponent<PlayerEnemy>();
         weaponPositioningScript = GetComponent<WeaponPositioning>();
+        cameraControllerScript = GetComponent<CameraController>();
 
         PlayerControllerSubscribe();
 
@@ -63,27 +64,12 @@ public class AimingShootingController : MonoBehaviour
         }
     }
 
-
-    private void Update()
+    private void OnPlayerShooting()
     {
-       
-
-        if (deadEye)
-        {
-            return;
-        }
-
-
-
-
-        if (Input.GetMouseButtonUp(1) && aiming)
-        {
-            //shoot event
-            playerShoot();
-            ShotSequence();
-        }
-
+        ShotSequence();
     }
+
+
 
     private void PositionXIndicator()
     {
@@ -91,7 +77,7 @@ public class AimingShootingController : MonoBehaviour
         {
             for (int i = 0; i < targets.Count; i++)
             {
-                indicatorList[i].position = mainCamera.WorldToScreenPoint(targets[i].position);
+                indicatorList[i].position = cameraControllerScript.mainCamera.WorldToScreenPoint(targets[i].position);
             }
         }
     }

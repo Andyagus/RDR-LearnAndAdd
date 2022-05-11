@@ -5,6 +5,13 @@ using UnityEngine;
 public class AnimationController : MonoBehaviour
 {
     private Animator anim;
+    private PlayerController playerControllerScript;
+
+
+    private void Start()
+    {
+        playerControllerScript = GetComponent<PlayerController>();
+    }
 
     private void Update()
     {
@@ -16,5 +23,9 @@ public class AnimationController : MonoBehaviour
     {
         anim.SetTrigger("onAttack");
     }
+
+    //On Aiming
+    anim.SetBool("aiming", state);
+
 
 }

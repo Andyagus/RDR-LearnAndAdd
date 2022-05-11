@@ -7,7 +7,7 @@ using UnityEngine.Rendering.PostProcessing;
 public class CameraController : MonoBehaviour
 {
     [Header("Camera Settings")]
-    private Camera mainCamera;
+    public Camera mainCamera;
     public float originalOffsetAmount;
     public float zoomOffsetAmount;
     public float aimTime;
