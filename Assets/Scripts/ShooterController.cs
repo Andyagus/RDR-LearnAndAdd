@@ -41,6 +41,7 @@ public class ShooterController : MonoBehaviour
 
     [Header("Targets")]
     public List<Transform> targets = new List<Transform>();
+    [SerializeField] private LayerMask enemyLayerMask;
 
     [Header("UI")]
     public Image reticle;
@@ -52,7 +53,6 @@ public class ShooterController : MonoBehaviour
 
     [Header("Gun")]
     [SerializeField] private LayerMask platformLayerMask;
-    [SerializeField] private LayerMask enemyLayerMask;
     public GameObject gun;
     public GameObject gunParentPrefab;
     private GameObject gunParent;
@@ -60,16 +60,16 @@ public class ShooterController : MonoBehaviour
     private Vector3 gunIdleRotation;
     private Vector3 gunAimPosition = new Vector3(0.2401146f, .006083928f, -0.1040046f);
     private Vector3 gunAimRotation = new Vector3(-6.622f, 97.47501f, 94.774f);
-    public int hitForceAmt;
+    //public int hitForceAmt;
     public bool gunOnGround;
+    public Transform rightHand;
 
     [Header("Attack")]
     private Sequence sequence;
 
-    [Header("Enemy")]
-    public EnemyController enemy;
-    public Rigidbody attackRb;
-    public Transform rightHand;
+    //[Header("Enemy")]
+    //public EnemyController enemy;
+    //public Rigidbody attackRb;
 
 
     void Start()
@@ -95,7 +95,7 @@ public class ShooterController : MonoBehaviour
         Cursor.visible = false;
         HorizontalOffset(originalOffsetAmount);
 
-        enemy = GameObject.FindObjectOfType<EnemyController>();
+        //enemy = GameObject.FindObjectOfType<EnemyController>();
         FindEnemiesInScene();
         GetPlayerHealth();
 
@@ -139,6 +139,7 @@ public class ShooterController : MonoBehaviour
 
         if (Input.GetMouseButtonUp(1) && aiming)
         {
+            Debug.Log("Shot Sequence Called");
             ShotSequence();
         }
 
@@ -206,7 +207,6 @@ public class ShooterController : MonoBehaviour
             for (var i = 0; i < targets.Count; i++) 
             {
                 
-                Debug.Log("inside sequence loop " + i);
                 var currentTarget = targets[i];
                 var currentIndicator = indicatorList[i];
 
@@ -246,7 +246,7 @@ public class ShooterController : MonoBehaviour
         //TODO fix the lerp after
         if (!zombieAttack)
         {
-            Debug.Log("Fixed Update: " + colorGrading.colorFilter.value);
+            //Debug.Log("Fixed Update: " + colorGrading.colorFilter.value);
             colorGrading.colorFilter.value = Color.Lerp(colorGrading.colorFilter.value, currentColor, aimTime);
         }
 
@@ -283,12 +283,9 @@ public class ShooterController : MonoBehaviour
             {
                 Destroy(indicator.gameObject);
             }
-
             indicatorList.Clear();
         }
     }
-
-
 
     private void Aim(bool state)
     {
@@ -416,7 +413,7 @@ public class ShooterController : MonoBehaviour
     private void StopShotSequence()
     {
         sequence.Kill();
-        Aim(false);
+        //Aim(false);
         DeadEye(false);
         zombieAttack = false;
     }
