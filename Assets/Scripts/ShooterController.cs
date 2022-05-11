@@ -105,7 +105,9 @@ public class ShooterController : MonoBehaviour
 
     void Update()
     {
-        
+
+        //Debug.Log("Aiming: " + aiming);
+
         if (aiming)
         {
             PositionXIndicator();
@@ -146,7 +148,9 @@ public class ShooterController : MonoBehaviour
         if (aiming)
         {
             AddTargets();
-        }      
+        }
+
+        //Debug.Log("Aiming: " + aiming);
 
     }
 
@@ -243,12 +247,16 @@ public class ShooterController : MonoBehaviour
     private void FixedUpdate()
     {
 
-        //TODO fix the lerp after
-        if (!zombieAttack)
+        //if zombieattack is false - 
+
+        //if (!zombieAttack)
+        //{
+        //change the color filter - from the current value to current color
+        if (!LevelManager.instance.gameOver)
         {
-            //Debug.Log("Fixed Update: " + colorGrading.colorFilter.value);
-            colorGrading.colorFilter.value = Color.Lerp(colorGrading.colorFilter.value, currentColor, aimTime);
+            colorGrading.colorFilter.value = Color.Lerp(colorGrading.colorFilter.value, currentColor, aimTime);            
         }
+        //}
 
     }
 
@@ -289,7 +297,9 @@ public class ShooterController : MonoBehaviour
 
     private void Aim(bool state)
     {
-        
+
+        Debug.Log("Aim Called: " + state);
+
         aiming = state;
         anim.SetBool("aiming", state);
 
@@ -332,7 +342,9 @@ public class ShooterController : MonoBehaviour
         Color reticleColor = state ? Color.white : Color.clear;
         reticle.color = reticleColor;
 
+
         currentColor = state ? deadEyeColor : Color.white;
+
     }
    
     private void CameraZoom(float zoomAmt)
@@ -418,9 +430,7 @@ public class ShooterController : MonoBehaviour
     }
 
     private void LoseGun()
-    {
-        //TODO review with sunny tmrw MAY 11
-        Debug.Log("Lose Gun");
+    {        
         lostWeapon = true;
         gunParent = Instantiate(gunParentPrefab, gun.transform.position, Quaternion.identity);
         var gunParentRb = gunParent.GetComponent<Rigidbody>();
