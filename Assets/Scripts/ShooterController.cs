@@ -412,10 +412,9 @@ public class ShooterController : MonoBehaviour
 
     private void StopShotSequence()
     {
-        sequence.Kill();
-        //Aim(false);
         DeadEye(false);
-        zombieAttack = false;
+        sequence.Kill();
+        Aim(false);
     }
 
     private void LoseGun()
