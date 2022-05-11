@@ -95,7 +95,6 @@ public class ShooterController : MonoBehaviour
         Cursor.visible = false;
         HorizontalOffset(originalOffsetAmount);
 
-        //enemy = GameObject.FindObjectOfType<EnemyController>();
         FindEnemiesInScene();
         GetPlayerHealth();
 
@@ -106,7 +105,6 @@ public class ShooterController : MonoBehaviour
     void Update()
     {
 
-        //Debug.Log("Aiming: " + aiming);
 
         if (aiming)
         {
@@ -141,7 +139,6 @@ public class ShooterController : MonoBehaviour
 
         if (Input.GetMouseButtonUp(1) && aiming)
         {
-            Debug.Log("Shot Sequence Called");
             ShotSequence();
         }
 
@@ -298,8 +295,6 @@ public class ShooterController : MonoBehaviour
     private void Aim(bool state)
     {
 
-        Debug.Log("Aim Called: " + state);
-
         aiming = state;
         anim.SetBool("aiming", state);
 
@@ -443,7 +438,6 @@ public class ShooterController : MonoBehaviour
 
     private void FoundGun()
     {
-        Debug.Log("Found Gun");
         lostWeapon = false;
         gun.GetComponent<Rigidbody>().isKinematic = true;
         gun.GetComponent<BoxCollider>().enabled = false;

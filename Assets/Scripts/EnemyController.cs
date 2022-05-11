@@ -81,7 +81,13 @@ public class EnemyController : MonoBehaviour
         if(shot == true)
         {
             DestroyEnemy();
-        }        
+        }
+
+        if (Input.GetKeyDown(KeyCode.A))
+        {
+            OnEnemyAttack(2);
+        }
+
     }
 
 

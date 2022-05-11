@@ -142,6 +142,7 @@ public class ShooterHealth : MonoBehaviour
 
     public void AdjustVignetteAmount(bool state)
     {
+        Debug.Log("adjust vignette method being called");
         ChangeVignetteColor();
         float attackStrength = (float)this.attackStrength/10;         
         attackStrength = state ? attackStrength : -attackStrength;

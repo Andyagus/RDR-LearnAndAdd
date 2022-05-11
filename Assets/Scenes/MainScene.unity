@@ -908,7 +908,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 419099223}
-  m_LocalRotation: {x: 0.12388445, y: 0.050373003, z: -0.0062971227, w: 0.99099725}
+  m_LocalRotation: {x: 0.12388432, y: 0.05038403, z: -0.0062984973, w: 0.9909967}
   m_LocalPosition: {x: -1.37, y: 2, z: 3.6000001}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
@@ -1097,7 +1097,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 460102724}
-  m_LocalRotation: {x: 0.123884425, y: 0.050373003, z: -0.0062971534, w: 0.99099725}
+  m_LocalRotation: {x: 0.12388432, y: 0.050384026, z: -0.0062985304, w: 0.9909967}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -4682,6 +4682,9 @@ MonoBehaviour:
   stateDrivenCam: {fileID: 923302430}
   deathCam: {fileID: 406472747}
   targets: []
+  enemyLayerMask:
+    serializedVersion: 2
+    m_Bits: 1024
   reticle: {fileID: 140639891}
   xIndicatorPrefab: {fileID: 5461032404049466586, guid: ba2041d63138748a8b6279818e4a5b33,
     type: 3}
@@ -4690,16 +4693,10 @@ MonoBehaviour:
   platformLayerMask:
     serializedVersion: 2
     m_Bits: 4096
-  enemyLayerMask:
-    serializedVersion: 2
-    m_Bits: 1024
   gun: {fileID: 922432698}
   gunParentPrefab: {fileID: 8864607200786511766, guid: 42a7bb6963a2b4a4fb7e094fbc3fcc5b,
     type: 3}
-  hitForceAmt: 0
   gunOnGround: 0
-  enemy: {fileID: 0}
-  attackRb: {fileID: 0}
   rightHand: {fileID: 1173127124}
 --- !u!114 &1173127123
 MonoBehaviour:
@@ -4899,7 +4896,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1254204284}
-  m_LocalRotation: {x: 0.115143634, y: 0.050426554, z: -0.005852862, w: 0.9920508}
+  m_LocalRotation: {x: 0.11514357, y: 0.050437596, z: -0.0058541493, w: 0.9920503}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -5986,7 +5983,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1700486477}
-  m_LocalRotation: {x: 0.10639936, y: 0.050476152, z: -0.005408319, w: 0.99302673}
+  m_LocalRotation: {x: 0.106399305, y: 0.050487205, z: -0.0054095066, w: 0.9930262}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:

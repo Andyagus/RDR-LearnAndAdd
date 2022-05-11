@@ -19,7 +19,7 @@ public class DeactivateCollider : MonoBehaviour
         {
             if(collider.enabled == false)
             {
-                Debug.Log(collider);
+                //Debug.Log(collider);
             }
             //if(collider.gameObject.name != "Player")
             //{
