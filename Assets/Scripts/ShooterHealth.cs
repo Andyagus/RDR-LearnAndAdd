@@ -109,7 +109,6 @@ public class ShooterHealth : MonoBehaviour
     {
         this.attackStrength = attackStrength;
         ImpactHealth(true);
-        AdjustVignetteAmount(true);
     }
 
     //player health count
@@ -118,6 +117,7 @@ public class ShooterHealth : MonoBehaviour
     {
         var impact = state ? -attackStrength : attackStrength;
         SetHealth(impact);
+        AdjustVignetteAmount(state);
     }
 
     private void SetMaxHealth()

@@ -408,7 +408,11 @@ public class ShooterController : MonoBehaviour
         Debug.Log("ON ENEMY ATTACK CALLED");
         ToggleControls(true);
         AttackAnimation();
-        StopShotSequence();
+
+        if(deadEye == true)
+        {
+            StopShotSequence();
+        }
 
 
         if (lostWeapon == false)
