@@ -1,18 +1,59 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    private MovementInput input;
+
+    [Header("Aiming")]
+    public Action OnPlayerAiming = () => { };
+    public Action OnPlayerShoot = () => { };
+
+
+    private void Start()
     {
-        
+        input = GetComponent<MovementInput>();
+        GetPlayerHealth();
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
-        
+
+        if (deadEye)
+        {
+            return;
+        }
+
+        if (Input.GetMouseButtonDown(1) && playerEnemyScript.ZombieAttack == false && weaponPositioningScript.lostWeapon == false)
+        {           
+            OnPlayerAiming();            
+        }
     }
+
+    private void GetPlayerHealth()
+    {
+        var shooterHealth = GetComponent<ShooterHealth>();
+        shooterHealth.OnPlayerDeath += OnPlayerDeath;
+    }
+
+    private void OnPlayerDeath()
+    {
+        anim.enabled = false;
+        input.enabled = false;
+        reticle.color = Color.clear;
+        GetComponent<CharacterController>().enabled = false;
+    }
+
+    private void ToggleControls(bool state)
+    {
+
+        zombieAttack = state;
+    }
+
+    
+       
+        
+
 }

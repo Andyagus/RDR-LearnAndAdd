@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class MovementInput : MonoBehaviour
 {
@@ -31,7 +32,6 @@ public class MovementInput : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
         InputMagnitude();
         isGrounded = controller.isGrounded;
 
@@ -46,6 +46,14 @@ public class MovementInput : MonoBehaviour
 
         moveVector = new Vector3(0, verticalVel, 0);
         controller.Move(moveVector);
+    }
+
+    void ReloadScene()
+    {
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().name);
+        }
     }
 
     void PlayerMoveAndRotation()
@@ -75,10 +83,6 @@ public class MovementInput : MonoBehaviour
         transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(pos), desiredRotationSpeed);
     }
 
-    public void RotateToCamera()
-    {
-
-    }
 
     void InputMagnitude()
     {
