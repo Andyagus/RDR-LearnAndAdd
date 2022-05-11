@@ -119,7 +119,6 @@ public class ShooterController : MonoBehaviour
 
 
         GunIsGrounded();
-        //Debug.Log("Lost Weapon: " + lostWeapon);
 
         anim.SetFloat("speed", input.Speed);
 
@@ -142,17 +141,6 @@ public class ShooterController : MonoBehaviour
         {
             ShotSequence();
         }
-
-        //if (Input.GetKeyDown(KeyCode.X))
-        //{
-        //    LoseGun();
-            
-        //}
-
-        //if (Input.GetKeyDown(KeyCode.Z))
-        //{
-        //    FoundGun();
-        //}
 
         if (aiming)
         {

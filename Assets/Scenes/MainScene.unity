@@ -908,7 +908,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 419099223}
-  m_LocalRotation: {x: 0.123884305, y: 0.0503845, z: -0.006298556, w: 0.99099666}
+  m_LocalRotation: {x: 0.12388435, y: 0.05037885, z: -0.00629785, w: 0.990997}
   m_LocalPosition: {x: -1.37, y: 2, z: 3.6000001}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
@@ -1097,7 +1097,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 460102724}
-  m_LocalRotation: {x: 0.12388431, y: 0.0503845, z: -0.006298595, w: 0.9909967}
+  m_LocalRotation: {x: 0.12388435, y: 0.050378848, z: -0.0062978882, w: 0.990997}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -4681,7 +4681,6 @@ MonoBehaviour:
   aimTime: 0.2
   stateDrivenCam: {fileID: 923302430}
   deathCam: {fileID: 406472747}
-  enemySetCount: 0
   targets: []
   reticle: {fileID: 140639891}
   xIndicatorPrefab: {fileID: 5461032404049466586, guid: ba2041d63138748a8b6279818e4a5b33,
@@ -4900,7 +4899,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1254204284}
-  m_LocalRotation: {x: 0.11514356, y: 0.050438065, z: -0.0058542206, w: 0.9920503}
+  m_LocalRotation: {x: 0.1151436, y: 0.050432406, z: -0.005853564, w: 0.9920506}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -5987,7 +5986,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1700486477}
-  m_LocalRotation: {x: 0.1063993, y: 0.050487675, z: -0.0054095523, w: 0.9930262}
+  m_LocalRotation: {x: 0.10639931, y: 0.050482005, z: -0.005408945, w: 0.9930265}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:

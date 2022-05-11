@@ -15,6 +15,7 @@ public class ScoreManager : Singleton<ScoreManager>
     public int playerScore;
     public int multiplier = 1;
 
+    //bloom can move to cam and post effects script
     [Header("Camera and Post Processing", order = 0)]
     private Camera mainCamera;
     private Bloom bloom;

@@ -58,6 +58,7 @@ public class ShooterHealth : MonoBehaviour
         }
     }
 
+    //leverages proximity manager list
     private void GetProximityManager()
     {
         var proximityManager = GetComponent<EnemyProximityManager>();
@@ -65,6 +66,7 @@ public class ShooterHealth : MonoBehaviour
         proximityManager.OnEnemyInRange += OnEnemyInRange;
     }
 
+    //start and stop coroutine review 
     private void OnNoEnemyInRange()
     {
         StartCoroutine(RestoreHealthOverTime());
