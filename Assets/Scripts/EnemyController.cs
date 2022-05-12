@@ -13,11 +13,8 @@ public class EnemyController : MonoBehaviour
     private Animator anim;
     private ShooterController shooter;
     private NavMeshAgent enemy;
-    private GameObject vCam;
-    //private PostProcessVolume postVolume;
-    //private PostProcessProfile postProfile;
-    private Camera mainCamera;
-    public GameObject cubeObject;
+
+    [Header("Enemy on Player Attack Box")]
     public GameObject enemyArm;
     public Transform attackPoint;
     private float attackRange = 0.2f;
@@ -28,7 +25,7 @@ public class EnemyController : MonoBehaviour
     public Vector3 startPosition;
     public GameObject cylinderPrefab;
     public bool moveTowardsPlayer;
-    public bool newZombieSpawn = false;
+   
     public bool setInitialLocation;
     public Vector3 walkToLocation;
 
@@ -64,7 +61,6 @@ public class EnemyController : MonoBehaviour
         rbs = GetComponentsInChildren<Rigidbody>();
         Ragdoll(false, this.transform);
         enemy = GetComponent<NavMeshAgent>();
-        mainCamera = Camera.main;
         //postVolume = mainCamera.GetComponent<PostProcessVolume>();       
         //postProfile = postVolume.profile;
     }
@@ -101,9 +97,7 @@ public class EnemyController : MonoBehaviour
     }
 
     private void OnZombieRelease(Vector3 spawnPos, Vector3 walkToLocation)
-    {
-        newZombieSpawn = true;
-
+    {        
         if(setInitialLocation == false)
         {
             this.walkToLocation = walkToLocation;

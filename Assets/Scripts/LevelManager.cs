@@ -10,7 +10,7 @@ public class LevelManager : Singleton<LevelManager>
     public int spawnCount = 0;
     public ShooterHealth playerHealth;
     public ZombieSpawner[] zombieSpawners;
-    public EnemyController[] enemies;
+    //public EnemyController[] enemies;
     public int enemiesShot;
     public int enemiesInScene;
     public bool showDemonstrationGizmos;

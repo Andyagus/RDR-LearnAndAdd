@@ -5,21 +5,25 @@ using UnityEngine;
 
 public class ZombieSpawner : MonoBehaviour
 {
-    [Header("Static Variables")]
+    [Header("Particle System")]
     private bool gizmosCreated = false;
     List<GameObject> cylinderPrefabs = new List<GameObject>();
-
-    public GameObject zombiePrefab;
     public GameObject cylinderPrefab;
     private Transform particleSystemTransform;
     private Transform sphereIndicator;
+
+    [Header("Zombie Spawn")]
+    public GameObject zombiePrefab;
     public static int spawnNumber = 0;
-    public bool spawnZombie = true;
+    //public bool spawnZombie = true;
     public float frequency = .01f;
     public int limit = 10;
+
     public Vector3 spawnPos;
     int spawnOffsetAmt = 2;
     public Vector3 initialDestination;
+
+    [Header("Events")]
     public Action<int> OnSpawnComplete = (int x) => {};
     public Action<EnemyController> OnEnemySpawn = (EnemyController enemy) => {};
     public Action<Vector3, Vector3> OnZombieRelease = (Vector3 spawnPos, Vector3 WalkToLocation) => { };
