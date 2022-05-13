@@ -182,6 +182,7 @@ public class ShooterController : MonoBehaviour
 
         if (!targets.Contains(hit.transform) && !hit.transform.GetComponentInParent<EnemyController>().aimed)
         {
+
             hit.transform.GetComponentInParent<EnemyController>().aimed = true;
             targets.Add(hit.transform);
             Vector3 worldToScreenPointPos = Camera.main.WorldToScreenPoint(hit.transform.position);

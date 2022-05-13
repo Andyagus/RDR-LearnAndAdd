@@ -20,8 +20,6 @@ public class EnemyController : MonoBehaviour
     private float attackRange = 0.2f;
     public LayerMask playerLayers;
 
-
-    //public bool updatedDestination = false;
     public Vector3 startPosition;
     public GameObject cylinderPrefab;
     public bool moveTowardsPlayer;
@@ -29,18 +27,15 @@ public class EnemyController : MonoBehaviour
     public bool setInitialLocation;
     public Vector3 walkToLocation;
 
-    public float distance;
-    public bool withinRange;
     public bool aimed = false;
     public bool shot;
-    public bool triggerStopAttack;
-    public bool attacking = false;
     public bool LookAtCalled = false;
     public bool playerHit = false;
     public bool inRange;
     public int attackStrength = 2;
 
     [Header("Events")]
+    //delegate to proximity manager 
     public Action<EnemyController> OnEnemyShot = (EnemyController enemy) => {};   
     public Action<EnemyController> OnEnemyOutOfRange = (EnemyController enemy) => {};
     public Action<EnemyController> OnEnemyInRange = (EnemyController enemy) => { };
@@ -108,34 +103,22 @@ public class EnemyController : MonoBehaviour
 
     private void CheckDestinationPosition()
     {
-        ///<summary>
-        ///how I made it work:
-        /// When the zombie is spawned pass in two vector3's through the event,
-        /// spawn location and position to walk towards
-        /// set the position to walk towards as the initial destination -
-        /// when you get a certain amount close to the initial destination, then switching
-        /// the destination to equal the player destination 
-        /// TODO • Implement Path Complete       
-        /// TODO • Unhappy with the booleans in the CheckDestinationPosition() method 
-        /// </summary>
-
         if(setInitialLocation == true)
         {
             enemy.destination = walkToLocation;
         }
 
-        //TODO not happy how I am controlling a remaining distance thing here - as well as an offset in the zombie spawner
-        //not worth my time diving into complete path etc…
-
+        //TODO Use Complete Path        
         if (enemy.remainingDistance <= 1.4f && enemy.remainingDistance != 0)
         {
-            moveTowardsPlayer = true;
-            
+            moveTowardsPlayer = true;            
         }
 
         if (moveTowardsPlayer)
         {
             enemy.destination = shooter.transform.position;
+
+            //TODO nail down how this works
             var lookRotation = Quaternion.LookRotation(shooter.transform.position - transform.position, Vector3.up);
             transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime);
 
@@ -180,21 +163,6 @@ public class EnemyController : MonoBehaviour
 
     }  
 
-
-    private void OnDrawGizmosSelected()
-    {
-        Gizmos.DrawWireSphere(attackPoint.position, attackRange);
-    }
-
-    private void DestroyEnemy()
-    {
-        GetComponent<NavMeshAgent>().enabled = false;
-        //GetComponent<EnemyController>().enabled = false;
-        //inRange = false;
-    }
-
-  
-
     private void AdjustEnemyBehavior(EnemyState state)
     {
         switch (state)
@@ -217,6 +185,19 @@ public class EnemyController : MonoBehaviour
         }
     }
 
+
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.DrawWireSphere(attackPoint.position, attackRange);
+    }
+
+    private void DestroyEnemy()
+    {
+        GetComponent<NavMeshAgent>().enabled = false;
+        //GetComponent<EnemyController>().enabled = false;
+        //inRange = false;
+    }
+
     //animation trigger
     public void OnHit(int numberBool)
     {
@@ -234,15 +215,15 @@ public class EnemyController : MonoBehaviour
     private void AttackPlayer()
     {
         enemy.isStopped = true;
+        //maybe should be a trigger instead of bool, so don't need to set to false in each method 
         anim.SetBool("attack", true);
 
         Collider[] hitPlayerRb = Physics.OverlapSphere(attackPoint.position, attackRange, playerLayers);
 
         if(playerHit == true && hitPlayerRb.Length > 0)
         {
+            //attack strength can vary depending on where player was hit
             OnEnemyAttack(attackStrength);
-
-            //TODO discuss with sunny added false here - because animation false doesn'thappen fast enough
             playerHit = false;
         }
 
@@ -259,6 +240,7 @@ public class EnemyController : MonoBehaviour
 
         enemy.speed = 0.5f;
 
+        //can be moved to proximity manager
         if(inRange == false)
         {
             OnEnemyInRange(GetComponent<EnemyController>());
