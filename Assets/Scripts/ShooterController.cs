@@ -20,9 +20,9 @@ public class ShooterController : MonoBehaviour
     private PostProcessProfile postProfile;
     private ColorGrading colorGrading;
     public Color deadEyeColor;
-    private Color currentColor = Color.white;
     public Color originalVignetteColor;
-    
+
+
     [Header("Booleans")]
     public bool aiming = false;
     public bool deadEye = false;
@@ -45,6 +45,7 @@ public class ShooterController : MonoBehaviour
 
     [Header("UI")]
     public Image reticle;
+    private Color currentColor = Color.white;
     public GameObject xIndicatorPrefab;
     public List<Transform> indicatorList = new List<Transform>();
     public Transform canvas;
@@ -66,11 +67,6 @@ public class ShooterController : MonoBehaviour
 
     [Header("Attack")]
     private Sequence sequence;
-
-    //[Header("Enemy")]
-    //public EnemyController enemy;
-    //public Rigidbody attackRb;
-
 
     void Start()
     {
@@ -225,10 +221,8 @@ public class ShooterController : MonoBehaviour
 
         }
         else
-        {
-            //Debug.Log("Else");
+        {            
             Aim(false);
-            //DeadEye(false);
         }
     }
 
@@ -305,15 +299,15 @@ public class ShooterController : MonoBehaviour
         float zoom = state ? zoomFov : originalFov;
         DOVirtual.Float(thirdPersonCam.m_Lens.FieldOfView, zoom, aimTime, CameraZoom);
 
-        if (!lostWeapon)
-        {
-            var pos = state ? gunAimPosition : gunIdlePosition;
-            var rot = state ? gunAimRotation : gunIdleRotation;
+        //if (!lostWeapon)
+        //{
+        var pos = state ? gunAimPosition : gunIdlePosition;
+        var rot = state ? gunAimRotation : gunIdleRotation;
 
-            gun.transform.DOComplete();
-            gun.transform.DOLocalMove(pos, 0.1f);
-            gun.transform.DOLocalRotate(rot, 0.1f);
-        }
+        gun.transform.DOComplete();
+        gun.transform.DOLocalMove(pos, 0.1f);
+        gun.transform.DOLocalRotate(rot, 0.1f);
+        //}
 
 
         //post effects

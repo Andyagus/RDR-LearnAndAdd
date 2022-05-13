@@ -95,14 +95,8 @@ public class ShooterHealth : MonoBehaviour
 
     private void AddEnemyEvents(EnemyController enemy)
     {
-        enemy.OnEnemyShot += OnEnemyShot;
         enemy.OnEnemyAttack += OnEnemyAttack;
 
-    }
-
-    private void OnEnemyShot(EnemyController enemy)
-    {
-        //**//
     }
 
     private void OnEnemyAttack(int attackStrength)

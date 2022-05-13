@@ -6,7 +6,6 @@ using UnityEngine;
 public class EnemyProximityManager : MonoBehaviour
 {
     public HashSet<int> enemySet;
-    private bool noEnemyInRangeTrigger = true;
     public Action OnNoEnemyInRange = () => { };
     public Action OnEnemyInRange = () => { };
 
@@ -36,6 +35,7 @@ public class EnemyProximityManager : MonoBehaviour
 
     private void OnEnemySpawn(EnemyController enemy)
     {
+        //events being passed in from enemy controller
         enemy.OnEnemyInRange += EnemyInRange;
         enemy.OnEnemyOutOfRange += EnemyOutOfRange;
         enemy.OnEnemyShot += EnemyShot;
