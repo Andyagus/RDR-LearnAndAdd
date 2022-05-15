@@ -181,8 +181,7 @@ public class ShooterController : MonoBehaviour
         reticle.color = Color.red;
 
         if (!targets.Contains(hit.transform) && !hit.transform.GetComponentInParent<EnemyController>().aimed)
-        {
-
+        {            
             hit.transform.GetComponentInParent<EnemyController>().aimed = true;
             targets.Add(hit.transform);
             Vector3 worldToScreenPointPos = Camera.main.WorldToScreenPoint(hit.transform.position);
@@ -473,7 +472,7 @@ public class ShooterController : MonoBehaviour
     private void OnPlayerDeath()
     {
         /*
-         * with there was better way to include death cam in state driven camera, but am 
+         * better way to include death cam in state driven camera, but am 
          * deactivated the animator when ragdoll is called.
          * anim.SetTrigger("onDeath");
         */
