@@ -31,11 +31,7 @@ public class ShooterController : MonoBehaviour
 
     [Header("Camera Settings")]
     private Camera mainCamera;
-    public float originalOffsetAmount;
-    public float zoomOffsetAmount;
     public float aimTime;
-    private float originalFov;
-    private float zoomFov = 20;
     public GameObject stateDrivenCam;
     public GameObject deathCam;
 
@@ -68,6 +64,10 @@ public class ShooterController : MonoBehaviour
     [Header("Attack")]
     private Sequence sequence;
 
+    [Header("Events")]
+    public Action OnPlayerAiming = () => { };
+    public Action OnPlayerStoppedAiming = () => { };
+
     void Start()
     {
         
@@ -76,7 +76,6 @@ public class ShooterController : MonoBehaviour
         anim = GetComponent<Animator>();
         mainCamera = Camera.main;
         //access cinemachine components
-        originalFov = thirdPersonCam.m_Lens.FieldOfView;
 
         impulseSource = thirdPersonCam.GetComponent<CinemachineImpulseSource>();
         postVolume = mainCamera.GetComponent<PostProcessVolume>();
@@ -89,7 +88,6 @@ public class ShooterController : MonoBehaviour
         gunIdleRotation = gun.transform.localEulerAngles;
 
         Cursor.visible = false;
-        HorizontalOffset(originalOffsetAmount);
 
         FindEnemiesInScene();
         GetPlayerHealth();
@@ -135,6 +133,8 @@ public class ShooterController : MonoBehaviour
 
         if (Input.GetMouseButtonUp(1) && aiming)
         {
+            OnPlayerStoppedAiming();
+            Debug.Log("OnPlayerStoppedAiming");
             ShotSequence();
         }
 
@@ -288,16 +288,11 @@ public class ShooterController : MonoBehaviour
 
     private void Aim(bool state)
     {
+        OnPlayerAiming();
 
         aiming = state;
         anim.SetBool("aiming", state);
 
-        float originalOffset = state ? originalOffsetAmount : zoomOffsetAmount;
-        float targetOffset = state ? zoomOffsetAmount : originalOffsetAmount;
-        DOVirtual.Float(originalOffset, targetOffset, aimTime, HorizontalOffset);
-
-        float zoom = state ? zoomFov : originalFov;
-        DOVirtual.Float(thirdPersonCam.m_Lens.FieldOfView, zoom, aimTime, CameraZoom);
 
         //if (!lostWeapon)
         //{
@@ -310,11 +305,7 @@ public class ShooterController : MonoBehaviour
         //}
 
 
-        //post effects
-        float originalTimeScale = state ? 1 : 0.7f;
-        float postTimeScale = state ? 0.7f : 1;
-        DOVirtual.Float(originalTimeScale, postTimeScale, 3f, SetTimeScale);
-
+     
         if(state == false)
         {
             transform.DORotate(new Vector3(0, transform.eulerAngles.y, transform.eulerAngles.z), aimTime);
@@ -336,24 +327,6 @@ public class ShooterController : MonoBehaviour
 
     }
    
-    private void CameraZoom(float zoomAmt)
-    {
-        thirdPersonCam.m_Lens.FieldOfView = zoomAmt;
-    }
-
-    private void HorizontalOffset(float xOffset)
-    {
-        for(var i = 0; i < 3; i++)
-        {
-            CinemachineComposer c = thirdPersonCam.GetRig(i).GetCinemachineComponent<CinemachineComposer>();
-            c.m_TrackedObjectOffset.x = xOffset;
-        }
-    }
-
-    private void SetTimeScale(float x)
-    {
-        Time.timeScale = x;
-    }
 
     private void AberationAmount(float x)
     {
