@@ -1,34 +1,43 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Cinemachine;
 
+public enum CameraSetting { ThirdPerson, Attack, Lost, Death };
+
 public class SwitchCinemacineCamera : MonoBehaviour
 {
+    public CameraSetting adjustCameraSetting;
 
-    public List<ICinemachineCamera> cinemachineCameras;
-    public ICinemachineCamera activeCamera;
+    public List<CinemachineVirtualCameraBase> cinemachineCameras;
+    public CinemachineVirtualCameraBase activeCamera;
     public CinemachineFreeLook thirdPersonCam;
     public CinemachineVirtualCamera attackCam;
     public CinemachineVirtualCamera lostWeaponCam;
     public CinemachineVirtualCamera deathCam;
 
-    public CameraSetting adjustCameraSetting;
-    public enum CameraSetting { ThirdPerson, Attack, Lost, Death };
+    public Action<CinemachineVirtualCameraBase, CameraSetting> OnCameraChange = (CinemachineVirtualCameraBase camera, CameraSetting cameraSetting) => { };
 
     // Start is called before the first frame update
     void Start()
     {
-         
+        SetCameras(); 
+    }
+
+    private void Update()
+    {
+        SetCameraPriority(adjustCameraSetting);
     }
 
     private void SetCameras()
     {
-        cinemachineCameras = new List<ICinemachineCamera>() { thirdPersonCam, attackCam, lostWeaponCam, deathCam };
+        cinemachineCameras = new List<CinemachineVirtualCameraBase>() { thirdPersonCam, attackCam, lostWeaponCam, deathCam };
     }
 
     private void SetCameraPriority(CameraSetting camSetting)
     {
+        var oldCam = activeCamera;
 
         switch (camSetting)
         {
@@ -52,6 +61,12 @@ public class SwitchCinemacineCamera : MonoBehaviour
                 break;
         }
 
+        if(activeCamera != oldCam)
+        {
+            Debug.Log("called on camera change");
+            OnCameraChange(activeCamera, adjustCameraSetting);
+        }
+
         foreach (var camera in cinemachineCameras)
         {
             if (camera != activeCamera)
@@ -59,6 +74,8 @@ public class SwitchCinemacineCamera : MonoBehaviour
                 camera.Priority = 0;
             }
         }
+
+        
     }
 
 

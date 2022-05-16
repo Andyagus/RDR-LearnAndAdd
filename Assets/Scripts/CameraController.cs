@@ -8,13 +8,10 @@ using UnityEngine.Rendering.PostProcessing;
 public class CameraController : MonoBehaviour
 {
     private Camera mainCamera;
-    private ICinemachineCamera activeCamera;
+    private CinemachineVirtualCameraBase activeCamera;
+    private CinemachineFreeLook thirdPersonCam;
+    private CameraSetting cameraSetting;
     public List<ICinemachineCamera> cinemachineCameras;
-    public CinemachineFreeLook thirdPersonCam;
-    public CinemachineVirtualCamera attackCam;
-    public CinemachineVirtualCamera lostWeaponCam;
-    public CinemachineVirtualCamera deathCam;
-
     public float originalOffsetAmount;
     public float zoomOffsetAmount;
     public float aimTime;
@@ -24,83 +21,52 @@ public class CameraController : MonoBehaviour
     private float postTimeScale = 0.7f;
 
     ///#cinemachine first -- post process second
+    ///
+    //public CinemachineImpulseSource impulseSource;
 
-    public CinemachineImpulseSource impulseSource;
+    private PostProcessVolume postProcessVolume;
+    private PostProcessProfile postProcessProfile;
 
-    //private PostProcessVolume postProcessVolume;
-    //private PostProcessProfile postProcessProfile;
-
-    //private ColorGrading colorGrading;
+    private ColorGrading colorGrading;
+    private Bloom bloom;
+    private Vignette vignette;
     //public Color deadEyeColor;
     //public Color originalVignetteColor;
 
-    public CameraSetting adjustCameraSetting;
-    public enum CameraSetting { ThirdPerson , Attack, Lost, Death};
-
+   
     private void Start()
     {
         mainCamera = Camera.main;
-        originalFov = thirdPersonCam.m_Lens.FieldOfView;
-        impulseSource = thirdPersonCam.GetComponent<CinemachineImpulseSource>();
 
-        HorizontalOffset(originalOffsetAmount);
+        FindCinemachineCameraChange();        
 
         SubscribeToAimingEvent();
-        SetCameras();
-        //SetCameraPriority(CameraSetting.ThirdPerson);
 
     }
 
-    private void Update()
+
+
+    private void FindCinemachineCameraChange()
     {
-        SetCameraPriority(adjustCameraSetting);
+        var switchCinemacineCameraScript = GameObject.FindObjectOfType<SwitchCinemacineCamera>();
+        switchCinemacineCameraScript.OnCameraChange += OnCameraChange;
     }
 
-    private void SetCameras()
-    {
-        cinemachineCameras = new List<ICinemachineCamera>() { thirdPersonCam, attackCam, lostWeaponCam, deathCam};
-    }
-
-    private void SetCameraPriority(CameraSetting camSetting)
-    {
-
-        switch (camSetting)
+    private void OnCameraChange(CinemachineVirtualCameraBase camera, CameraSetting cameraSetting)
+    {              
+        this.activeCamera = camera;
+        if (cameraSetting == CameraSetting.ThirdPerson)
         {
-            case CameraSetting.ThirdPerson:
-                activeCamera = thirdPersonCam;
-                thirdPersonCam.Priority = 1;
-                break;
-            case CameraSetting.Attack:
-                activeCamera = attackCam;
-                attackCam.Priority = 1;                
-                break;
-            case CameraSetting.Lost:
-                activeCamera = lostWeaponCam;
-                lostWeaponCam.Priority = 1;
-                break;
-            case CameraSetting.Death:
-                activeCamera = deathCam;
-                deathCam.Priority = 1;
-                break;
-            default:
-                break;
+            Debug.Log("Third person cam");
+            thirdPersonCam = activeCamera.GetComponent<CinemachineFreeLook>();
+            originalFov = thirdPersonCam.m_Lens.FieldOfView;            
+            HorizontalOffset(originalOffsetAmount);
 
 
         }
 
-        foreach (var camera in cinemachineCameras)
-        {
-            if (camera != activeCamera)
-            {               
-                camera.Priority = 0;
-            }
-        }
-    }
 
-    //private void AllCameras()
-    //{
-    //    foreach
-    //}
+    }
 
     private void SubscribeToAimingEvent()
     {
@@ -125,7 +91,7 @@ public class CameraController : MonoBehaviour
 
     private void CameraZoom(float zoomAmt)
     {
-        thirdPersonCam.m_Lens.FieldOfView = zoomAmt;
+        //thirdPersonCam.m_Lens.FieldOfView = zoomAmt;
     }   
 
     private void HorizontalOffset(float offsetAmt)
