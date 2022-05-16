@@ -379,7 +379,6 @@ public class ShooterController : MonoBehaviour
 
     public void OnEnemyAttack(int attackAmount)
     {
-        Debug.Log("ON ENEMY ATTACK CALLED");
         ToggleControls(true);
         AttackAnimation();
 

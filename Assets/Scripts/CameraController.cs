@@ -54,7 +54,6 @@ public class CameraController : MonoBehaviour
         this.activeCamera = camera;
         if (cameraSetting == CameraSetting.ThirdPerson)
         {
-            Debug.Log("Third person cam");
             thirdPersonCam = activeCamera.GetComponent<CinemachineFreeLook>();
             originalFov = thirdPersonCam.m_Lens.FieldOfView;            
             HorizontalOffset(originalOffsetAmount);

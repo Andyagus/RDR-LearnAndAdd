@@ -128,8 +128,6 @@ public class SwitchCinemacineCamera : MonoBehaviour
                 break;
         }
 
-        Debug.Log(activeCamera);
-
         if(activeCamera != oldCam)
         {
             OnCameraChange(activeCamera, adjustCameraSetting);
