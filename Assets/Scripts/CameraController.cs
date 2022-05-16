@@ -8,11 +8,7 @@ using UnityEngine.Rendering.PostProcessing;
 public class CameraController : MonoBehaviour
 {
     private Camera mainCamera;
-    //public GameObject cinemachineCameras;
-    public CinemachineFreeLook defaultThirdPersonCam;
-    public CinemachineVirtualCamera attackCam;
-    public CinemachineVirtualCamera lostWeaponCam;
-    public CinemachineVirtualCamera deathCam;
+    private ICinemachineCamera activeCamera;
 
     public float originalOffsetAmount;
     public float zoomOffsetAmount;
@@ -23,7 +19,7 @@ public class CameraController : MonoBehaviour
     private float postTimeScale = 0.7f;
 
     ///#cinemachine first -- post process second
-    public CinemachineFreeLook thirdPersonCam;
+
     public CinemachineImpulseSource impulseSource;
 
     //private PostProcessVolume postProcessVolume;
@@ -33,28 +29,34 @@ public class CameraController : MonoBehaviour
     //public Color deadEyeColor;
     //public Color originalVignetteColor;
 
+
+
     private void Start()
     {
         mainCamera = Camera.main;
+
+        //active camera here? 
         originalFov = thirdPersonCam.m_Lens.FieldOfView;
         impulseSource = thirdPersonCam.GetComponent<CinemachineImpulseSource>();
 
         HorizontalOffset(originalOffsetAmount);
 
         SubscribeToAimingEvent();
+        //SetCameras();
+        //SetCameraPriority(CameraSetting.ThirdPerson);
 
-        //GetCameras();
     }
 
-    //private void GetCameras()
-    //{
-    //    defaultThirdPersonCam = cinemachineCameras.transform.GetChild(0).gameObject.GetComponent<CinemachineFreeLook>();
-    //    Debug.Log(defaultThirdPersonCam.Priority);
-    //    attackCam = cinemachineCameras.transform.GetChild(2).gameObject;
-    //    lostWeaponCam = cinemachineCameras.transform.GetChild(3).gameObject;
-    //    deathCam = cinemachineCameras.transform.GetChild(3).gameObject;
+    private void Update()
+    {
+        //SetCameraPriority(adjustCameraSetting);
+    }
 
-    //    //Debug.Log(deathCam.pri)
+ 
+
+    //private void AllCameras()
+    //{
+    //    foreach
     //}
 
     private void SubscribeToAimingEvent()
