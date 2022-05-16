@@ -38,7 +38,7 @@ public class CameraController : MonoBehaviour
         mainCamera = Camera.main;
 
         FindCinemachineCameraChange();        
-
+        
         SubscribeToAimingEvent();
 
     }

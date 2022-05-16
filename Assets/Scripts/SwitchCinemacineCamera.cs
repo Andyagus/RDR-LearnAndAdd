@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Cinemachine;
 
-public enum CameraSetting { ThirdPerson, Attack, Lost, Death };
+public enum CameraSetting { ThirdPerson, Attack, LostWeapon, Death };
 
 public class SwitchCinemacineCamera : MonoBehaviour
 {
@@ -14,7 +14,7 @@ public class SwitchCinemacineCamera : MonoBehaviour
     public CinemachineVirtualCameraBase activeCamera;
     public CinemachineFreeLook thirdPersonCam;
     public CinemachineVirtualCamera attackCam;
-    public CinemachineVirtualCamera lostWeaponCam;
+    public CinemachineFreeLook lostWeaponCam;
     public CinemachineVirtualCamera deathCam;
 
     public Action<CinemachineVirtualCameraBase, CameraSetting> OnCameraChange = (CinemachineVirtualCameraBase camera, CameraSetting cameraSetting) => { };
@@ -33,28 +33,68 @@ public class SwitchCinemacineCamera : MonoBehaviour
 
     private void SubscribeToEvents()
     {
-        SubscribeToEnemyAttack();
+        //Not subscribing to enemy attack because the lost weapon cam
+        //conflicts and is more important
+        //----------------------------------
+        //SubscribeToEnemyAttack();
+
+        SubscribeToPlayer();
+        SubscribeToPlayerHealth();
     }
 
-    private void SubscribeToEnemyAttack()
-    {
-        var zombieSpawners = GameObject.FindObjectsOfType<ZombieSpawner>();
+    //private void SubscribeToEnemyAttack()
+    //{
+    //    var zombieSpawners = GameObject.FindObjectsOfType<ZombieSpawner>();
 
-        foreach (var spawner in zombieSpawners)
-        {
-            spawner.OnEnemySpawn += OnEnemySpawn;
-        }
+    //    foreach (var spawner in zombieSpawners)
+    //    {
+    //        spawner.OnEnemySpawn += OnEnemySpawn;
+    //    }
+    //}
+
+    //private void OnEnemySpawn(EnemyController enemy)
+    //{
+    //    enemy.OnEnemyAttack += OnEnemyAttack;
+    //}
+
+    //private void OnEnemyAttack(int attackAmt)
+    //{
+    //    adjustCameraSetting = CameraSetting.Attack;
+    //    SetCameraPriority(adjustCameraSetting);
+    //}
+
+    private void SubscribeToPlayer()
+    {
+        var player = GameObject.FindObjectOfType<ShooterController>();
+        player.OnLostWeapon += OnLostWeapon;
+        player.OnWeaponFound += OnWeaponFound;
     }
 
-    private void OnEnemySpawn(EnemyController enemy)
-    {
-        enemy.OnEnemyAttack += OnEnemyAttack;
-    }
 
-    private void OnEnemyAttack(int attackAmt)
+    private void OnLostWeapon()
     {
-        adjustCameraSetting = CameraSetting.Attack;
+        adjustCameraSetting = CameraSetting.LostWeapon;
         SetCameraPriority(adjustCameraSetting);
+    }
+
+    private void OnWeaponFound()
+    {
+        adjustCameraSetting = CameraSetting.ThirdPerson;
+        SetCameraPriority(adjustCameraSetting);
+
+    }
+
+    private void SubscribeToPlayerHealth()
+    {
+        var playerHealth = GameObject.FindObjectOfType<ShooterHealth>();
+        playerHealth.OnPlayerDeath += OnPlayerDeath;
+    }
+
+    private void OnPlayerDeath()
+    {
+        adjustCameraSetting = CameraSetting.Death;
+        SetCameraPriority(adjustCameraSetting);
+
     }
 
     private void SetCameras()
@@ -76,7 +116,7 @@ public class SwitchCinemacineCamera : MonoBehaviour
                 activeCamera = attackCam;
                 attackCam.Priority = 1;
                 break;
-            case CameraSetting.Lost:
+            case CameraSetting.LostWeapon:
                 activeCamera = lostWeaponCam;
                 lostWeaponCam.Priority = 1;
                 break;
@@ -87,6 +127,8 @@ public class SwitchCinemacineCamera : MonoBehaviour
             default:
                 break;
         }
+
+        Debug.Log(activeCamera);
 
         if(activeCamera != oldCam)
         {

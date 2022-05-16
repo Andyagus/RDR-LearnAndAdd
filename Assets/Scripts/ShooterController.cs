@@ -68,6 +68,7 @@ public class ShooterController : MonoBehaviour
     public Action OnPlayerAiming = () => { };
     public Action OnPlayerStoppedAiming = () => { };
     public Action OnLostWeapon = () => { };
+    public Action OnWeaponFound = () => { };
 
     void Start()
     {
@@ -421,6 +422,7 @@ public class ShooterController : MonoBehaviour
 
     private void FoundGun()
     {
+        OnWeaponFound();
         lostWeapon = false;
         gun.GetComponent<Rigidbody>().isKinematic = true;
         gun.GetComponent<BoxCollider>().enabled = false;
