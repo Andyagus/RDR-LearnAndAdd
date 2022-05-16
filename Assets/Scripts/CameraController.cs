@@ -8,8 +8,10 @@ using UnityEngine.Rendering.PostProcessing;
 public class CameraController : MonoBehaviour
 {
     private Camera mainCamera;
-    public GameObject stateDrivenCamera;
-    public GameObject deathCamera;
+    private CinemachineVirtualCamera defaultThirdPersonCam;
+    //private ICinemachineCamera attackCam;
+    //private ICinemachineCamera lostWeaponCam;
+    //private ICinemachineCamera deathCam;    
 
     public float originalOffsetAmount;
     public float zoomOffsetAmount;
@@ -39,6 +41,14 @@ public class CameraController : MonoBehaviour
         HorizontalOffset(originalOffsetAmount);
 
         SubscribeToAimingEvent();
+
+        GetCameras();
+    }
+
+    private void GetCameras()
+    {
+        defaultThirdPersonCam = gameObject.AddComponent<CinemachineVirtualCamera>();
+        Debug.Log(defaultThirdPersonCam.Priority);
 
     }
 
