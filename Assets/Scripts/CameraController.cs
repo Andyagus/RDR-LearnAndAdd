@@ -9,6 +9,11 @@ public class CameraController : MonoBehaviour
 {
     private Camera mainCamera;
     private ICinemachineCamera activeCamera;
+    public List<ICinemachineCamera> cinemachineCameras;
+    public CinemachineFreeLook thirdPersonCam;
+    public CinemachineVirtualCamera attackCam;
+    public CinemachineVirtualCamera lostWeaponCam;
+    public CinemachineVirtualCamera deathCam;
 
     public float originalOffsetAmount;
     public float zoomOffsetAmount;
@@ -29,30 +34,68 @@ public class CameraController : MonoBehaviour
     //public Color deadEyeColor;
     //public Color originalVignetteColor;
 
-
+    public CameraSetting adjustCameraSetting;
+    public enum CameraSetting { ThirdPerson , Attack, Lost, Death};
 
     private void Start()
     {
         mainCamera = Camera.main;
-
-        //active camera here? 
         originalFov = thirdPersonCam.m_Lens.FieldOfView;
         impulseSource = thirdPersonCam.GetComponent<CinemachineImpulseSource>();
 
         HorizontalOffset(originalOffsetAmount);
 
         SubscribeToAimingEvent();
-        //SetCameras();
+        SetCameras();
         //SetCameraPriority(CameraSetting.ThirdPerson);
 
     }
 
     private void Update()
     {
-        //SetCameraPriority(adjustCameraSetting);
+        SetCameraPriority(adjustCameraSetting);
     }
 
- 
+    private void SetCameras()
+    {
+        cinemachineCameras = new List<ICinemachineCamera>() { thirdPersonCam, attackCam, lostWeaponCam, deathCam};
+    }
+
+    private void SetCameraPriority(CameraSetting camSetting)
+    {
+
+        switch (camSetting)
+        {
+            case CameraSetting.ThirdPerson:
+                activeCamera = thirdPersonCam;
+                thirdPersonCam.Priority = 1;
+                break;
+            case CameraSetting.Attack:
+                activeCamera = attackCam;
+                attackCam.Priority = 1;                
+                break;
+            case CameraSetting.Lost:
+                activeCamera = lostWeaponCam;
+                lostWeaponCam.Priority = 1;
+                break;
+            case CameraSetting.Death:
+                activeCamera = deathCam;
+                deathCam.Priority = 1;
+                break;
+            default:
+                break;
+
+
+        }
+
+        foreach (var camera in cinemachineCameras)
+        {
+            if (camera != activeCamera)
+            {               
+                camera.Priority = 0;
+            }
+        }
+    }
 
     //private void AllCameras()
     //{

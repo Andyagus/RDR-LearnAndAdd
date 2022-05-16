@@ -19,12 +19,7 @@ public class SwitchCinemacineCamera : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        SetCameras(); 
-    }
-
-    private void Update()
-    {
-        adjustCameraSetting;
+         
     }
 
     private void SetCameras()
