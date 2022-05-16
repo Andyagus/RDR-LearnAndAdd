@@ -11,7 +11,6 @@ public class CameraController : MonoBehaviour
     private CinemachineVirtualCameraBase activeCamera;
     private CinemachineFreeLook thirdPersonCam;
     private CameraSetting cameraSetting;
-    public List<ICinemachineCamera> cinemachineCameras;
     public float originalOffsetAmount;
     public float zoomOffsetAmount;
     public float aimTime;
@@ -44,8 +43,6 @@ public class CameraController : MonoBehaviour
 
     }
 
-
-
     private void FindCinemachineCameraChange()
     {
         var switchCinemacineCameraScript = GameObject.FindObjectOfType<SwitchCinemacineCamera>();
@@ -61,11 +58,7 @@ public class CameraController : MonoBehaviour
             thirdPersonCam = activeCamera.GetComponent<CinemachineFreeLook>();
             originalFov = thirdPersonCam.m_Lens.FieldOfView;            
             HorizontalOffset(originalOffsetAmount);
-
-
         }
-
-
     }
 
     private void SubscribeToAimingEvent()
@@ -77,6 +70,7 @@ public class CameraController : MonoBehaviour
 
     private void OnPlayerAiming()
     {
+        
         DOVirtual.Float(originalOffsetAmount, zoomOffsetAmount, aimTime, HorizontalOffset);
         DOVirtual.Float(originalFov, zoomFov, aimTime, CameraZoom);
         DOVirtual.Float(originalTimeScale, postTimeScale, aimTime, SetTimeScale);
@@ -91,7 +85,7 @@ public class CameraController : MonoBehaviour
 
     private void CameraZoom(float zoomAmt)
     {
-        //thirdPersonCam.m_Lens.FieldOfView = zoomAmt;
+        thirdPersonCam.m_Lens.FieldOfView = zoomAmt;
     }   
 
     private void HorizontalOffset(float offsetAmt)
@@ -106,8 +100,6 @@ public class CameraController : MonoBehaviour
     private void SetTimeScale(float timeScale)
     {
         Time.timeScale = timeScale;
-        Debug.Log(Time.timeScale);
-
     }
 
 }

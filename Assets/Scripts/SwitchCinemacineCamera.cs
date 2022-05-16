@@ -22,11 +22,38 @@ public class SwitchCinemacineCamera : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        SetCameras(); 
+        SetCameras();
+        SubscribeToEvents();
     }
 
     private void Update()
     {
+        SetCameraPriority(adjustCameraSetting);
+    }
+
+    private void SubscribeToEvents()
+    {
+        SubscribeToEnemyAttack();
+    }
+
+    private void SubscribeToEnemyAttack()
+    {
+        var zombieSpawners = GameObject.FindObjectsOfType<ZombieSpawner>();
+
+        foreach (var spawner in zombieSpawners)
+        {
+            spawner.OnEnemySpawn += OnEnemySpawn;
+        }
+    }
+
+    private void OnEnemySpawn(EnemyController enemy)
+    {
+        enemy.OnEnemyAttack += OnEnemyAttack;
+    }
+
+    private void OnEnemyAttack(int attackAmt)
+    {
+        adjustCameraSetting = CameraSetting.Attack;
         SetCameraPriority(adjustCameraSetting);
     }
 
@@ -63,7 +90,6 @@ public class SwitchCinemacineCamera : MonoBehaviour
 
         if(activeCamera != oldCam)
         {
-            Debug.Log("called on camera change");
             OnCameraChange(activeCamera, adjustCameraSetting);
         }
 

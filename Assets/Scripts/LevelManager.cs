@@ -69,8 +69,9 @@ public class LevelManager : Singleton<LevelManager>
         playerHealth.OnPlayerDeath += OnPlayerDeath;
     }
 
+
     public void FindSpawners()
-    {
+    {        
         zombieSpawners = GameObject.FindObjectsOfType<ZombieSpawner>();
 
         foreach (var zs in zombieSpawners)

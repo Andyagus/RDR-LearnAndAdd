@@ -67,6 +67,7 @@ public class ShooterController : MonoBehaviour
     [Header("Events")]
     public Action OnPlayerAiming = () => { };
     public Action OnPlayerStoppedAiming = () => { };
+    public Action OnLostWeapon = () => { };
 
     void Start()
     {
@@ -400,8 +401,14 @@ public class ShooterController : MonoBehaviour
         Aim(false);
     }
 
+    //private void LoseWeapon(Weapon weapon)
+    //{
+    //    //polymorphism weapon method
+    //}
+
     private void LoseGun()
-    {        
+    {
+        OnLostWeapon();
         lostWeapon = true;
         gunParent = Instantiate(gunParentPrefab, gun.transform.position, Quaternion.identity);
         var gunParentRb = gunParent.GetComponent<Rigidbody>();

@@ -28,6 +28,10 @@ public class ZombieSpawner : MonoBehaviour
     public Action<EnemyController> OnEnemySpawn = (EnemyController enemy) => {};
     public Action<Vector3, Vector3> OnZombieRelease = (Vector3 spawnPos, Vector3 WalkToLocation) => { };
 
+    private void Awake()
+    {
+        
+    }
     void Start()
     {
         particleSystemTransform = gameObject.transform.GetChild(0).transform.GetChild(0);
