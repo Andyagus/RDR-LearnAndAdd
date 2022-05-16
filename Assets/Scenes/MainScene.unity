@@ -1047,7 +1047,7 @@ MonoBehaviour:
   originalOffsetAmount: 0.2
   zoomOffsetAmount: 0.45
   aimTime: 0.2
-  zoomFov: 10
+  zoomFov: 18
   thirdPersonCam: {fileID: 107641428}
   impulseSource: {fileID: 107641430}
 --- !u!1 &460102724
@@ -1118,7 +1118,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 460102724}
-  m_LocalRotation: {x: 0.12499706, y: 0.09510199, z: -0.012037779, w: 0.98751533}
+  m_LocalRotation: {x: 0.12499706, y: 0.09510199, z: -0.012037781, w: 0.98751533}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -4914,7 +4914,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1254204284}
-  m_LocalRotation: {x: 0.11628693, y: 0.09520441, z: -0.011198977, w: 0.98857886}
+  m_LocalRotation: {x: 0.11628694, y: 0.09520441, z: -0.011198976, w: 0.98857886}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:

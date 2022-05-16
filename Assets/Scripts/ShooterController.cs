@@ -133,8 +133,7 @@ public class ShooterController : MonoBehaviour
 
         if (Input.GetMouseButtonUp(1) && aiming)
         {
-            OnPlayerStoppedAiming();
-            Debug.Log("OnPlayerStoppedAiming");
+            
             ShotSequence();
         }
 
@@ -288,14 +287,20 @@ public class ShooterController : MonoBehaviour
 
     private void Aim(bool state)
     {
-        OnPlayerAiming();
+        if(state == true)
+        {
+            OnPlayerAiming();
+        }
+        if(state == false)
+        {
+            OnPlayerStoppedAiming();
+        }
 
         aiming = state;
         anim.SetBool("aiming", state);
 
 
-        //if (!lostWeapon)
-        //{
+        
         var pos = state ? gunAimPosition : gunIdlePosition;
         var rot = state ? gunAimRotation : gunIdleRotation;
 

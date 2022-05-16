@@ -58,7 +58,6 @@ public class CameraController : MonoBehaviour
 
     private void OnPlayerStoppedAiming()
     {
-        Debug.Log(originalFov);
         DOVirtual.Float(zoomOffsetAmount, originalOffsetAmount, aimTime, HorizontalOffset);
         DOVirtual.Float(zoomFov, originalFov, aimTime, CameraZoom);
         DOVirtual.Float(postTimeScale, originalTimeScale, aimTime, SetTimeScale);
@@ -66,7 +65,6 @@ public class CameraController : MonoBehaviour
 
     private void CameraZoom(float zoomAmt)
     {
-        Debug.Log(zoomAmt);
         thirdPersonCam.m_Lens.FieldOfView = zoomAmt;
     }   
 
@@ -82,6 +80,8 @@ public class CameraController : MonoBehaviour
     private void SetTimeScale(float timeScale)
     {
         Time.timeScale = timeScale;
+        Debug.Log(Time.timeScale);
+
     }
 
 }
