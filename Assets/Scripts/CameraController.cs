@@ -19,26 +19,27 @@ public class CameraController : MonoBehaviour
     private float originalTimeScale = 1;
     private float postTimeScale = 0.7f;
 
-    ///#cinemachine first -- post process second
-    ///
-    //public CinemachineImpulseSource impulseSource;
-
-    private PostProcessVolume postProcessVolume;
-    private PostProcessProfile postProcessProfile;
+    private PostProcessVolume postVolume;
+    private PostProcessProfile postProfile;
 
     private ColorGrading colorGrading;
     private Bloom bloom;
     private Vignette vignette;
-    //public Color deadEyeColor;
-    //public Color originalVignetteColor;
+    public Color deadEyeColor;
+    public Color originalVignetteColor;
 
-   
+
     private void Start()
     {
         mainCamera = Camera.main;
 
-        FindCinemachineCameraChange();        
-        
+        postVolume = mainCamera.GetComponent<PostProcessVolume>();
+        postProfile = postVolume.profile;
+        colorGrading = postProfile.GetSetting<ColorGrading>();
+        bloom = postProfile.GetSetting<Bloom>();
+        vignette = postProfile.GetSetting<Vignette>();
+
+        FindCinemachineCameraChange();                
         SubscribeToAimingEvent();
 
     }

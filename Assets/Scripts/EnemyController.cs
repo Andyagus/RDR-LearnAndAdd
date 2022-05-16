@@ -19,20 +19,18 @@ public class EnemyController : MonoBehaviour
     public Transform attackPoint;
     private float attackRange = 0.2f;
     public LayerMask playerLayers;
+    private bool playerHit = false;
+    public int attackStrength = 2;
 
     public Vector3 startPosition;
     public GameObject cylinderPrefab;
-    public bool moveTowardsPlayer;
-   
     public bool setInitialLocation;
-    public Vector3 walkToLocation;
+    public Vector3 walkToLocation;   
+    public bool moveTowardsPlayer;
 
     public bool aimed = false;
     public bool shot;
-    public bool LookAtCalled = false;
-    public bool playerHit = false;
     public bool inRange;
-    public int attackStrength = 2;
 
     [Header("Events")]
     //delegate to proximity manager 
@@ -74,7 +72,7 @@ public class EnemyController : MonoBehaviour
             DestroyEnemy();
         }
 
-        if (Input.GetKeyDown(KeyCode.A))
+        if (Input.GetKeyDown(KeyCode.B))
         {
             OnEnemyAttack(2);
         }
@@ -185,7 +183,6 @@ public class EnemyController : MonoBehaviour
         }
     }
 
-
     private void OnDrawGizmosSelected()
     {
         Gizmos.DrawWireSphere(attackPoint.position, attackRange);
@@ -194,11 +191,8 @@ public class EnemyController : MonoBehaviour
     private void DestroyEnemy()
     {
         GetComponent<NavMeshAgent>().enabled = false;
-        //GetComponent<EnemyController>().enabled = false;
-        //inRange = false;
     }
 
-    //animation trigger
     public void OnHit(int numberBool)
     {
         switch (numberBool)
@@ -215,21 +209,18 @@ public class EnemyController : MonoBehaviour
     private void AttackPlayer()
     {
         enemy.isStopped = true;
-        //maybe should be a trigger instead of bool, so don't need to set to false in each method 
         anim.SetBool("attack", true);
 
         Collider[] hitPlayerRb = Physics.OverlapSphere(attackPoint.position, attackRange, playerLayers);
 
         if(playerHit == true && hitPlayerRb.Length > 0)
         {
-            //attack strength can vary depending on where player was hit
             OnEnemyAttack(attackStrength);
             playerHit = false;
         }
 
         if (hitPlayerRb.Length == 0)
         {
-
             return;
         }
     }
