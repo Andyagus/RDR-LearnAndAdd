@@ -27,6 +27,7 @@ public class ZombieSpawner : MonoBehaviour
     public Action<int> OnSpawnComplete = (int x) => {};
     public Action<EnemyController> OnEnemySpawn = (EnemyController enemy) => {};
     public Action<Vector3, Vector3> OnZombieRelease = (Vector3 spawnPos, Vector3 WalkToLocation) => { };
+    public Action OnRequestZombieForSpawn = () => { };
 
     private void Awake()
     {
@@ -36,6 +37,7 @@ public class ZombieSpawner : MonoBehaviour
     {
         particleSystemTransform = gameObject.transform.GetChild(0).transform.GetChild(0);
         sphereIndicator = gameObject.transform.GetChild(0).transform.GetChild(0).transform.GetChild(0);
+        FindEnemyManager();
         StartCoroutine(SpawnZombies());
     }
 
@@ -89,6 +91,12 @@ public class ZombieSpawner : MonoBehaviour
 
     }
 
+    private void FindEnemyManager()
+    {
+        var enemyManager = GameObject.FindObjectOfType<EnemyManager>();
+        enemyManager.OnEnemyInstantiated += OnEnemyInstantiated;
+    }
+
     public IEnumerator SpawnZombies()
     {
         for(var i = 0; i < limit; i++)
@@ -96,14 +104,21 @@ public class ZombieSpawner : MonoBehaviour
             
             yield return new WaitForSeconds(frequency);
             spawnNumber++;
-            var zombie = Instantiate(zombiePrefab, ZombieSpawnPosition(), particleSystemTransform.rotation);
-            zombie.gameObject.name = $"zombie {spawnNumber}";
-            var enemy = zombie.GetComponent<EnemyController>();
-            OnZombieRelease(ZombieSpawnPosition(), WalkToLocation());
-            OnEnemySpawn(enemy);
+            //var zombie = Instantiate(zombiePrefab, ZombieSpawnPosition(), particleSystemTransform.rotation);
+            OnRequestZombieForSpawn();
+
+            //zombie.gameObject.name = $"zombie {spawnNumber}";
+            //var enemy = zombie.GetComponent<EnemyController>();
+            //OnZombieRelease(ZombieSpawnPosition(), WalkToLocation());
+            //OnEnemySpawn(enemy);
 
         }
         OnSpawnComplete(limit);
         yield return null;
+    }
+
+    private void OnEnemyInstantiated(EnemyController enemy)
+    {
+        Debug.Log("ENEMY INSTANTIATED");
     }
 }
