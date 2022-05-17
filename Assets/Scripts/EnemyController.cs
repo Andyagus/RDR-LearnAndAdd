@@ -6,7 +6,9 @@ using UnityEngine.AI;
 using Cinemachine;
 using DG.Tweening;
 using UnityEngine.Rendering.PostProcessing;
- 
+
+public enum EnemyState { running, walking, attacking, gameOver };
+
 public class EnemyController : MonoBehaviour
 {
     private Rigidbody[] rbs;
@@ -40,7 +42,6 @@ public class EnemyController : MonoBehaviour
     public Action<int> OnEnemyAttack = (int attackStrength) => {};
 
     public EnemyState enemyState;
-    public enum EnemyState { running, walking, attacking, gameOver};
 
     private void Awake()
     {

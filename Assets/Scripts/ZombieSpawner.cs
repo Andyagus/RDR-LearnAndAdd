@@ -23,11 +23,13 @@ public class ZombieSpawner : MonoBehaviour
     int spawnOffsetAmt = 2;
     public Vector3 initialDestination;
 
+    private EnemyManager enemyManager;
+
     [Header("Events")]
     public Action<int> OnSpawnComplete = (int x) => {};
     public Action<EnemyController> OnEnemySpawn = (EnemyController enemy) => {};
     public Action<Vector3, Vector3> OnZombieRelease = (Vector3 spawnPos, Vector3 WalkToLocation) => { };
-    public Action OnRequestZombieForSpawn = () => { };
+    public Action<int> OnRequestZombieForSpawn = (int spawnNumber) => { };
 
     private void Awake()
     {
@@ -93,8 +95,7 @@ public class ZombieSpawner : MonoBehaviour
 
     private void FindEnemyManager()
     {
-        var enemyManager = GameObject.FindObjectOfType<EnemyManager>();
-        enemyManager.OnEnemyInstantiated += OnEnemyInstantiated;
+        enemyManager = GameObject.FindObjectOfType<EnemyManager>();
     }
 
     public IEnumerator SpawnZombies()
@@ -105,12 +106,10 @@ public class ZombieSpawner : MonoBehaviour
             yield return new WaitForSeconds(frequency);
             spawnNumber++;
             //var zombie = Instantiate(zombiePrefab, ZombieSpawnPosition(), particleSystemTransform.rotation);
-            OnRequestZombieForSpawn();
+            enemyManager.OnEnemyInstantiated += OnEnemyInstantiated;
+            OnRequestZombieForSpawn(spawnNumber); //pass in zombie spawner? 
 
-            //zombie.gameObject.name = $"zombie {spawnNumber}";
-            //var enemy = zombie.GetComponent<EnemyController>();
-            //OnZombieRelease(ZombieSpawnPosition(), WalkToLocation());
-            //OnEnemySpawn(enemy);
+            OnZombieRelease(ZombieSpawnPosition(), WalkToLocation());
 
         }
         OnSpawnComplete(limit);
@@ -119,6 +118,10 @@ public class ZombieSpawner : MonoBehaviour
 
     private void OnEnemyInstantiated(EnemyController enemy)
     {
-        Debug.Log("ENEMY INSTANTIATED");
+        enemyManager.OnEnemyInstantiated -= OnEnemyInstantiated;
+        enemy.transform.position = ZombieSpawnPosition();
+        enemy.transform.rotation = particleSystemTransform.rotation;
+        OnEnemySpawn(enemy);
+
     }
 }
