@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Cinemachine;
@@ -19,28 +20,17 @@ public class CameraController : MonoBehaviour
     private float originalTimeScale = 1;
     private float postTimeScale = 0.7f;
 
-    private PostProcessVolume postVolume;
-    private PostProcessProfile postProfile;
+    public Action<Camera> OnPostProcessSetup = (Camera mainCamera) => { };
 
-    private ColorGrading colorGrading;
-    private Bloom bloom;
-    private Vignette vignette;
-    public Color deadEyeColor;
-    public Color originalVignetteColor;
 
 
     private void Start()
     {
         mainCamera = Camera.main;
 
-        postVolume = mainCamera.GetComponent<PostProcessVolume>();
-        postProfile = postVolume.profile;
-        colorGrading = postProfile.GetSetting<ColorGrading>();
-        bloom = postProfile.GetSetting<Bloom>();
-        vignette = postProfile.GetSetting<Vignette>();
-
         FindCinemachineCameraChange();                
         SubscribeToAimingEvent();
+        OnPostProcessSetup(mainCamera);
 
     }
 

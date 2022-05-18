@@ -28,8 +28,6 @@ public class LevelManager : Singleton<LevelManager>
 
     private void Start()
     {
-        //**
-        FindEnemies();
         FindSpawners();
         FindPlayerHealth();
         SetUpPostEffects();
@@ -71,7 +69,6 @@ public class LevelManager : Singleton<LevelManager>
         playerHealth.OnPlayerDeath += OnPlayerDeath;
     }
 
-
     public void FindSpawners()
     {        
         zombieSpawners = GameObject.FindObjectsOfType<ZombieSpawner>();
@@ -82,23 +79,12 @@ public class LevelManager : Singleton<LevelManager>
             zs.OnEnemySpawn += OnEnemySpawn;
         }
     }
-
-    //**
-    public void FindEnemies()
-    {
-        EnemyManager.FindObjectOfType<EnemyManager>();
-
-        //EnemyManager.o
-    }
-
+    
     public void OnEnemySpawn(EnemyController enemy)
     {
         enemiesInScene++;
         enemy.OnEnemyShot += OnEnemyShot;
-
     }
-
-
 
     public void OnSpawnComplete(int x)
     {
