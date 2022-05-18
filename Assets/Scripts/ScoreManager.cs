@@ -84,19 +84,13 @@ public class ScoreManager : Singleton<ScoreManager>
 
     public void FindEnemies()
     {
-        var zombieSpawners = GameObject.FindObjectsOfType<ZombieSpawner>();
-
-        foreach(var spawner in zombieSpawners)
-        {
-            spawner.OnEnemySpawn += OnEnemySpawn;
-        }
+        var enemyManager = GameObject.FindObjectOfType<EnemyManager>();
+        enemyManager.OnEnemyRegistered += OnEnemyRegistered;
     }
 
-    public void OnEnemySpawn(EnemyController enemy)
-    {        
+    private void OnEnemyRegistered(EnemyController enemy)
+    {
         enemy.OnEnemyShot += OnEnemyShot;
-        //need enemy attack for multiplier 
-        enemy.OnEnemyAttack += OnEnemyAttack;
     }
 
 
@@ -104,6 +98,13 @@ public class ScoreManager : Singleton<ScoreManager>
     {
         IncreaseScore();
     }
+
+
+    public void OnEnemySpawn(EnemyController enemy)
+    {        
+        enemy.OnEnemyAttack += OnEnemyAttack;
+    }
+
 
     public void IncreaseScore()
     {

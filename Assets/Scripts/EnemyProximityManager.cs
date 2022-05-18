@@ -5,15 +5,24 @@ using UnityEngine;
 
 public class EnemyProximityManager : MonoBehaviour
 {
+    private Transform playerTransform;
+    private List<Transform> enemyPositions = new List<Transform>();
     public HashSet<int> enemySet;
-    public Action OnNoEnemyInRange = () => { };
+
+    public bool EnemyInRange;
+    public bool NoEnemyInRange;
+
     public Action OnEnemyInRange = () => { };
+    public Action OnNoEnemyInRange = () => { };
+    
 
     private void Start()
     {
-        FindEnemiesInScene();
+        //FindEnemiesInScene();
         FindEnemyManager();
-        enemySet = new HashSet<int>();      
+        enemySet = new HashSet<int>();
+        FindEnemyManager();
+        FindPlayer();
     }
 
     private void Update()
@@ -22,48 +31,68 @@ public class EnemyProximityManager : MonoBehaviour
         {
             LogListOfEnemiesInRange();
         }
+
+        DistanceCheck();
+        
     }
 
     public void FindEnemyManager()
     {
         var enemyManager = GameObject.FindObjectOfType<EnemyManager>();
-        enemyManager.OnEnemiesInRange += 
+        enemyManager.OnEnemiesInScene += OnEnemiesInScene;
     }
 
-    public void FindEnemiesInScene()
+
+    private void OnEnemiesInScene(List<EnemyController> enemies)
     {
-        //var spawners = GameObject.FindObjectsOfType<ZombieSpawner>();
-
-        //foreach (var spawner in spawners)
-        //{
-        //    spawner.OnEnemySpawn += OnEnemySpawn;
-        //}
-    }
-
-    private void OnEnemySpawn(EnemyController enemy)
-    {
-        //events being passed in from enemy controller
-        //enemy.OnEnemyInRange += EnemyInRange;
-        //enemy.OnEnemyOutOfRange += EnemyOutOfRange;
-        enemy.OnEnemyShot += EnemyShot;
-    }
-
-    private void EnemyInRange(EnemyController enemy)
-    {        
-        enemySet.Add(enemy.GetInstanceID());
-        //OnEnemyInRange();
-        
-    }
-
-    private void EnemyOutOfRange(EnemyController enemy)
-    {
-        enemySet.Remove(enemy.GetInstanceID());
-
-        if(enemySet.Count == 0)
+        //this.enemies = enemies;
+        foreach(var enemy in enemies)
         {
-            OnNoEnemyInRange();
+            enemyPositions.Add(enemy.transform);
+        }
+
+    }
+
+    private void FindPlayer()
+    {
+        var player = GameObject.FindObjectOfType<ShooterController>();
+        player.OnPlayerPosition += OnPlayerPosition;
+    }
+
+    private void OnPlayerPosition(Transform playerPosition)
+    {
+        this.playerTransform = playerPosition;
+    }
+
+    private void DistanceCheck()
+    {
+      foreach(var enemy in enemyPositions)
+        {            
+            var distanceCheck = Vector3.Distance(enemy.position, playerTransform.position);
+
+            if(distanceCheck <= 1.4)
+            {
+                enemySet.Add(enemy.GetInstanceID());
+                OnEnemyInRange();
+                EnemyInRange = true;
+                NoEnemyInRange = false;
+            }
+            else
+            {
+                if (enemySet.Contains(enemy.GetInstanceID()))
+                {
+                    enemySet.Remove(enemy.GetInstanceID());
+                    if(enemySet.Count <= 0)
+                    {
+                        OnNoEnemyInRange();
+                        NoEnemyInRange = true;
+                        EnemyInRange = false;
+                    }
+                }
+            }
         }
     }
+
 
     private void EnemyShot(EnemyController enemy)
     {

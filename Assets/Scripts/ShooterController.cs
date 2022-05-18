@@ -65,6 +65,7 @@ public class ShooterController : MonoBehaviour
     private Sequence sequence;
 
     [Header("Events")]
+    public Action<Transform> OnPlayerPosition = (Transform playerPosition) => { };
     public Action OnPlayerAiming = () => { };
     public Action OnPlayerStoppedAiming = () => { };
     public Action OnLostWeapon = () => { };
@@ -97,10 +98,10 @@ public class ShooterController : MonoBehaviour
 
     }
 
-
     void Update()
     {
 
+        OnPlayerPosition(this.gameObject.transform);
 
         if (aiming)
         {

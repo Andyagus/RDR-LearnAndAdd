@@ -35,12 +35,7 @@ public class EnemyController : MonoBehaviour
     public bool inRange;
 
     [Header("Events")]
-    //delegate to proximity manager 
-
-    //control enemyshot and enemyattack…
     public Action<EnemyController> OnEnemyShot = (EnemyController enemy) => {};   
-    //public Action<EnemyController> OnEnemyOutOfRange = (EnemyController enemy) => {};
-    //public Action<EnemyController> OnEnemyInRange = (EnemyController enemy) => { };
     public Action<int> OnEnemyAttack = (int attackStrength) => {};
 
     public EnemyState enemyState;
@@ -231,15 +226,7 @@ public class EnemyController : MonoBehaviour
     private void WalkToPlayer()
     {
         anim.SetBool("attack", false);
-
         enemy.speed = 0.5f;
-
-        //can be moved to proximity manager
-        //if(inRange == false)
-        //{
-        //    OnEnemyInRange(GetComponent<EnemyController>());
-        //    inRange = true;
-        //}
 
         if (enemy.isStopped)
         {
@@ -250,12 +237,6 @@ public class EnemyController : MonoBehaviour
     private void RunToPlayer()
     {
         anim.SetBool("attack", false);
-
-        if (inRange == true)
-        {
-            OnEnemyOutOfRange(GetComponent<EnemyController>());
-            inRange = false;
-        }
         enemy.speed = 1f;
     }
   

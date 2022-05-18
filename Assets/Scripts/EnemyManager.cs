@@ -7,65 +7,92 @@ public class EnemyManager : MonoBehaviour
 {
     public GameObject enemyPrefab;
     public Action<EnemyController> OnEnemyInstantiated = (EnemyController enemy) => { };
-    public List<EnemyController> enemyList = new List<EnemyController>();
-    public Action OnEnemiesAttacking = () => { };
-    public Action OnEnemiesInRange = () => { };
-    //public enum GlobalEnemyState { Running, Walking, Attacked }
 
-    // Start is called before the first frame update
+    public List<EnemyController> enemyList = new List<EnemyController>();
+
+    public Action<EnemyController> OnEnemyRegistered = (EnemyController enemy) => { };
+    public Action<EnemyController> OnEnemyUnregistered = (EnemyController enemy) => { };
+    public Action OnEnemiesAttacking = () => { };
+    public Action OnEnemiesWalking = () => { };
+    public Action OnEnemiesShot = () => { };
+    public Action<List<EnemyController>> OnEnemiesInScene = (List<EnemyController> enemyList) => {};
+
+    
     void Start()
     {
         FindZombieSpawner();
-        //FindProximityManager();
-        //GetAllEnemies();
+        FindProximityManager();
     }
 
     private void Update()
     {
-        UpdateState();
+        FindEnemyController();
         PrintOutEnemyList();
+        EnemiesInScene();
     }
 
-    //private void GetAllEnemies()
-    //{
+    private void EnemiesInScene()
+    {
+        OnEnemiesInScene(enemyList);
+    }
 
-    //}
-
-    //private void FindProximityManager()
-    //{
-    //    var proximityManager = FindObjectOfType<EnemyProximityManager>();
-    //    proximityManager.OnEnemyInRange += OnEnemyInRange;
-    //}
-
-    private void OnEnemyInRange()
+ 
+    private void FindEnemyController()
     {
         foreach(var enemy in enemyList)
         {
-            if(enemy.enemyState == EnemyState.walking)
-            {
-                OnEnemiesInRange();
-            }
+            enemy.OnEnemyShot += OnEnemyShot;
         }
+                
     }
 
-    private void UpdateState()
+    private void FindProximityManager()
     {
-        foreach (var enemy in enemyList)
-        {
-            if(enemy.enemyState == EnemyState.attacking)
-            {
-                OnEnemiesAttacking();
-            }
-        }
+        //TODO ask sunny: this is kind of doing the same thing as proximity manager to determine global state,
+        //but with different names.
+
+        var enemyProximityManager = GameObject.FindObjectOfType<EnemyProximityManager>();
+        enemyProximityManager.OnEnemyInRange += OnEnemyInRange;
+        enemyProximityManager.OnNoEnemyInRange += OnNoEnemyInRange;
     }
 
+    private void RegisterEnemy(EnemyController enemy)
+    {
+        enemyList.Add(enemy);
+        OnEnemyRegistered(enemy);
+    }
+
+    private void DeregisterEnemy(EnemyController enemy)
+    {
+        enemyList.Remove(enemy);
+        OnEnemyUnregistered(enemy);
+    }
+
+
+    private void OnEnemyInRange()
+    {
+        OnEnemiesAttacking();
+    }
+
+    private void OnNoEnemyInRange()
+    {
+        OnEnemiesWalking();
+    }
+
+    private void OnEnemyShot(EnemyController enemy)
+    {
+        DeregisterEnemy(enemy);
+    }
+
+
+       
     private void PrintOutEnemyList()
     {
         if (Input.GetKeyDown(KeyCode.X))
         {
             foreach (var enemy in enemyList)
             {
-                Debug.Log(enemy.name + " " + enemy.enemyState);
+                Debug.Log(enemy.name);
             }
         }
     }
@@ -91,6 +118,7 @@ public class EnemyManager : MonoBehaviour
         enemyGameObject.name = name;
         var enemy = enemyGameObject.GetComponent<EnemyController>();
         OnEnemyInstantiated(enemy);
-        enemyList.Add(enemy);
+        RegisterEnemy(enemy);
     }
+
 }
