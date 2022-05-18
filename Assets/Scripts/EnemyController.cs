@@ -36,9 +36,11 @@ public class EnemyController : MonoBehaviour
 
     [Header("Events")]
     //delegate to proximity manager 
+
+    //control enemyshot and enemyattack…
     public Action<EnemyController> OnEnemyShot = (EnemyController enemy) => {};   
-    public Action<EnemyController> OnEnemyOutOfRange = (EnemyController enemy) => {};
-    public Action<EnemyController> OnEnemyInRange = (EnemyController enemy) => { };
+    //public Action<EnemyController> OnEnemyOutOfRange = (EnemyController enemy) => {};
+    //public Action<EnemyController> OnEnemyInRange = (EnemyController enemy) => { };
     public Action<int> OnEnemyAttack = (int attackStrength) => {};
 
     public EnemyState enemyState;
@@ -233,11 +235,11 @@ public class EnemyController : MonoBehaviour
         enemy.speed = 0.5f;
 
         //can be moved to proximity manager
-        if(inRange == false)
-        {
-            OnEnemyInRange(GetComponent<EnemyController>());
-            inRange = true;
-        }
+        //if(inRange == false)
+        //{
+        //    OnEnemyInRange(GetComponent<EnemyController>());
+        //    inRange = true;
+        //}
 
         if (enemy.isStopped)
         {

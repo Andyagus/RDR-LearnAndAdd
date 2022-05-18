@@ -79,7 +79,7 @@ public class LevelManager : Singleton<LevelManager>
         foreach (var zs in zombieSpawners)
         {
             zs.OnSpawnComplete += OnSpawnComplete;
-            //zs.OnEnemySpawn += OnEnemySpawn;
+            zs.OnEnemySpawn += OnEnemySpawn;
         }
     }
 
@@ -88,15 +88,15 @@ public class LevelManager : Singleton<LevelManager>
     {
         EnemyManager.FindObjectOfType<EnemyManager>();
 
-        EnemyManager.o
+        //EnemyManager.o
     }
 
-    //public void OnEnemySpawn(EnemyController enemy)
-    //{
-    //    enemiesInScene++;
-    //    enemy.OnEnemyShot += OnEnemyShot;
+    public void OnEnemySpawn(EnemyController enemy)
+    {
+        enemiesInScene++;
+        enemy.OnEnemyShot += OnEnemyShot;
 
-    //}
+    }
 
 
 

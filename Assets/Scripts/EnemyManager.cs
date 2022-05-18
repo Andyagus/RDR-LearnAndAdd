@@ -8,21 +8,44 @@ public class EnemyManager : MonoBehaviour
     public GameObject enemyPrefab;
     public Action<EnemyController> OnEnemyInstantiated = (EnemyController enemy) => { };
     public List<EnemyController> enemyList = new List<EnemyController>();
-    public Action OnEnemiesWalking = () => { };
-    public Action OnEnemiesRunning = () => { };
     public Action OnEnemiesAttacking = () => { };
+    public Action OnEnemiesInRange = () => { };
     //public enum GlobalEnemyState { Running, Walking, Attacked }
 
     // Start is called before the first frame update
     void Start()
     {
-        FindZombieSpawner();        
+        FindZombieSpawner();
+        //FindProximityManager();
+        //GetAllEnemies();
     }
 
     private void Update()
     {
         UpdateState();
-        PrintOutEnemyList();       
+        PrintOutEnemyList();
+    }
+
+    //private void GetAllEnemies()
+    //{
+
+    //}
+
+    //private void FindProximityManager()
+    //{
+    //    var proximityManager = FindObjectOfType<EnemyProximityManager>();
+    //    proximityManager.OnEnemyInRange += OnEnemyInRange;
+    //}
+
+    private void OnEnemyInRange()
+    {
+        foreach(var enemy in enemyList)
+        {
+            if(enemy.enemyState == EnemyState.walking)
+            {
+                OnEnemiesInRange();
+            }
+        }
     }
 
     private void UpdateState()
