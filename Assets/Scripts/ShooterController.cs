@@ -247,7 +247,7 @@ public class ShooterController : MonoBehaviour
         //change the color filter - from the current value to current color
         if (!LevelManager.instance.gameOver)
         {
-            colorGrading.colorFilter.value = Color.Lerp(colorGrading.colorFilter.value, currentColor, aimTime);            
+            //colorGrading.colorFilter.value = Color.Lerp(colorGrading.colorFilter.value, currentColor, aimTime);            
         }
         //}
 
@@ -301,8 +301,6 @@ public class ShooterController : MonoBehaviour
 
         aiming = state;
         anim.SetBool("aiming", state);
-
-
         
         var pos = state ? gunAimPosition : gunIdlePosition;
         var rot = state ? gunAimRotation : gunIdleRotation;
@@ -310,48 +308,20 @@ public class ShooterController : MonoBehaviour
         gun.transform.DOComplete();
         gun.transform.DOLocalMove(pos, 0.1f);
         gun.transform.DOLocalRotate(rot, 0.1f);
-        //}
-
-
+        
      
         if(state == false)
         {
             transform.DORotate(new Vector3(0, transform.eulerAngles.y, transform.eulerAngles.z), aimTime);
         }
 
-        var originalAberation = state ? 0f : .34f;
-        var postAberation = state ? .34f : 0;
-        DOVirtual.Float(originalAberation, postAberation, aimTime, AberationAmount);
-
-        var originalVignette = state ? 0f : 0.5f;
-        var postVignette = state ? 0.5f : 0f;
-        DOVirtual.Float(originalVignette, postVignette, aimTime, VignetteAmount);
 
         Color reticleColor = state ? Color.white : Color.clear;
         reticle.color = reticleColor;
 
 
-        currentColor = state ? deadEyeColor : Color.white;
-
     }
    
-
-    private void AberationAmount(float x)
-    {
-        var chromatic = postProfile.GetSetting<ChromaticAberration>();
-        chromatic.intensity.value = x;
-    }
-
-    private void VignetteAmount(float x)
-    {
-        var vignette = postProfile.GetSetting<Vignette>();
-        //setting back the vignette color
-        vignette.color.value = originalVignetteColor;
-        vignette.intensity.value = x;
-    }
-
-    //already doing this in the level manager
-
     public void FindEnemiesInScene()
     {
         var spawners = GameObject.FindObjectsOfType<ZombieSpawner>();
@@ -401,11 +371,6 @@ public class ShooterController : MonoBehaviour
         sequence.Kill();
         Aim(false);
     }
-
-    //private void LoseWeapon(Weapon weapon)
-    //{
-    //    //polymorphism weapon method
-    //}
 
     private void LoseGun()
     {

@@ -18,13 +18,6 @@ public class ShooterHealth : MonoBehaviour
     private int maxHealth = 10;
     public float currentHealth;
 
-    [Header("Vignette")]
-    private PostProcessVolume postProcessVolume;
-    private PostProcessProfile postProcessProfile;
-    private Vignette vignette;
-    public Color postVignetteColor;
-    private float tweenFadeTime;
-
     [Header("Health Bar")]
     public Slider healthSlider;
     public Gradient sliderGradient;
@@ -33,6 +26,7 @@ public class ShooterHealth : MonoBehaviour
     [Header("Information from events")]
     private int attackStrength;
 
+    public Action OnRestoreFractionOfHealth = () => { };
     public Action OnPlayerDeath = () => { };
 
     private void Start()
@@ -44,9 +38,6 @@ public class ShooterHealth : MonoBehaviour
 
         SetMaxHealth();
 
-        postProcessVolume = mainCamera.GetComponent<PostProcessVolume>();
-        postProcessProfile = postProcessVolume.profile;
-        vignette = postProcessProfile.GetSetting<Vignette>();
     }
 
     private void FindEnemies()
@@ -81,6 +72,7 @@ public class ShooterHealth : MonoBehaviour
     {
         while (currentHealth != maxHealth)
         {
+            OnRestoreFractionOfHealth();
             ImpactHealth(false);
             yield return new WaitForSeconds(1);
         }
@@ -111,7 +103,6 @@ public class ShooterHealth : MonoBehaviour
     {
         var impact = state ? -attackStrength : attackStrength;
         SetHealth(impact);
-        AdjustVignetteAmount(state);
     }
 
     private void SetMaxHealth()
@@ -132,24 +123,4 @@ public class ShooterHealth : MonoBehaviour
         }
     }
 
-    //change vignette amount
-
-    public void AdjustVignetteAmount(bool state)
-    {        
-        ChangeVignetteColor();
-        float attackStrength = (float)this.attackStrength/10;         
-        attackStrength = state ? attackStrength : -attackStrength;
-        vignette.intensity.value += attackStrength;
-    }
-    
-    private void ChangeVignetteColor()
-    {       
-        DOVirtual.Color(vignette.color.value, Color.red, tweenFadeTime, ChangeVignetteColorTween);
-    }
-
-    private void ChangeVignetteColorTween(Color color)
-    {
-        vignette.color.value = color;
-    }
-    
 }
