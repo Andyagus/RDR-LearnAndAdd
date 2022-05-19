@@ -30,10 +30,14 @@ public class PostEffects : MonoBehaviour
     
     public enum VignetteType { aiming, attack}
 
+    private void Awake()
+    {
+        FindCameraController();        
+    }
+
     void Start()
     {
-        InitializeEvents();
-        FindCameraController();
+        //InitializeEvents();
         FindShooterController();
         FindEnemyManager();
         FindShooterHealth();
@@ -49,6 +53,22 @@ public class PostEffects : MonoBehaviour
     private void FindCameraController()
     {
         CameraController.instance.OnPostProcessSetup += OnPostProcessSetup;
+        //var cameraController = FindObjectOfType<CameraController>();
+        //cameraController.OnPostProcessSetup += OnPostProcessSetup;
+    }
+
+    private void OnPostProcessSetup(Camera mainCamera)
+    {
+        Debug.Log("Calling On Post Process Setup");
+
+        postVolume = mainCamera.GetComponent<PostProcessVolume>();
+        postProfile = postVolume.profile;
+
+        GetSettings();
+
+        originalBloomIntensity = bloom.intensity.value;
+        originalBloomColor = bloom.color.value;
+
     }
 
     private void FindShooterController()
@@ -126,21 +146,12 @@ public class PostEffects : MonoBehaviour
 
     private void OnEnemyRegistered(EnemyController enemy)
     {
+        
         enemy.OnEnemyAttack += OnEnemyAttack;
     }
 
 
-    private void OnPostProcessSetup(Camera mainCamera)
-    {
-        postVolume = mainCamera.GetComponent<PostProcessVolume>();
-        postProfile = postVolume.profile;
 
-        GetSettings();
-
-        originalBloomIntensity = bloom.intensity.value;
-        originalBloomColor = bloom.color.value;
-
-    }
 
     private void GetSettings()
     {
