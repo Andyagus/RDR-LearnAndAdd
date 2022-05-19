@@ -32,17 +32,23 @@ public class PostEffects : MonoBehaviour
 
     void Start()
     {
+        InitializeEvents();
         FindCameraController();
         FindShooterController();
         FindEnemyManager();
         FindShooterHealth();
         FindScoreManager();
+        FindLevelManager();
+    }
+
+    private void InitializeEvents()
+    {
+        //
     }
 
     private void FindCameraController()
     {
-        var cameraController = GameObject.FindObjectOfType<CameraController>();
-        cameraController.OnPostProcessSetup += OnPostProcessSetup;
+        CameraController.instance.OnPostProcessSetup += OnPostProcessSetup;
     }
 
     private void FindShooterController()
@@ -69,7 +75,28 @@ public class PostEffects : MonoBehaviour
         var scoreManager = GameObject.FindObjectOfType<ScoreManager>();
         scoreManager.OnStartBloom += OnStartBloom;
         scoreManager.OnStopBloom += OnStopBloom;
+    }
 
+    private void FindLevelManager()
+    {
+        var levelManager = GameObject.FindObjectOfType<LevelManager>();
+        levelManager.OnGameOver += OnGameOver;
+    }
+
+    private void OnGameOver()
+    {
+        GameOverRedFilter();
+    }
+
+
+    private void GameOverRedFilter()
+    {
+        DOVirtual.Color(colorGrading.colorFilter.value, Color.red, aimTime, GameOverRedTween);
+    }
+
+    private void GameOverRedTween(Color colorAmount)
+    {
+        colorGrading.colorFilter.value = colorAmount;
     }
 
     private void OnStartBloom()

@@ -70,23 +70,26 @@ public class EnemyProximityManager : MonoBehaviour
         {            
             var distanceCheck = Vector3.Distance(enemy.position, playerTransform.position);
 
-            if(distanceCheck <= 1.4)
+            if(enemy.position != null && playerTransform.position != null)
             {
-                enemySet.Add(enemy.GetInstanceID());
-                OnEnemyInRange();
-                EnemyInRange = true;
-                NoEnemyInRange = false;
-            }
-            else
-            {
-                if (enemySet.Contains(enemy.GetInstanceID()))
+                if(distanceCheck <= 1.4)
                 {
-                    enemySet.Remove(enemy.GetInstanceID());
-                    if(enemySet.Count <= 0)
+                    enemySet.Add(enemy.GetInstanceID());
+                    OnEnemyInRange();
+                    EnemyInRange = true;
+                    NoEnemyInRange = false;
+                }
+                else
+                {
+                    if (enemySet.Contains(enemy.GetInstanceID()))
                     {
-                        OnNoEnemyInRange();
-                        NoEnemyInRange = true;
-                        EnemyInRange = false;
+                        enemySet.Remove(enemy.GetInstanceID());
+                        if(enemySet.Count <= 0)
+                        {
+                            OnNoEnemyInRange();
+                            NoEnemyInRange = true;
+                            EnemyInRange = false;
+                        }
                     }
                 }
             }

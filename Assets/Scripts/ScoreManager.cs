@@ -24,11 +24,6 @@ public class ScoreManager : Singleton<ScoreManager>
         
     }
 
-    private void Update()
-    {
-
-       
-    }
 
     public ShooterController FindPlayer()
     {

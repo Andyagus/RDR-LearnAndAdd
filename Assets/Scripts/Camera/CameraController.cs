@@ -6,7 +6,7 @@ using Cinemachine;
 using DG.Tweening;
 using UnityEngine.Rendering.PostProcessing;
 
-public class CameraController : MonoBehaviour
+public class CameraController : Singleton<CameraController>
 {
     private Camera mainCamera;
     private CinemachineVirtualCameraBase activeCamera;
