@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MovementInput : MonoBehaviour
+public class MovementInput : Singleton<MovementInput>
 {
 
     public float Velocity;

@@ -4,7 +4,7 @@ using DG.Tweening;
 using UnityEngine;
 using UnityEngine.Rendering.PostProcessing;
 
-public class PostEffects : MonoBehaviour
+public class PostEffects : Singleton<PostEffects>
 {
     private PostProcessVolume postVolume;
     private PostProcessProfile postProfile;
@@ -32,7 +32,7 @@ public class PostEffects : MonoBehaviour
 
     private void Awake()
     {
-        FindCameraController();        
+        InitializeEvents();        
     }
 
     void Start()
@@ -47,15 +47,9 @@ public class PostEffects : MonoBehaviour
 
     private void InitializeEvents()
     {
-        //
+        CameraController.instance.OnPostProcessSetup += OnPostProcessSetup;        
     }
 
-    private void FindCameraController()
-    {
-        CameraController.instance.OnPostProcessSetup += OnPostProcessSetup;
-        //var cameraController = FindObjectOfType<CameraController>();
-        //cameraController.OnPostProcessSetup += OnPostProcessSetup;
-    }
 
     private void OnPostProcessSetup(Camera mainCamera)
     {

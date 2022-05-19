@@ -8,7 +8,7 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using UnityEngine.Rendering.PostProcessing;
 
-public class ShooterController : MonoBehaviour
+public class ShooterController : Singleton<ShooterController>
 {
     private MovementInput input;
     private Animator anim;

@@ -22,22 +22,23 @@ public class CameraController : Singleton<CameraController>
 
     public Action<Camera> OnPostProcessSetup = (Camera mainCamera) => { };
 
-
+    private void Awake()
+    {
+        InitializeEvents();
+    }
 
     private void Start()
     {
         mainCamera = Camera.main;
-
-        FindCinemachineCameraChange();                
-        SubscribeToAimingEvent();
         OnPostProcessSetup(mainCamera);
 
     }
 
-    private void FindCinemachineCameraChange()
+    private void InitializeEvents()
     {
-        var switchCinemacineCameraScript = GameObject.FindObjectOfType<SwitchCinemacineCamera>();
-        switchCinemacineCameraScript.OnCameraChange += OnCameraChange;
+        SwitchCinemacineCamera.instance.OnCameraChange += OnCameraChange;
+        ShooterController.instance.OnPlayerAiming += TurnOnZoomCameraSettings;
+        ShooterController.instance.OnPlayerStoppedAiming += TurnOffZoomCameraSettings;
     }
 
     private void OnCameraChange(CinemachineVirtualCameraBase camera, CameraSetting cameraSetting)
@@ -51,14 +52,7 @@ public class CameraController : Singleton<CameraController>
         }
     }
 
-    private void SubscribeToAimingEvent()
-    {
-        var shooterController = FindObjectOfType<ShooterController>();
-        shooterController.OnPlayerAiming += OnPlayerAiming;
-        shooterController.OnPlayerStoppedAiming += OnPlayerStoppedAiming;
-    }
-
-    private void OnPlayerAiming()
+    private void TurnOnZoomCameraSettings()
     {
         
         DOVirtual.Float(originalOffsetAmount, zoomOffsetAmount, aimTime, HorizontalOffset);
@@ -66,7 +60,7 @@ public class CameraController : Singleton<CameraController>
         DOVirtual.Float(originalTimeScale, postTimeScale, aimTime, SetTimeScale);
     }
 
-    private void OnPlayerStoppedAiming()
+    private void TurnOffZoomCameraSettings()
     {
         DOVirtual.Float(zoomOffsetAmount, originalOffsetAmount, aimTime, HorizontalOffset);
         DOVirtual.Float(zoomFov, originalFov, aimTime, CameraZoom);

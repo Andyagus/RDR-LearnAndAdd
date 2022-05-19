@@ -6,7 +6,7 @@ using UnityEngine.UI;
 using UnityEngine.Rendering.PostProcessing;
 using DG.Tweening;
 
-public class ShooterHealth : MonoBehaviour
+public class ShooterHealth : Singleton<ShooterHealth>
 {
     [Header("Restore Health")]
     //private bool restoreHealth;

@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyProximityManager : MonoBehaviour
+public class EnemyProximityManager : Singleton<EnemyProximityManager>
 {
     private Transform playerTransform;
     private List<Transform> enemyPositions = new List<Transform>();

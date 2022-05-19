@@ -6,7 +6,7 @@ using Cinemachine;
 
 public enum CameraSetting { ThirdPerson, Attack, LostWeapon, Death };
 
-public class SwitchCinemacineCamera : MonoBehaviour
+public class SwitchCinemacineCamera : Singleton<SwitchCinemacineCamera>
 {
     public CameraSetting adjustCameraSetting;
 

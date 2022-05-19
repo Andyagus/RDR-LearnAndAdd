@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyManager : MonoBehaviour
+public class EnemyManager : Singleton<EnemyManager>
 {
     public GameObject enemyPrefab;
     public Action<EnemyController> OnEnemyInstantiated = (EnemyController enemy) => { };
