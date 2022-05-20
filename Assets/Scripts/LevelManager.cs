@@ -67,14 +67,12 @@ public class LevelManager : Singleton<LevelManager>
 
     public void OnEnemyRegistered(EnemyController enemy)
     {
-        Debug.Log(enemy.name + "  has been registered in scene");
         enemiesInScene++;
         enemy.OnEnemyShot += OnEnemyShot;
     }
 
     public void OnEnemyShot(EnemyController enemy)
     {
-        Debug.Log(enemy.name + "  has been shot");
         enemiesShot++;
     }
 

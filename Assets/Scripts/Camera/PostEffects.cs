@@ -96,11 +96,11 @@ public class PostEffects : Singleton<PostEffects>
 
     private void SubscribeToEnemyAttack(EnemyController enemy)
     {
-        enemy.OnEnemyAttack += OnEnemyAttack;
+        enemy.OnEnemyAttack += IncreaseVignette;
     }
 
 
-    private void OnEnemyAttack(int attackStrength)
+    private void IncreaseVignette(int attackStrength)
     {
         AdjustVignetteColor(VignetteType.attack);
         AdjustVignetteOnAttack(true);

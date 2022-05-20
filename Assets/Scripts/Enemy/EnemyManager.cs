@@ -6,10 +6,9 @@ using UnityEngine;
 public class EnemyManager : Singleton<EnemyManager>
 {
     public GameObject enemyPrefab;
+
     public Action<EnemyController> OnEnemyInstantiated = (EnemyController enemy) => { };
-
     public List<EnemyController> enemyList = new List<EnemyController>();
-
     public Action<EnemyController> OnEnemyRegistered = (EnemyController enemy) => { };
     public Action<EnemyController> OnEnemyUnregistered = (EnemyController enemy) => { };
     public Action OnEnemiesAttacking = () => { };
@@ -24,9 +23,13 @@ public class EnemyManager : Singleton<EnemyManager>
 
     private void Update()
     {
-        ShareEnemiesInScene();
-        FindEnemyInScene();
+        OnEnemyUpdate();
         PrintOutEnemyList();
+    }
+
+    private void OnEnemyUpdate()
+    {
+        OnEnemiesInScene(enemyList);
     }
 
     private void InitializeEvents()
@@ -59,24 +62,7 @@ public class EnemyManager : Singleton<EnemyManager>
     {
         enemyList.Add(enemy);
         OnEnemyRegistered(enemy);
-    }
-
-    private void ShareEnemiesInScene()
-    {
-        OnEnemiesInScene(enemyList);
-    }
- 
-    private void FindEnemyInScene()
-    {
-        foreach(var enemy in enemyList)
-        {
-            enemy.OnEnemyShot += RemoveEnemyFromList;
-        }                
-    }
-
-    private void RemoveEnemyFromList(EnemyController enemy)
-    {
-        DeregisterEnemy(enemy);
+        enemy.OnEnemyShot += DeregisterEnemy;
     }
 
     private void DeregisterEnemy(EnemyController enemy)
@@ -87,11 +73,13 @@ public class EnemyManager : Singleton<EnemyManager>
 
     private void OnEnemyInRange()
     {
+        //no subscribers
         OnEnemiesAttacking();
     }
 
     private void OnNoEnemyInRange()
     {
+        //no subscribers
         OnEnemiesWalking();
     }
 
