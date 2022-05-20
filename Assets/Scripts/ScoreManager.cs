@@ -13,8 +13,8 @@ public class ScoreManager : Singleton<ScoreManager>
     public int playerScore;
     public int multiplier = 1;
 
-    public Action OnStartBloom = () => { };
-    public Action OnStopBloom = () => { };
+    public Action OnTimesThreeMultiplier = () => { };
+    public Action OnRestartMultiplier = () => { };
 
 
     private void Start()
@@ -69,7 +69,7 @@ public class ScoreManager : Singleton<ScoreManager>
                 multiplier = 3;
                 multiplierText.text = $"X{multiplier}";
                 multiplierText.fontSize = 100;
-                OnStartBloom();
+                OnTimesThreeMultiplier();
                 break;
             case (3):
                 break;
@@ -79,7 +79,7 @@ public class ScoreManager : Singleton<ScoreManager>
 
     private void OnEnemyAttack(int attackStrength)
     {
-        OnStopBloom();        
+        OnRestartMultiplier();        
         ResetMultiplier(); 
         
     }

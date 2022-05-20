@@ -31,7 +31,6 @@ public class CameraController : Singleton<CameraController>
     {
         mainCamera = Camera.main;
         OnPostProcessSetup(mainCamera);
-
     }
 
     private void InitializeEvents()
@@ -53,8 +52,7 @@ public class CameraController : Singleton<CameraController>
     }
 
     private void TurnOnZoomCameraSettings()
-    {
-        
+    {        
         DOVirtual.Float(originalOffsetAmount, zoomOffsetAmount, aimTime, HorizontalOffset);
         DOVirtual.Float(originalFov, zoomFov, aimTime, CameraZoom);
         DOVirtual.Float(originalTimeScale, postTimeScale, aimTime, SetTimeScale);

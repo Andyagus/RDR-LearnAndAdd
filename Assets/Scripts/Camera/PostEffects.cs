@@ -9,9 +9,7 @@ public class PostEffects : Singleton<PostEffects>
     private PostProcessVolume postVolume;
     private PostProcessProfile postProfile;
 
-    private bool playerAiming;
-
-    private float aimTime = 0.4f;
+    [SerializeField] private float aimTime = 0.4f;
 
     //Bloom Settings
     private Bloom bloom;
@@ -20,104 +18,108 @@ public class PostEffects : Singleton<PostEffects>
 
     //Vignette Settings
     private Vignette vignette;
-    private float originalVigentteAmount = 0.0f;
-    private float postVignetteAmount = 0.5f;
+    [SerializeField] private float originalVigentteAmount = 0.0f;
+    [SerializeField] private float postVignetteAmount = 0.5f;
 
     //Color Grading Settings
     private ColorGrading colorGrading;
     public Color deadEyeColor;
     private Color originalColorGrade;
     
-    public enum VignetteType { aiming, attack}
+    public enum VignetteType {aiming, attack}
 
     private void Awake()
     {
         InitializeEvents();        
     }
 
-    void Start()
-    {
-        //InitializeEvents();
-        FindShooterController();
-        FindEnemyManager();
-        FindShooterHealth();
-        FindScoreManager();
-        FindLevelManager();
-    }
-
     private void InitializeEvents()
     {
-        CameraController.instance.OnPostProcessSetup += OnPostProcessSetup;        
+        CameraController.instance.OnPostProcessSetup += OnPostProcessSetup;
+        ShooterController.instance.OnPlayerAiming += TurnOnAimingEffects;
+        ShooterController.instance.OnPlayerStoppedAiming += TurnOffAimingEffects;
+        EnemyManager.instance.OnEnemyRegistered += SubscribeToEnemyAttack;
+        ShooterHealth.instance.OnRestoreFractionOfHealth += OnRestoreVignette;
+        ScoreManager.instance.OnTimesThreeMultiplier += OnStartBloom;
+        ScoreManager.instance.OnRestartMultiplier += OnStopBloom;
+        LevelManager.instance.OnGameOver += GameOverColorFilter;
     }
-
 
     private void OnPostProcessSetup(Camera mainCamera)
     {
-        Debug.Log("Calling On Post Process Setup");
-
-        postVolume = mainCamera.GetComponent<PostProcessVolume>();
-        postProfile = postVolume.profile;
-
-        GetSettings();
-
+        GetSettings(mainCamera);
         originalBloomIntensity = bloom.intensity.value;
         originalBloomColor = bloom.color.value;
+    }
+
+    private void GetSettings(Camera mainCamera)
+    {
+        postVolume = mainCamera.GetComponent<PostProcessVolume>();
+        postProfile = postVolume.profile;
+        colorGrading = postProfile.GetSetting<ColorGrading>();
+        originalColorGrade = colorGrading.colorFilter.value;
+        bloom = postProfile.GetSetting<Bloom>();
+        vignette = postProfile.GetSetting<Vignette>();
+    }
+
+    private void TurnOnAimingEffects()
+    {
+        //playerAiming = true;
+        AdjustVignetteColor(VignetteType.aiming);
+        AdjustColorGrading(true);
+        AdjustAimVignette(true);
+    }
+
+    private void TurnOffAimingEffects()
+    {
+        //playerAiming = false;
+        AdjustColorGrading(false);
+        AdjustAimVignette(false);
+    }
+
+    private void AdjustAimVignette(bool state)
+    {
+        if(state)
+            DOVirtual.Float(originalVigentteAmount, postVignetteAmount, aimTime, TweenVignetteAmount);
+        else
+            DOVirtual.Float(postVignetteAmount, originalVigentteAmount, aimTime, TweenVignetteAmount);
+    }
+
+    private void AdjustColorGrading(bool state)
+    {
+        var originalColorGrading = state ? originalColorGrade : deadEyeColor;
+        var postColorGrading = state ? deadEyeColor : originalColorGrade;
+
+        DOVirtual.Color(originalColorGrade, postColorGrading, aimTime, TweenColorGrading);
 
     }
 
-    private void FindShooterController()
+    private void SubscribeToEnemyAttack(EnemyController enemy)
     {
-        var shooterController = GameObject.FindObjectOfType<ShooterController>();
-        shooterController.OnPlayerAiming += OnPlayerAiming;
-        shooterController.OnPlayerStoppedAiming += OnPlayerStoppedAiming;
-    }
-
-    private void FindEnemyManager()
-    {
-        var enemyManager = GameObject.FindObjectOfType<EnemyManager>();
-        enemyManager.OnEnemyRegistered += OnEnemyRegistered;
-    }
-
-    private void FindShooterHealth()
-    {
-        var shooterHealth = GameObject.FindObjectOfType<ShooterHealth>();
-        shooterHealth.OnRestoreFractionOfHealth += OnRestoreFractionOfHealth;
-    }
-
-    private void FindScoreManager()
-    {
-        var scoreManager = GameObject.FindObjectOfType<ScoreManager>();
-        scoreManager.OnStartBloom += OnStartBloom;
-        scoreManager.OnStopBloom += OnStopBloom;
-    }
-
-    private void FindLevelManager()
-    {
-        var levelManager = GameObject.FindObjectOfType<LevelManager>();
-        levelManager.OnGameOver += OnGameOver;
-    }
-
-    private void OnGameOver()
-    {
-        GameOverRedFilter();
+        enemy.OnEnemyAttack += OnEnemyAttack;
     }
 
 
-    private void GameOverRedFilter()
+    private void OnEnemyAttack(int attackStrength)
     {
-        DOVirtual.Color(colorGrading.colorFilter.value, Color.red, aimTime, GameOverRedTween);
+        AdjustVignetteColor(VignetteType.attack);
+        AdjustVignetteOnAttack(true);
     }
 
-    private void GameOverRedTween(Color colorAmount)
+    private void OnRestoreVignette()
     {
-        colorGrading.colorFilter.value = colorAmount;
+        AdjustVignetteOnAttack(false);
+    }
+
+    private void AdjustVignetteOnAttack(bool state)
+    {
+        var attackAmount = state ? 2 : -2;
+        vignette.intensity.value += (float)attackAmount / 10;
     }
 
     private void OnStartBloom()
     {
-
         PlayerBloom(true);
-        
     }
 
     private void OnStopBloom()
@@ -133,67 +135,16 @@ public class PostEffects : Singleton<PostEffects>
         DOVirtual.Float(bloom.threshold.value, thresholdValue, 0.4f, TweenPlayerBloom);
     }
 
-    private void TweenPlayerBloom(float thresholdAmount)
+
+    private void GameOverColorFilter()
     {
-        bloom.threshold.value = thresholdAmount;
+        DOVirtual.Color(colorGrading.colorFilter.value, Color.red, aimTime, GameOverRedTween);
     }
 
-    private void OnEnemyRegistered(EnemyController enemy)
+    private void GameOverRedTween(Color colorAmount)
     {
-        
-        enemy.OnEnemyAttack += OnEnemyAttack;
-    }
-
-
-
-
-    private void GetSettings()
-    {
-        colorGrading = postProfile.GetSetting<ColorGrading>();
-        originalColorGrade = colorGrading.colorFilter.value;
-
-        bloom = postProfile.GetSetting<Bloom>();
-        vignette = postProfile.GetSetting<Vignette>();
-
-
-    }
-
-    private void OnRestoreFractionOfHealth()
-    {
-        AdjustVignetteOnAttack(false);
-    }
-
-    private void OnEnemyAttack(int attackStrength)
-    {
-        //TODO weird how on attack is through the enemy controller
-        //and on release is through proximity controller
-        AdjustVignetteColor(VignetteType.attack);
-        AdjustVignetteOnAttack(true);
-    }
-
-
-
-    private void AdjustVignetteOnAttack(bool state)
-    {
-        var attackAmount = state ? 2 : - 2;
-        vignette.intensity.value += (float)attackAmount / 10;
-    }
-
-    //aiming vignette
-    private void OnPlayerAiming()
-    {
-        playerAiming = true;
-        AdjustVignetteColor(VignetteType.aiming);        
-        AdjustColorGrading(true);
-        AdjustAimVignette();
-    }
-
-    private void OnPlayerStoppedAiming()
-    {
-        playerAiming = false;
-        DOVirtual.Float(postVignetteAmount, originalVigentteAmount, aimTime, TweenVignetteAmount);
-        AdjustColorGrading(false);
-    }    
+        colorGrading.colorFilter.value = colorAmount;
+    }   
 
     private void AdjustVignetteColor(VignetteType vignetteType)
     {
@@ -208,23 +159,14 @@ public class PostEffects : Singleton<PostEffects>
         }
     }
 
-    private void AdjustAimVignette()
-    {
-        DOVirtual.Float(originalVigentteAmount, postVignetteAmount, aimTime, TweenVignetteAmount);
-    }
- 
     private void TweenVignetteAmount(float vignetteAmount)
     {
         vignette.intensity.value = vignetteAmount;
     }
 
-    private void AdjustColorGrading(bool state)
+    private void TweenPlayerBloom(float thresholdAmount)
     {
-        var originalColorGrading = state ? originalColorGrade : deadEyeColor;
-        var postColorGrading = state ? deadEyeColor : originalColorGrade;
-
-        DOVirtual.Color(originalColorGrade, postColorGrading, aimTime, TweenColorGrading);
-
+        bloom.threshold.value = thresholdAmount;
     }
 
     private void TweenColorGrading(Color colorAmount)
