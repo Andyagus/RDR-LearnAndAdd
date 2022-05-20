@@ -17,98 +17,32 @@ public class EnemyManager : Singleton<EnemyManager>
     public Action OnEnemiesShot = () => { };
     public Action<List<EnemyController>> OnEnemiesInScene = (List<EnemyController> enemyList) => {};
 
-    
-    void Start()
+    private void Awake()
     {
-        FindZombieSpawner();
-        FindProximityManager();
+        InitializeEvents();
     }
 
     private void Update()
     {
-        FindEnemyController();
+        ShareEnemiesInScene();
+        FindEnemyInScene();
         PrintOutEnemyList();
-        EnemiesInScene();
     }
 
-    private void EnemiesInScene()
+    private void InitializeEvents()
     {
-        OnEnemiesInScene(enemyList);
+        FindZombieSpawners();
+        EnemyProximityManager.instance.OnEnemyInRange += OnEnemyInRange;
+        EnemyProximityManager.instance.OnNoEnemyInRange += OnNoEnemyInRange;
     }
 
- 
-    private void FindEnemyController()
-    {
-        foreach(var enemy in enemyList)
-        {
-            enemy.OnEnemyShot += OnEnemyShot;
-        }
-                
-    }
-
-    private void FindProximityManager()
-    {
-        //TODO ask sunny: this is kind of doing the same thing as proximity manager to determine global state,
-        //but with different names.
-
-        var enemyProximityManager = GameObject.FindObjectOfType<EnemyProximityManager>();
-        enemyProximityManager.OnEnemyInRange += OnEnemyInRange;
-        enemyProximityManager.OnNoEnemyInRange += OnNoEnemyInRange;
-    }
-
-    private void RegisterEnemy(EnemyController enemy)
-    {
-        enemyList.Add(enemy);
-        OnEnemyRegistered(enemy);
-    }
-
-    private void DeregisterEnemy(EnemyController enemy)
-    {
-        enemyList.Remove(enemy);
-        OnEnemyUnregistered(enemy);
-    }
-
-
-    private void OnEnemyInRange()
-    {
-        OnEnemiesAttacking();
-    }
-
-    private void OnNoEnemyInRange()
-    {
-        OnEnemiesWalking();
-    }
-
-    private void OnEnemyShot(EnemyController enemy)
-    {
-        DeregisterEnemy(enemy);
-    }
-
-
-       
-    private void PrintOutEnemyList()
-    {
-        if (Input.GetKeyDown(KeyCode.X))
-        {
-            foreach (var enemy in enemyList)
-            {
-                Debug.Log(enemy.name);
-            }
-        }
-    }
-
-    private void FindZombieSpawner()
+    private void FindZombieSpawners()
     {
         var zombieSpawners = GameObject.FindObjectsOfType<ZombieSpawner>();
-        foreach(var spawner in zombieSpawners)
+        foreach (var spawner in zombieSpawners)
         {
-            spawner.OnRequestZombieForSpawn += OnRequestZombieForSpawn;
+            spawner.OnRequestZombieForSpawn += InstantiateEnemy;
         }
-    }
-
-    private void OnRequestZombieForSpawn(int spawnNumber)
-    {
-        InstantiateEnemy(spawnNumber);
     }
 
     private void InstantiateEnemy(int spawnNumber)
@@ -120,5 +54,58 @@ public class EnemyManager : Singleton<EnemyManager>
         OnEnemyInstantiated(enemy);
         RegisterEnemy(enemy);
     }
+
+    private void RegisterEnemy(EnemyController enemy)
+    {
+        enemyList.Add(enemy);
+        OnEnemyRegistered(enemy);
+    }
+
+    private void ShareEnemiesInScene()
+    {
+        OnEnemiesInScene(enemyList);
+    }
+ 
+    private void FindEnemyInScene()
+    {
+        foreach(var enemy in enemyList)
+        {
+            enemy.OnEnemyShot += RemoveEnemyFromList;
+        }                
+    }
+
+    private void RemoveEnemyFromList(EnemyController enemy)
+    {
+        DeregisterEnemy(enemy);
+    }
+
+    private void DeregisterEnemy(EnemyController enemy)
+    {
+        enemyList.Remove(enemy);
+        OnEnemyUnregistered(enemy);
+    }
+
+    private void OnEnemyInRange()
+    {
+        OnEnemiesAttacking();
+    }
+
+    private void OnNoEnemyInRange()
+    {
+        OnEnemiesWalking();
+    }
+
+    private void PrintOutEnemyList()
+    {
+        if (Input.GetKeyDown(KeyCode.X))
+        {
+            foreach (var enemy in enemyList)
+            {
+                Debug.Log(enemy.name);
+            }
+        }
+    }
+
+
 
 }

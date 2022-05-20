@@ -14,15 +14,15 @@ public class EnemyProximityManager : Singleton<EnemyProximityManager>
 
     public Action OnEnemyInRange = () => { };
     public Action OnNoEnemyInRange = () => { };
-    
+
+    private void Awake()
+    {
+        InitializeEvents();        
+    }
 
     private void Start()
     {
-        //FindEnemiesInScene();
-        FindEnemyManager();
-        enemySet = new HashSet<int>();
-        FindEnemyManager();
-        FindPlayer();
+        enemySet = new HashSet<int>();       
     }
 
     private void Update()
@@ -31,35 +31,24 @@ public class EnemyProximityManager : Singleton<EnemyProximityManager>
         {
             LogListOfEnemiesInRange();
         }
-
-        DistanceCheck();
-        
+        DistanceCheck();        
     }
 
-    public void FindEnemyManager()
+    private void InitializeEvents()
     {
-        var enemyManager = GameObject.FindObjectOfType<EnemyManager>();
-        enemyManager.OnEnemiesInScene += OnEnemiesInScene;
+        EnemyManager.instance.OnEnemiesInScene += AddEnemyTransformToList;
+        ShooterController.instance.OnPlayerPosition += SetPlayerPosition;
     }
 
-
-    private void OnEnemiesInScene(List<EnemyController> enemies)
+    private void AddEnemyTransformToList(List<EnemyController> enemies)
     {
-        //this.enemies = enemies;
         foreach(var enemy in enemies)
         {
             enemyPositions.Add(enemy.transform);
         }
-
     }
 
-    private void FindPlayer()
-    {
-        var player = GameObject.FindObjectOfType<ShooterController>();
-        player.OnPlayerPosition += OnPlayerPosition;
-    }
-
-    private void OnPlayerPosition(Transform playerPosition)
+    private void SetPlayerPosition(Transform playerPosition)
     {
         this.playerTransform = playerPosition;
     }
@@ -97,10 +86,10 @@ public class EnemyProximityManager : Singleton<EnemyProximityManager>
     }
 
 
-    private void EnemyShot(EnemyController enemy)
-    {
-        enemySet.Remove(enemy.GetInstanceID());
-    }
+    //private void EnemyShot(EnemyController enemy)
+    //{
+    //    enemySet.Remove(enemy.GetInstanceID());
+    //}
 
     private void LogListOfEnemiesInRange()
     {
