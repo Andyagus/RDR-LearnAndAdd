@@ -29,86 +29,54 @@ public class ShooterHealth : Singleton<ShooterHealth>
     public Action OnRestoreFractionOfHealth = () => { };
     public Action OnPlayerDeath = () => { };
 
+    private void Awake()
+    {
+        InitializeEvents();        
+
+    }
+
     private void Start()
     {
         currentHealth = maxHealth;
         mainCamera = Camera.main;
-        FindEnemies();
-        GetProximityManager();
-
         SetMaxHealth();
-
-    }
-
-    private void FindEnemies()
-    {
-        var zombieSpawners = GameObject.FindObjectsOfType<ZombieSpawner>();
-        foreach (var zombieSpawner in zombieSpawners)
-        {
-            zombieSpawner.OnEnemySpawn += OnEnemySpawn;
-        }
-    }
-
-    //leverages proximity manager list
-    private void GetProximityManager()
-    {
-        var proximityManager = GetComponent<EnemyProximityManager>();
-        proximityManager.OnNoEnemyInRange += OnNoEnemyInRange;
-        proximityManager.OnEnemyInRange += OnEnemyInRange;
-    }
-
-    //start and stop coroutine review 
-    private void OnNoEnemyInRange()
-    {
-        StartCoroutine(RestoreHealthOverTime());
-    }
-
-    private void OnEnemyInRange()
-    {
-        StopCoroutine(RestoreHealthOverTime());
-    }
-
-    private IEnumerator RestoreHealthOverTime()
-    {
-        while (currentHealth != maxHealth)
-        {
-            OnRestoreFractionOfHealth();
-            ImpactHealth(false);
-            yield return new WaitForSeconds(1);
-        }
-
     }
 
 
-    private void OnEnemySpawn(EnemyController enemy)
+    private void InitializeEvents()
     {
-        AddEnemyEvents(enemy);
-    }
-
-    private void AddEnemyEvents(EnemyController enemy)
-    {
-        enemy.OnEnemyAttack += OnEnemyAttack;
-
-    }
-
-    private void OnEnemyAttack(int attackStrength)
-    {
-        this.attackStrength = attackStrength;
-        ImpactHealth(true);
-    }
-
-    //player health count
-
-    public void ImpactHealth(bool state)
-    {
-        var impact = state ? -attackStrength : attackStrength;
-        SetHealth(impact);
+        EnemyManager.instance.OnEnemyRegistered +=
+            (EnemyController enemy) => enemy.OnEnemyAttack += TakeDamage;
+        EnemyProximityManager.instance.OnNoEnemyInRange += RestoreHealth;
+        EnemyProximityManager.instance.OnEnemyInRange += StopRestoringHealth;
     }
 
     private void SetMaxHealth()
     {
         healthSlider.value = maxHealth;
         sliderFill.color = sliderGradient.Evaluate(1f);
+    }
+
+    private void TakeDamage(int attackStrength)
+    {
+        this.attackStrength = attackStrength;
+        ImpactHealth(true);
+    }
+ 
+    private void RestoreHealth()
+    {
+        StartCoroutine(RestoreHealthOverTime());
+    }
+
+    private void StopRestoringHealth()
+    {
+        StopCoroutine(RestoreHealthOverTime());
+    }
+
+    public void ImpactHealth(bool state)
+    {
+        var impact = state ? -attackStrength : attackStrength;
+        SetHealth(impact);
     }
 
     private void SetHealth(float health)
@@ -122,5 +90,17 @@ public class ShooterHealth : Singleton<ShooterHealth>
             OnPlayerDeath();
         }
     }
+
+    private IEnumerator RestoreHealthOverTime()
+    {
+        while (currentHealth != maxHealth)
+        {
+            OnRestoreFractionOfHealth();
+            ImpactHealth(false);
+            yield return new WaitForSeconds(1);
+        }
+
+    }
+
 
 }

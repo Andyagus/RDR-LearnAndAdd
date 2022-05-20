@@ -11,47 +11,28 @@ public class ScoreManager : Singleton<ScoreManager>
     public TextMeshProUGUI scoreText;
     public TextMeshProUGUI multiplierText;
     public int playerScore;
-    public int multiplier = 1;
+    private int multiplier = 1;
 
     public Action OnTimesThreeMultiplier = () => { };
     public Action OnRestartMultiplier = () => { };
 
-
-    private void Start()
+    private void Awake()
     {
-        FindEnemies();        
-        multiplier = 1;
-        
+        InitializeEvents();
     }
 
-
-    public ShooterController FindPlayer()
+    private void InitializeEvents()
     {
-        var player = GameObject.FindObjectOfType<ShooterController>();
-        return player;
+        EnemyManager.instance.OnEnemyRegistered += enemy => {
+            enemy.OnEnemyShot += OnEnemyShot;
+            enemy.OnEnemyAttack += OnEnemyAttack;
+        };
     }
-
-
-    public void FindEnemies()
-    {
-        var enemyManager = GameObject.FindObjectOfType<EnemyManager>();
-        enemyManager.OnEnemyRegistered += OnEnemyRegistered;
-    }
-
-    private void OnEnemyRegistered(EnemyController enemy)
-    {
-        enemy.OnEnemyShot += OnEnemyShot;
-        enemy.OnEnemyAttack += OnEnemyAttack;
-    }
-
 
     public void OnEnemyShot(EnemyController enemy)
     {
         IncreaseScore();
     }
-
-
-
 
     public void IncreaseScore()
     {
@@ -76,12 +57,10 @@ public class ScoreManager : Singleton<ScoreManager>
         }
     }
 
-
     private void OnEnemyAttack(int attackStrength)
     {
         OnRestartMultiplier();        
-        ResetMultiplier(); 
-        
+        ResetMultiplier();         
     }
 
     private void ResetMultiplier()

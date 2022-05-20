@@ -19,16 +19,15 @@ public class MovementInput : Singleton<MovementInput>
     public bool isGrounded;
     private float verticalVel;
     private Vector3 moveVector;
+    
 
-    // Start is called before the first frame update
     void Start()
     {
+        cam = CameraController.instance.mainCamera;
         anim = GetComponent<Animator>();
         controller = GetComponent<CharacterController>();
-        cam = Camera.main;
     }
 
-    // Update is called once per frame
     void Update()
     {
 
@@ -47,6 +46,7 @@ public class MovementInput : Singleton<MovementInput>
         moveVector = new Vector3(0, verticalVel, 0);
         controller.Move(moveVector);
     }
+
 
     void PlayerMoveAndRotation()
     {

@@ -10,7 +10,6 @@ public class LevelManager : Singleton<LevelManager>
     public int spawnCount = 0;
     public ShooterHealth playerHealth;
     public ZombieSpawner[] zombieSpawners;
-    //public EnemyController[] enemies;
     public int enemiesShot;
     public int enemiesInScene;
     public bool showDemonstrationGizmos;
@@ -19,12 +18,13 @@ public class LevelManager : Singleton<LevelManager>
     public bool gameOver = false;
     public TextMeshProUGUI gameOverText;
 
+    public Action OnLevelComplete = () => { };
     public Action OnGameOver = () => { };
 
-    private void Start()
+
+    private void Awake()
     {
-        FindSpawners();
-        FindPlayerHealth();
+        InitializeEvents();
     }
 
     private void Update()
@@ -32,45 +32,50 @@ public class LevelManager : Singleton<LevelManager>
         LevelComplete();
     }
 
-
-    public void LevelComplete()
+    private void InitializeEvents()
     {
-        if(spawnCount == zombieSpawners.Length && allSpawned == false)
-        {
-            allSpawned = true;
-        }
-        if(enemiesShot == enemiesInScene && allSpawned == true)
-        {
-            allShot = true;
-        }
 
-        if(allShot && allSpawned)
-        {
-            Debug.Log("Level Complete");
-        }
-    }
-
-    public void FindPlayerHealth()
-    {        
-        playerHealth = FindObjectOfType<ShooterHealth>();
-        playerHealth.OnPlayerDeath += OnPlayerDeath;
-    }
-
-    public void FindSpawners()
-    {        
-        zombieSpawners = GameObject.FindObjectsOfType<ZombieSpawner>();
+        zombieSpawners = FindObjectsOfType<ZombieSpawner>();
 
         foreach (var zs in zombieSpawners)
         {
             zs.OnSpawnComplete += OnSpawnComplete;
-            zs.OnEnemySpawn += OnEnemySpawn;
+        }
+
+        EnemyManager.instance.OnEnemyRegistered += OnEnemyRegistered;
+        ShooterHealth.instance.OnPlayerDeath += SetGameOverScreen;
+
+    }
+
+    public void LevelComplete()
+    {
+        if (spawnCount == zombieSpawners.Length && allSpawned == false)
+        {
+            allSpawned = true;
+        }
+        if (enemiesShot == enemiesInScene && allSpawned == true)
+        {
+            allShot = true;
+        }
+
+        if (allShot && allSpawned)
+        {
+            OnLevelComplete();
+            Debug.Log("Level Complete");
         }
     }
-    
-    public void OnEnemySpawn(EnemyController enemy)
+
+    public void OnEnemyRegistered(EnemyController enemy)
     {
+        Debug.Log(enemy.name + "  has been registered in scene");
         enemiesInScene++;
         enemy.OnEnemyShot += OnEnemyShot;
+    }
+
+    public void OnEnemyShot(EnemyController enemy)
+    {
+        Debug.Log(enemy.name + "  has been shot");
+        enemiesShot++;
     }
 
     public void OnSpawnComplete(int x)
@@ -78,12 +83,8 @@ public class LevelManager : Singleton<LevelManager>
         spawnCount++;
     }
 
-    public void OnEnemyShot(EnemyController enemy)
-    {
-        enemiesShot++;
-    }
 
-    public void OnPlayerDeath()
+    public void SetGameOverScreen()
     {
         gameOver = true;
         OnGameOver();
@@ -94,4 +95,6 @@ public class LevelManager : Singleton<LevelManager>
     {
         gameOverText.gameObject.SetActive(true);        
     }
+
+
 }

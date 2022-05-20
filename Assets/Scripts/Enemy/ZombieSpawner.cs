@@ -15,7 +15,6 @@ public class ZombieSpawner : MonoBehaviour
     [Header("Zombie Spawn")]
     public GameObject zombiePrefab;
     public static int spawnNumber = 0;
-    //public bool spawnZombie = true;
     public float frequency = .01f;
     public int limit = 10;
 
@@ -23,29 +22,29 @@ public class ZombieSpawner : MonoBehaviour
     int spawnOffsetAmt = 2;
     public Vector3 initialDestination;
 
-    private EnemyManager enemyManager;
-
     [Header("Events")]
     public Action<int> OnSpawnComplete = (int x) => {};
     public Action<EnemyController> OnEnemySpawn = (EnemyController enemy) => {};
     public Action<Vector3, Vector3> OnZombieRelease = (Vector3 spawnPos, Vector3 WalkToLocation) => { };
     public Action<int> OnRequestZombieForSpawn = (int spawnNumber) => { };
 
-    private void Awake()
-    {
-        
-    }
+
     void Start()
     {
-        particleSystemTransform = gameObject.transform.GetChild(0).transform.GetChild(0);
-        sphereIndicator = gameObject.transform.GetChild(0).transform.GetChild(0).transform.GetChild(0);
-        FindEnemyManager();
+        GetChildObjects();
         StartCoroutine(SpawnZombies());
     }
 
     private void Update()
     {
         DrawDemonstrationGizmos();
+    }
+
+
+    private void GetChildObjects()
+    {
+        particleSystemTransform = gameObject.transform.GetChild(0).transform.GetChild(0);
+        sphereIndicator = gameObject.transform.GetChild(0).transform.GetChild(0).transform.GetChild(0);
     }
 
     private void DrawDemonstrationGizmos()
@@ -93,11 +92,6 @@ public class ZombieSpawner : MonoBehaviour
 
     }
 
-    private void FindEnemyManager()
-    {
-        enemyManager = GameObject.FindObjectOfType<EnemyManager>();
-    }
-
     public IEnumerator SpawnZombies()
     {
         for(var i = 0; i < limit; i++)
@@ -106,7 +100,7 @@ public class ZombieSpawner : MonoBehaviour
             yield return new WaitForSeconds(frequency);
             spawnNumber++;
             //var zombie = Instantiate(zombiePrefab, ZombieSpawnPosition(), particleSystemTransform.rotation);
-            enemyManager.OnEnemyInstantiated += OnEnemyInstantiated;
+            EnemyManager.instance.OnEnemyInstantiated += OnEnemyInstantiated;
             OnRequestZombieForSpawn(spawnNumber); //pass in zombie spawner? 
 
             OnZombieRelease(ZombieSpawnPosition(), WalkToLocation());
@@ -118,7 +112,7 @@ public class ZombieSpawner : MonoBehaviour
 
     private void OnEnemyInstantiated(EnemyController enemy)
     {
-        enemyManager.OnEnemyInstantiated -= OnEnemyInstantiated;
+        EnemyManager.instance.OnEnemyInstantiated -= OnEnemyInstantiated;
         enemy.transform.position = ZombieSpawnPosition();
         enemy.transform.rotation = particleSystemTransform.rotation;
         OnEnemySpawn(enemy);

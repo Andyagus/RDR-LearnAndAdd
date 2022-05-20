@@ -12,16 +12,7 @@ public class ShooterController : Singleton<ShooterController>
 {
     private MovementInput input;
     private Animator anim;
-
-    [Header("Cinemachine")]
-    public CinemachineFreeLook thirdPersonCam;
-    private CinemachineImpulseSource impulseSource;
-    private PostProcessVolume postVolume;
-    private PostProcessProfile postProfile;
-    private ColorGrading colorGrading;
-    public Color deadEyeColor;
-    public Color originalVignetteColor;
-
+    private Camera mainCamera;
 
     [Header("Booleans")]
     public bool aiming = false;
@@ -29,11 +20,6 @@ public class ShooterController : Singleton<ShooterController>
     public bool zombieAttack = false;
     public bool lostWeapon = false;
 
-    [Header("Camera Settings")]
-    private Camera mainCamera;
-    public float aimTime;
-    public GameObject stateDrivenCam;
-    public GameObject deathCam;
 
     [Header("Targets")]
     public List<Transform> targets = new List<Transform>();
@@ -57,7 +43,6 @@ public class ShooterController : Singleton<ShooterController>
     private Vector3 gunIdleRotation;
     private Vector3 gunAimPosition = new Vector3(0.2401146f, .006083928f, -0.1040046f);
     private Vector3 gunAimRotation = new Vector3(-6.622f, 97.47501f, 94.774f);
-    //public int hitForceAmt;
     public bool gunOnGround;
     public Transform rightHand;
 
@@ -71,32 +56,34 @@ public class ShooterController : Singleton<ShooterController>
     public Action OnLostWeapon = () => { };
     public Action OnWeaponFound = () => { };
 
-    void Start()
+
+    private void Awake()
     {
-        
+        InitializeEvents();
+    }
+
+    void Start()
+    {        
         input = GetComponent<MovementInput>();
-
         anim = GetComponent<Animator>();
-        mainCamera = Camera.main;
-        //access cinemachine components
-
-        impulseSource = thirdPersonCam.GetComponent<CinemachineImpulseSource>();
-        postVolume = mainCamera.GetComponent<PostProcessVolume>();
-        postProfile = postVolume.profile;
-
-        colorGrading = postProfile.GetSetting<ColorGrading>();
-        originalVignetteColor = postProfile.GetSetting<Vignette>().color.value;
 
         gunIdlePosition = gun.transform.localPosition;
         gunIdleRotation = gun.transform.localEulerAngles;
 
         Cursor.visible = false;
-
-        FindEnemiesInScene();
-        GetPlayerHealth();
-
-
     }
+
+    private void InitializeEvents()
+    {
+        mainCamera = CameraController.instance.mainCamera;
+        EnemyManager.instance.OnEnemyRegistered += FindEnemy;
+        LevelManager.instance.OnGameOver += OnPlayerDeath;
+    }
+
+    public void FindEnemy(EnemyController enemy)
+    {        
+        enemy.OnEnemyAttack += OnPlayerAttack;
+    }    
 
     void Update()
     {
@@ -159,6 +146,7 @@ public class ShooterController : Singleton<ShooterController>
             }
         }
     }
+
 
     private void AddTargets()
     {
@@ -228,6 +216,7 @@ public class ShooterController : Singleton<ShooterController>
         }
     }
 
+
     private void WeaponPosition()
     {
         bool state = input.Speed > 0;
@@ -237,26 +226,8 @@ public class ShooterController : Singleton<ShooterController>
         gun.transform.DOLocalRotate(rot, .3f);
     }
 
-    private void FixedUpdate()
-    {
-
-        //if zombieattack is false - 
-
-        //if (!zombieAttack)
-        //{
-        //change the color filter - from the current value to current color
-        if (!LevelManager.instance.gameOver)
-        {
-            //colorGrading.colorFilter.value = Color.Lerp(colorGrading.colorFilter.value, currentColor, aimTime);            
-        }
-        //}
-
-    }
-
     private void FirePolish()
     {
-        impulseSource.GenerateImpulse();
-
         foreach(ParticleSystem pSystem in gun.GetComponentsInChildren<ParticleSystem>())
         {
             pSystem.Play();
@@ -312,7 +283,7 @@ public class ShooterController : Singleton<ShooterController>
      
         if(state == false)
         {
-            transform.DORotate(new Vector3(0, transform.eulerAngles.y, transform.eulerAngles.z), aimTime);
+            transform.DORotate(new Vector3(0, transform.eulerAngles.y, transform.eulerAngles.z), 0.4f);
         }
 
 
@@ -321,39 +292,20 @@ public class ShooterController : Singleton<ShooterController>
 
 
     }
-   
-    public void FindEnemiesInScene()
+      
+    private void StopShotSequence()
     {
-        var spawners = GameObject.FindObjectsOfType<ZombieSpawner>();
-
-        foreach(var spawner in spawners)
-        {
-            spawner.OnEnemySpawn += OnEnemySpawn;
-
-        }
+        DeadEye(false);
+        sequence.Kill();
+        Aim(false);
     }
 
-    public void OnEnemySpawn(EnemyController enemy)
-    {
-        enemy.OnEnemyAttack += OnEnemyAttack;
-
-        //enemy.OnEnemyInRange += OnEnemyInRange;
-        //enemy.OnEnemyOutOfRange += OnEnemyOutOfRange;
-    }
-
-    private void GetPlayerHealth()
-    {
-        var shooterHealth = GetComponent<ShooterHealth>();
-        shooterHealth.OnPlayerDeath += OnPlayerDeath;
-    }
-
-
-    public void OnEnemyAttack(int attackAmount)
+    public void OnPlayerAttack(int attackAmount)
     {
         ToggleControls(true);
         AttackAnimation();
 
-        if(deadEye == true)
+        if (deadEye == true)
         {
             StopShotSequence();
         }
@@ -365,12 +317,6 @@ public class ShooterController : Singleton<ShooterController>
         }
     }
 
-    private void StopShotSequence()
-    {
-        DeadEye(false);
-        sequence.Kill();
-        Aim(false);
-    }
 
     private void LoseGun()
     {
@@ -423,16 +369,10 @@ public class ShooterController : Singleton<ShooterController>
 
     private void OnPlayerDeath()
     {
-        /*
-         * better way to include death cam in state driven camera, but am 
-         * deactivated the animator when ragdoll is called.
-         * anim.SetTrigger("onDeath");
-        */
         anim.enabled = false;
         input.enabled = false;       
         reticle.color = Color.clear;
         GetComponent<CharacterController>().enabled = false;
-
     }
 
     private bool GunIsGrounded()

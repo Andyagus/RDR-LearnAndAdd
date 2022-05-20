@@ -8,7 +8,7 @@ using UnityEngine.Rendering.PostProcessing;
 
 public class CameraController : Singleton<CameraController>
 {
-    private Camera mainCamera;
+    public Camera mainCamera;
     private CinemachineVirtualCameraBase activeCamera;
     private CinemachineFreeLook thirdPersonCam;
     private CameraSetting cameraSetting;
