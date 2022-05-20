@@ -18,12 +18,11 @@ public class SwitchCinemacineCamera : Singleton<SwitchCinemacineCamera>
     public CinemachineVirtualCamera deathCam;
 
     public Action<CinemachineVirtualCameraBase, CameraSetting> OnCameraChange = (CinemachineVirtualCameraBase camera, CameraSetting cameraSetting) => { };
-
-    // Start is called before the first frame update
-    void Start()
+    
+    void Awake()
     {
-        SetCameras();
-        SubscribeToEvents();
+        SetCinemachineCameraList();
+        InitializeEvents();
     }
 
     private void Update()
@@ -31,47 +30,19 @@ public class SwitchCinemacineCamera : Singleton<SwitchCinemacineCamera>
         SetCameraPriority(adjustCameraSetting);
     }
 
-    private void SubscribeToEvents()
+    private void SetCinemachineCameraList()
     {
-        //Not subscribing to enemy attack because the lost weapon cam
-        //conflicts and is more important
-        //----------------------------------
-        //SubscribeToEnemyAttack();
-
-        SubscribeToPlayer();
-        SubscribeToPlayerHealth();
+        cinemachineCameras = new List<CinemachineVirtualCameraBase>() { thirdPersonCam, attackCam, lostWeaponCam, deathCam };
     }
 
-    //private void SubscribeToEnemyAttack()
-    //{
-    //    var zombieSpawners = GameObject.FindObjectsOfType<ZombieSpawner>();
-
-    //    foreach (var spawner in zombieSpawners)
-    //    {
-    //        spawner.OnEnemySpawn += OnEnemySpawn;
-    //    }
-    //}
-
-    //private void OnEnemySpawn(EnemyController enemy)
-    //{
-    //    enemy.OnEnemyAttack += OnEnemyAttack;
-    //}
-
-    //private void OnEnemyAttack(int attackAmt)
-    //{
-    //    adjustCameraSetting = CameraSetting.Attack;
-    //    SetCameraPriority(adjustCameraSetting);
-    //}
-
-    private void SubscribeToPlayer()
-    {
-        var player = GameObject.FindObjectOfType<ShooterController>();
-        player.OnLostWeapon += OnLostWeapon;
-        player.OnWeaponFound += OnWeaponFound;
+    private void InitializeEvents()
+    {        
+        ShooterController.instance.OnLostWeapon += OnLostWeaponCamera;
+        ShooterController.instance.OnWeaponFound += OnWeaponFound;
+        ShooterHealth.instance.OnPlayerDeath += OnPlayerDeathCamera;
     }
 
-
-    private void OnLostWeapon()
+    private void OnLostWeaponCamera()
     {
         adjustCameraSetting = CameraSetting.LostWeapon;
         SetCameraPriority(adjustCameraSetting);
@@ -81,25 +52,12 @@ public class SwitchCinemacineCamera : Singleton<SwitchCinemacineCamera>
     {
         adjustCameraSetting = CameraSetting.ThirdPerson;
         SetCameraPriority(adjustCameraSetting);
-
     }
 
-    private void SubscribeToPlayerHealth()
-    {
-        var playerHealth = GameObject.FindObjectOfType<ShooterHealth>();
-        playerHealth.OnPlayerDeath += OnPlayerDeath;
-    }
-
-    private void OnPlayerDeath()
+    private void OnPlayerDeathCamera()
     {
         adjustCameraSetting = CameraSetting.Death;
         SetCameraPriority(adjustCameraSetting);
-
-    }
-
-    private void SetCameras()
-    {
-        cinemachineCameras = new List<CinemachineVirtualCameraBase>() { thirdPersonCam, attackCam, lostWeaponCam, deathCam };
     }
 
     private void SetCameraPriority(CameraSetting camSetting)

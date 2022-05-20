@@ -14,9 +14,8 @@ public class EnemyController : MonoBehaviour
     private Rigidbody[] rbs;
     private Animator anim;
     private ShooterController shooter;
-    private NavMeshAgent enemy;
+    private NavMeshAgent enemyNavMesh;
 
-    [Header("Enemy on Player Attack Box")]
     public GameObject enemyArm;
     public Transform attackPoint;
     private float attackRange = 0.2f;
@@ -34,7 +33,6 @@ public class EnemyController : MonoBehaviour
     public bool shot;
     public bool inRange;
 
-    [Header("Events")]
     public Action<EnemyController> OnEnemyShot = (EnemyController enemy) => {};   
     public Action<int> OnEnemyAttack = (int attackStrength) => {};
 
@@ -42,26 +40,23 @@ public class EnemyController : MonoBehaviour
 
     private void Awake()
     {
-        FindZombieSpawner();
+        InitializeEvents();
     }
 
     void Start()
     {
+        InitializeEvents();
+        enemyNavMesh = GetComponent<NavMeshAgent>();
         anim = GetComponent<Animator>();
         shooter = FindObjectOfType<ShooterController>();
         rbs = GetComponentsInChildren<Rigidbody>();
         Ragdoll(false, this.transform);
-        enemy = GetComponent<NavMeshAgent>();
-        //postVolume = mainCamera.GetComponent<PostProcessVolume>();       
-        //postProfile = postVolume.profile;
     }
 
     private void Update()
     {
-
         if (!shot)
-        {
-            
+        {            
             FollowPlayer();
         }
 
@@ -77,17 +72,21 @@ public class EnemyController : MonoBehaviour
 
     }
 
+    private void InitializeEvents()
+    {
+        FindZombieSpawner();
+    }
 
     private void FindZombieSpawner()
     {
         var zombieSpawners = GameObject.FindObjectsOfType<ZombieSpawner>();
         foreach (var spawner in zombieSpawners)
         {
-            spawner.OnZombieRelease += OnZombieRelease;
+            spawner.OnZombieRelease += SetEnemyInitialLocation;
         }
     }
 
-    private void OnZombieRelease(Vector3 spawnPos, Vector3 walkToLocation)
+    private void SetEnemyInitialLocation(Vector3 spawnPos, Vector3 walkToLocation)
     {        
         if(setInitialLocation == false)
         {
@@ -101,49 +100,42 @@ public class EnemyController : MonoBehaviour
     {
         if(setInitialLocation == true)
         {
-            enemy.destination = walkToLocation;
+            enemyNavMesh.destination = walkToLocation;
         }
 
-        //TODO Use Complete Path        
-        if (enemy.remainingDistance <= 1.4f && enemy.remainingDistance != 0)
+        if (enemyNavMesh.remainingDistance <= 1.4f && enemyNavMesh.remainingDistance != 0)
         {
             moveTowardsPlayer = true;            
         }
 
         if (moveTowardsPlayer)
         {
-            enemy.destination = shooter.transform.position;
-
-            //TODO nail down how this works
+            enemyNavMesh.destination = shooter.transform.position;
             var lookRotation = Quaternion.LookRotation(shooter.transform.position - transform.position, Vector3.up);
             transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime);
-
         }
-
     }
 
     private void FollowPlayer()
     {
-
         CheckDestinationPosition();
-
         var enemyWalkingDistance = 3;
 
-        if (enemy.remainingDistance > enemyWalkingDistance)
+        if (enemyNavMesh.remainingDistance > enemyWalkingDistance)
         {
             enemyState = EnemyState.running;
         }
 
-        if (enemy.remainingDistance > enemy.stoppingDistance && enemy.remainingDistance < enemyWalkingDistance)
+        if (enemyNavMesh.remainingDistance > enemyNavMesh.stoppingDistance && enemyNavMesh.remainingDistance < enemyWalkingDistance)
         {
             enemyState = EnemyState.walking;
         }
 
-        if (enemy.remainingDistance != 0 && moveTowardsPlayer)
+        if (enemyNavMesh.remainingDistance != 0 && moveTowardsPlayer)
         {
-            if (enemy.remainingDistance <= enemy.stoppingDistance)
+            if (enemyNavMesh.remainingDistance <= enemyNavMesh.stoppingDistance)
             {
-                if (!enemy.hasPath || enemy.velocity.sqrMagnitude == 0)
+                if (!enemyNavMesh.hasPath || enemyNavMesh.velocity.sqrMagnitude == 0)
                 {
                     enemyState = EnemyState.attacking;
                 }
@@ -206,7 +198,7 @@ public class EnemyController : MonoBehaviour
 
     private void AttackPlayer()
     {
-        enemy.isStopped = true;
+        enemyNavMesh.isStopped = true;
         anim.SetBool("attack", true);
 
         Collider[] hitPlayerRb = Physics.OverlapSphere(attackPoint.position, attackRange, playerLayers);
@@ -226,18 +218,18 @@ public class EnemyController : MonoBehaviour
     private void WalkToPlayer()
     {
         anim.SetBool("attack", false);
-        enemy.speed = 0.5f;
+        enemyNavMesh.speed = 0.5f;
 
-        if (enemy.isStopped)
+        if (enemyNavMesh.isStopped)
         {
-            enemy.isStopped = !enemy.isStopped;
+            enemyNavMesh.isStopped = !enemyNavMesh.isStopped;
         }
     }
 
     private void RunToPlayer()
     {
         anim.SetBool("attack", false);
-        enemy.speed = 1f;
+        enemyNavMesh.speed = 1f;
     }
   
 
@@ -254,17 +246,15 @@ public class EnemyController : MonoBehaviour
         {
             point.GetComponent<Rigidbody>().AddForce(shooter.transform.forward * 30, ForceMode.Impulse);
             shot = true;
-            OnEnemyShot(enemy.GetComponent<EnemyController>());            
+            OnEnemyShot(enemyNavMesh.GetComponent<EnemyController>());            
         }
     }
-
-    //TODO connect to singleton
 
     public void GameOver()
     {
         anim.SetTrigger("GameOver");
-        enemy.isStopped = true;
-        enemy.ResetPath();
+        enemyNavMesh.isStopped = true;
+        enemyNavMesh.ResetPath();
     }
 
 }
