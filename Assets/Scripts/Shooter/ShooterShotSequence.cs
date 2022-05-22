@@ -1,51 +1,71 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ShooterShotSequence : MonoBehaviour
+public class ShooterShotSequence : Singleton<ShooterShotSequence>
 {
     private Sequence sequence;
     private List<Transform> indicatorList;
-    private List<Transform> targets;
-
+    private List<Transform> targetList = new List<Transform>();
+    
     private Animator anim;
     public GameObject gun;
     //private Image reticle;
+
+    public Action OnRemoveTargets = () => { };
+    public Action<int> OnShotSequence = (int i) => { };
 
     private void Start()
     {
         InitializeMembers();
     }
 
+    private void Update()
+    {
+        Debug.Log($"Target list from shot sequence: {targetList.Count}");
+    }
+
     private void InitializeMembers()
     {
         anim = GetComponent<Animator>();
+        ShooterAddTargets.instance.OnShooterTargets += UpdateTargetList;
+        ShooterController.instance.OnPlayerStoppedAim += StartSequence;
+    }
+
+    private void StartSequence()
+    {
+        ShotSequence();
     }
 
     private void ShotSequence()
     {
 
         //if (targets.Count > 0 && !LevelManager.instance.gameOver && !zombieAttack)
-        if(targets.Count > 0)
+        Debug.Log(targetList.Count);
+
+        if(targetList.Count > 0)
         {
-            DeadEye(true);
+            //DeadEye(true);
 
             sequence = DOTween.Sequence();
 
-            for (var i = 0; i < targets.Count; i++)
+            for (var i = 0; i < targetList.Count; i++)
             {
                 //passed in through add targets event
-                var currentTarget = targets[i];
-                var currentIndicator = indicatorList[i];
+                var currentTarget = targetList[i];
+                //var currentIndicator = indicatorList[i];
 
                 sequence.Append(transform.DOLookAt(currentTarget.GetComponentInParent<EnemyController>().transform.position, .2f));
                 sequence.AppendCallback(() => anim.SetTrigger("fire"));
                 sequence.AppendInterval(0.1f);
                 sequence.AppendCallback(FirePolish);
                 sequence.AppendCallback(() => currentTarget.GetComponentInParent<EnemyController>().Ragdoll(true, currentTarget));
-                sequence.AppendCallback(() => currentIndicator.GetComponent<Image>().color = Color.clear);
+                //sequence.AppendCallback(() => currentIndicator.GetComponent<Image>().color = Color.clear);
+                //TODO Fix Here 
+                OnShotSequence(i);
                 sequence.AppendInterval(1.75f);
             }
 
@@ -77,13 +97,7 @@ public class ShooterShotSequence : MonoBehaviour
 
         if (!state)
         {
-            targets.Clear();
-
-            foreach (var indicator in indicatorList)
-            {
-                Destroy(indicator.gameObject);
-            }
-            indicatorList.Clear();
+            OnRemoveTargets();
         }
     }
 
@@ -95,6 +109,16 @@ public class ShooterShotSequence : MonoBehaviour
         {
             pSystem.Play();
         }
+    }
+
+    private void UpdateTargetList(List<Transform> targets)
+    {
+        this.targetList = targets;
+
+        //foreach (var target in targets)
+        //{
+            
+        //}
     }
 
 }

@@ -15,8 +15,12 @@ public class ShooterAddTargets : Singleton<ShooterAddTargets>
     public List<Transform> targets = new List<Transform>();
     public List<Transform> indicatorList = new List<Transform>();
 
-    public Action<Transform> OnAddTarget = (Transform hitPosition) => {};
+    public Action<Transform> OnAddTarget = (Transform hitPosition) => { };
+    public Action<GameObject> OnRemoveTarget = (GameObject target) => { };
     public Action<Transform, Transform> OnPositionIndicator = (Transform indicator, Transform target) => { };
+
+    public Action<List<Transform>> OnShooterTargets = (List<Transform> targets) => { };
+
 
     private void Awake()
     {
@@ -25,7 +29,8 @@ public class ShooterAddTargets : Singleton<ShooterAddTargets>
 
     private void Update()
     {
-        Debug.Log(indicatorList.Count);
+        OnShooterTargets(targets);
+
     }
 
     private void InitializeMembers()
@@ -34,7 +39,9 @@ public class ShooterAddTargets : Singleton<ShooterAddTargets>
         input = GetComponent<MovementInput>();
         ShooterController.instance.OnPlayerAiming += AddTargets;
         ShooterController.instance.OnPlayerAiming += PositionXIndicator;
-        ShooterController.instance.OnPlayerStoppedAim += RemoveTargets;
+        ShooterShotSequence.instance.OnShotSequence += RemoveTarget;
+
+
         UIController.instance.OnIndicatorCreated += OnIndicatorCreated;
     }
 
@@ -90,17 +97,9 @@ public class ShooterAddTargets : Singleton<ShooterAddTargets>
         }
     }
 
-    private void RemoveTargets()
+    private void RemoveTarget(int i)
     {
-        //will require change
-        targets.Clear();
-
-        foreach(var i in indicatorList)
-        {
-            Destroy(i.gameObject);
-        }
-
-        indicatorList.Clear();
+        OnRemoveTarget(indicatorList[i].gameObject);
     }
 
 }

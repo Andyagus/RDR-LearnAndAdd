@@ -23,6 +23,7 @@ public class UIController : Singleton<UIController>
         mainCamera = CameraController.instance.mainCamera; 
         ShooterAddTargets.instance.OnAddTarget += CreateIndicator;
         ShooterAddTargets.instance.OnPositionIndicator += PositionTargets;
+        ShooterAddTargets.instance.OnRemoveTarget += ClearIndiciator;
         //ShooterAddTargets.instance.ClearTargets += RemoveTargets;
     }
 
@@ -41,6 +42,11 @@ public class UIController : Singleton<UIController>
         indicator.position = mainCamera.WorldToScreenPoint(target.position);
     }
 
+    private void ClearIndiciator(GameObject indicator)
+    {
+        Debug.Log($"{indicator} removed!");
+        Destroy(indicator);
+    }
     //private void RemoveTargets()
     //{
 
