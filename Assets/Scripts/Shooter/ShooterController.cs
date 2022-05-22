@@ -18,9 +18,15 @@ public class ShooterController : Singleton<ShooterController>
     [Header("Attack")]
     private Sequence sequence;
 
+    private bool aiming = false;
+    
     [Header("Events")]
     public Action<Transform> OnPlayerPosition = (Transform playerPosition) => { };
-    public Action OnPlayerAiming = () => { };
+    //post effects, camera controller, animation controller, shooter controller……
+    public Action OnPlayerAimed = () => { };
+    public Action OnPlayerStoppedAim = () => { };
+
+    public Action<bool> OnPlayerAiming = (bool aiming) => { };
     public Action OnPlayerStoppedAiming = () => { };
     public Action OnLostWeapon = () => { };
     public Action OnWeaponFound = () => { };
@@ -56,12 +62,30 @@ public class ShooterController : Singleton<ShooterController>
 
         if (Input.GetMouseButtonDown(1))
         {
-            OnPlayerAiming();
+            Aim(true);
+            OnPlayerAimed();
         }
         if (Input.GetMouseButtonUp(1))
         {
+            Aim(false);
+            OnPlayerStoppedAim();
+        }
+
+        //continuously running events;
+        if (aiming)
+        {
+            OnPlayerAiming(true);
+        }else if (!aiming)
+        {
+            //probably don't need this but put in for now
             OnPlayerStoppedAiming();
         }
+
+        
+        //if (!aiming)
+        //{
+        //    OnPlayerStoppedAiming();
+        //}
 
         //if (aiming)
         //{
@@ -116,36 +140,40 @@ public class ShooterController : Singleton<ShooterController>
  
 
    
-    private void Aim(bool state) { 
-    //{
-    //    if(state == true)
-    //    {
-    //        OnPlayerAiming();
-    //    }
-    //    if(state == false)
-    //    {
-    //        OnPlayerStoppedAiming();
-    //    }
+    private void Aim(bool state) {
 
-    //    aiming = state;
-    //    anim.SetBool("aiming", state);
-        
-    //    var pos = state ? gunAimPosition : gunIdlePosition;
-    //    var rot = state ? gunAimRotation : gunIdleRotation;
+        aiming = state;
+               
 
-    //    gun.transform.DOComplete();
-    //    gun.transform.DOLocalMove(pos, 0.1f);
-    //    gun.transform.DOLocalRotate(rot, 0.1f);
-        
-     
-    //    if(state == false)
-    //    {
-    //        transform.DORotate(new Vector3(0, transform.eulerAngles.y, transform.eulerAngles.z), 0.4f);
-    //    }
+        //{
+        //    if(state == true)
+        //    {
+        //        OnPlayerAiming();
+        //    }
+        //    if(state == false)
+        //    {
+        //        OnPlayerStoppedAiming();
+        //    }
+
+        //    aiming = state;
+        //    anim.SetBool("aiming", state);
+
+        //    var pos = state ? gunAimPosition : gunIdlePosition;
+        //    var rot = state ? gunAimRotation : gunIdleRotation;
+
+        //    gun.transform.DOComplete();
+        //    gun.transform.DOLocalMove(pos, 0.1f);
+        //    gun.transform.DOLocalRotate(rot, 0.1f);
 
 
-    //    Color reticleColor = state ? Color.white : Color.clear;
-    //    reticle.color = reticleColor;
+        //    if(state == false)
+        //    {
+        //        transform.DORotate(new Vector3(0, transform.eulerAngles.y, transform.eulerAngles.z), 0.4f);
+        //    }
+
+
+        //    Color reticleColor = state ? Color.white : Color.clear;
+        //    reticle.color = reticleColor;
 
 
     }

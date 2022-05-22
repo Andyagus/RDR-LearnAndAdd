@@ -19,6 +19,9 @@ public class CameraController : Singleton<CameraController>
     public float zoomFov;
     private float originalTimeScale = 1;
     private float postTimeScale = 0.7f;
+    //temp
+    bool playerCanAim = true;
+
 
     public Action<Camera> OnPostProcessSetup = (Camera mainCamera) => { };
 
@@ -36,8 +39,8 @@ public class CameraController : Singleton<CameraController>
     private void InitializeEvents()
     {
         SwitchCinemacineCamera.instance.OnCameraChange += OnCameraChange;
-        ShooterController.instance.OnPlayerAiming += TurnOnZoomCameraSettings;
-        ShooterController.instance.OnPlayerStoppedAiming += TurnOffZoomCameraSettings;
+        ShooterController.instance.OnPlayerAimed += TurnOnZoomCameraSettings;
+        ShooterController.instance.OnPlayerStoppedAim += TurnOffZoomCameraSettings;
     }
 
     private void OnCameraChange(CinemachineVirtualCameraBase camera, CameraSetting cameraSetting)
@@ -52,14 +55,20 @@ public class CameraController : Singleton<CameraController>
     }
 
     private void TurnOnZoomCameraSettings()
-    {        
-        DOVirtual.Float(originalOffsetAmount, zoomOffsetAmount, aimTime, HorizontalOffset);
-        DOVirtual.Float(originalFov, zoomFov, aimTime, CameraZoom);
-        DOVirtual.Float(originalTimeScale, postTimeScale, aimTime, SetTimeScale);
+    {
+        if (playerCanAim)
+        {
+            Debug.Log("Zoom camera settings called");
+            DOVirtual.Float(originalOffsetAmount, zoomOffsetAmount, aimTime, HorizontalOffset);
+            DOVirtual.Float(originalFov, zoomFov, aimTime, CameraZoom);
+            DOVirtual.Float(originalTimeScale, postTimeScale, aimTime, SetTimeScale);
+            playerCanAim = false;
+        }
     }
 
     private void TurnOffZoomCameraSettings()
     {
+        Debug.Log("Camera Controller, turn off zoom called");
         DOVirtual.Float(zoomOffsetAmount, originalOffsetAmount, aimTime, HorizontalOffset);
         DOVirtual.Float(zoomFov, originalFov, aimTime, CameraZoom);
         DOVirtual.Float(postTimeScale, originalTimeScale, aimTime, SetTimeScale);

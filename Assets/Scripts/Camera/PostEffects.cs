@@ -36,8 +36,8 @@ public class PostEffects : Singleton<PostEffects>
     private void InitializeEvents()
     {
         CameraController.instance.OnPostProcessSetup += OnPostProcessSetup;
-        ShooterController.instance.OnPlayerAiming += TurnOnAimingEffects;
-        ShooterController.instance.OnPlayerStoppedAiming += TurnOffAimingEffects;
+        ShooterController.instance.OnPlayerAimed += TurnOnAimingEffects;
+        ShooterController.instance.OnPlayerStoppedAim += TurnOffAimingEffects;
         EnemyManager.instance.OnEnemyRegistered += SubscribeToEnemyAttack;
         ShooterHealth.instance.OnRestoreFractionOfHealth += OnRestoreVignette;
         ScoreManager.instance.OnTimesThreeMultiplier += OnStartBloom;
