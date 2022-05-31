@@ -49,12 +49,14 @@ public class ShooterController : Singleton<ShooterController>
     {
         EnemyManager.instance.OnEnemyRegistered += FindEnemy;
         LevelManager.instance.OnGameOver += OnPlayerDeath;
+        ShooterShotSequence.instance.OnSequenceComplete += EnableInput;
+        ShooterShotSequence.instance.OnSequenceStart += DisableInput;
     }
 
     public void FindEnemy(EnemyController enemy)
     {        
         enemy.OnEnemyAttack += OnPlayerAttacked;
-    }    
+    }
 
     void Update()
     {
@@ -76,71 +78,82 @@ public class ShooterController : Singleton<ShooterController>
         if (aiming)
         {
             OnPlayerAiming(true);
-        }else if (!aiming)
+        }
+        else if (!aiming)
         {
             //probably don't need this but put in for now
             OnPlayerStoppedAiming();
         }
-
-        
-        //if (!aiming)
-        //{
-        //    OnPlayerStoppedAiming();
-        //}
-
-        //if (aiming)
-        //{
-        //    //PositionXIndicator();
-        //}
-
-
-        //if (deadEye)
-        //{
-        //    return;
-        //}
-
-
-        //GunIsGrounded();
-
-        //anim.SetFloat("speed", input.Speed);
-
-
-        //if (!aiming && zombieAttack == false && lostWeapon == false)
-        //{
-        //    //WeaponPosition();
-        //}
-
-        ////Move to a game manager
-        //if (Input.GetKeyDown(KeyCode.R))
-        //{
-        //    SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().name);
-        //}
-
-
-        ////stays
-        //if (Input.GetMouseButtonDown(1) && !zombieAttack && !lostWeapon)
-        //{
-        //    Aim(true);
-        //}
-
-
-        ////stays 
-        //if (Input.GetMouseButtonUp(1) && aiming)
-        //{
-
-        //    //ShotSequence();
-        //}
-
-        //add targets script--
-        //if (aiming)
-        //{
-        //    AddTargets();
-        //}
-
     }
- 
 
-   
+    private void DisableInput()
+    {
+        Debug.Log("Input is disabled");
+        input.enabled = false;
+    }
+
+    private void EnableInput()
+    {
+        input.enabled = true;
+    }
+
+    //if (!aiming)
+    //{
+    //    OnPlayerStoppedAiming();
+    //}
+
+    //if (aiming)
+    //{
+    //    //PositionXIndicator();
+    //}
+
+
+    //if (deadEye)
+    //{
+    //    return;
+    //}
+
+    //GunIsGrounded();
+
+    //anim.SetFloat("speed", input.Speed);
+
+
+    //if (!aiming && zombieAttack == false && lostWeapon == false)
+    //{
+    //    //WeaponPosition();
+    //}
+
+    ////Move to a game manager
+    //if (Input.GetKeyDown(KeyCode.R))
+    //{
+    //    SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().name);
+    //}
+
+
+    ////stays
+    //if (Input.GetMouseButtonDown(1) && !zombieAttack && !lostWeapon)
+    //{
+    //    Aim(true);
+    //}
+
+
+    ////stays 
+    //if (Input.GetMouseButtonUp(1) && aiming)
+    //{
+
+    //    //ShotSequence();
+    //}
+
+    //add targets script--
+    //if (aiming)
+    //{
+    //    AddTargets();
+    //}
+
+    //}
+
+
+
     private void Aim(bool state) {
 
         aiming = state;

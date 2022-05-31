@@ -97,31 +97,6 @@ public class ShooterShotSequence : Singleton<ShooterShotSequence>
         }
     }
 
-    private void DeadEye(bool state)
-    {
-
-        if (state)
-        {
-            //OnDeadEyeStart();
-        }
-        Debug.Log("DEAD EYE CALLED WITH BOOL: " + state);
-
-        //DeadEyeActiveEvent -> disable input, make reticle clear -> change animation speed
-
-        //input.enabled = !deadEye;
-        //DisableInputEvent()
-
-        float animationSpeed = state ? 1.275f : 1;
-        anim.speed = animationSpeed;
-
-        //if (state)
-        //{
-        //    reticle.DOColor(Color.clear, 0.5f);
-        //}
-
-  
-    }
-
     //shot sequence script
 
     private void FirePolish()
