@@ -42,7 +42,7 @@ public class UIController : Singleton<UIController>
 
 
     private void PositionTargets(Transform target, int index)
-    {     
+    {        
         indicatorList[index].transform.position = mainCamera.WorldToScreenPoint(target.position);
     }
 

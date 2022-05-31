@@ -45,19 +45,19 @@ public class ShooterAddTargets : Singleton<ShooterAddTargets>
         mainCamera = CameraController.instance.mainCamera;        
         input = GetComponent<MovementInput>();
         ShooterController.instance.OnPlayerAiming += AddTargets;
-        ShooterController.instance.OnPlayerAiming += OnPlayerAiming;
-        ShooterShotSequence.instance.OnSequenceComplete += OnSequenceComplete;
+        ShooterController.instance.OnPlayerAiming += StartPositioningTargets;
+        ShooterShotSequence.instance.OnSequenceComplete += StopPositioningTargets;
         ShooterShotSequence.instance.OnSequenceComplete += RemoveTargets;
         //ShooterShotSequence.instance.OnRemoveTargetByIndex += RemoveTarget;
 
     }
 
-    private void OnPlayerAiming(bool state)
+    private void StartPositioningTargets(bool state)
     {
         positionTargets = true;
     }
 
-    private void OnSequenceComplete()
+    private void StopPositioningTargets()
     {
         positionTargets = false;
     }
@@ -98,7 +98,6 @@ public class ShooterAddTargets : Singleton<ShooterAddTargets>
         for (int i = 0; i < targets.Count; i++)
         {
             OnPositionTarget(targets[i], i);
-
         }        
     }
 

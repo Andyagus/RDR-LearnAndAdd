@@ -108,7 +108,6 @@ public class ShooterShotSequence : Singleton<ShooterShotSequence>
 
         //DeadEyeActiveEvent -> disable input, make reticle clear -> change animation speed
 
-        //deadEye = state;
         //input.enabled = !deadEye;
         //DisableInputEvent()
 
