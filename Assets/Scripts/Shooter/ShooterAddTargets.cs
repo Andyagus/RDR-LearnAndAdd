@@ -92,7 +92,6 @@ public class ShooterAddTargets : Singleton<ShooterAddTargets>
         }
     }
 
-
     private void PositionXIndicator()
     {        
         for (int i = 0; i < targets.Count; i++)
