@@ -28,6 +28,7 @@ public class ShooterController : Singleton<ShooterController>
 
     public Action<bool> OnPlayerAiming = (bool aiming) => { };
     public Action OnPlayerStoppedAiming = () => { };
+
     public Action OnLostWeapon = () => { };
     public Action OnWeaponFound = () => { };
 

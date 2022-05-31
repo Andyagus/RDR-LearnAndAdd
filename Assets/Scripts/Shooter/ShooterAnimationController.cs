@@ -19,7 +19,7 @@ public class ShooterAnimationController : MonoBehaviour
     }
 
     private void AimWeapon(bool state)
-    {
+    {        
         animator.SetBool("aiming", true);
     }
 

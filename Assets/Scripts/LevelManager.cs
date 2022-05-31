@@ -61,7 +61,7 @@ public class LevelManager : Singleton<LevelManager>
         if (allShot && allSpawned)
         {
             OnLevelComplete();
-            Debug.Log("Level Complete");
+            //Debug.Log("Level Complete");
         }
     }
 

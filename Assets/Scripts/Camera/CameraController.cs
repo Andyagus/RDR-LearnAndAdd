@@ -58,7 +58,7 @@ public class CameraController : Singleton<CameraController>
     {
         if (playerCanAim)
         {
-            Debug.Log("Zoom camera settings called");
+            //Debug.Log("Zoom camera settings called");
             DOVirtual.Float(originalOffsetAmount, zoomOffsetAmount, aimTime, HorizontalOffset);
             DOVirtual.Float(originalFov, zoomFov, aimTime, CameraZoom);
             DOVirtual.Float(originalTimeScale, postTimeScale, aimTime, SetTimeScale);

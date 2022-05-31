@@ -6,20 +6,22 @@ using UnityEngine.UI;
 
 public class ShooterAddTargets : Singleton<ShooterAddTargets>
 {
-    private Image reticle;
+    
     private MovementInput input;
     private Camera mainCamera;
-    private Transform canvas;
+    //private bool playerAiming = false;
 
-    public LayerMask enemyLayerMask;
-    public List<Transform> targets = new List<Transform>();
-    public List<Transform> indicatorList = new List<Transform>();
+    private bool positionTargets = false;
 
-    public Action<Transform> OnAddTarget = (Transform hitPosition) => { };
-    public Action<GameObject> OnRemoveTarget = (GameObject target) => { };
-    public Action<Transform, Transform> OnPositionIndicator = (Transform indicator, Transform target) => { };
-
+    //enemy layer mask for adding targets
+    public LayerMask enemyLayerMask;    
     public Action<List<Transform>> OnShooterTargets = (List<Transform> targets) => { };
+    public List<Transform> targets = new List<Transform>();
+    //TODO can be moved ot ui controller
+    public Action<Transform> OnAddTarget = (Transform hitPosition) => { };    
+    public Action<GameObject> OnRemoveTarget = (GameObject target) => { };    
+    public Action<Transform, int> OnPositionTarget = (Transform target, int index) => { };
+
 
 
     private void Awake()
@@ -29,8 +31,13 @@ public class ShooterAddTargets : Singleton<ShooterAddTargets>
 
     private void Update()
     {
+        //Debug.Log("Target Count: " + targets.Count);
         OnShooterTargets(targets);
 
+        if(positionTargets == true && targets.Count > 0)
+        {
+            PositionXIndicator();
+        }
     }
 
     private void InitializeMembers()
@@ -38,23 +45,30 @@ public class ShooterAddTargets : Singleton<ShooterAddTargets>
         mainCamera = CameraController.instance.mainCamera;        
         input = GetComponent<MovementInput>();
         ShooterController.instance.OnPlayerAiming += AddTargets;
-        ShooterController.instance.OnPlayerAiming += PositionXIndicator;
-        ShooterShotSequence.instance.OnShotSequence += RemoveTarget;
+        ShooterController.instance.OnPlayerAiming += OnPlayerAiming;
+        ShooterShotSequence.instance.OnSequenceComplete += OnSequenceComplete;
+        ShooterShotSequence.instance.OnSequenceComplete += RemoveTargets;
+        //ShooterShotSequence.instance.OnRemoveTargetByIndex += RemoveTarget;
 
+    }
 
-        UIController.instance.OnIndicatorCreated += OnIndicatorCreated;
+    private void OnPlayerAiming(bool state)
+    {
+        positionTargets = true;
+    }
+
+    private void OnSequenceComplete()
+    {
+        positionTargets = false;
     }
 
     private void AddTargets(bool state)
     {
 
         Debug.DrawRay(mainCamera.transform.position, mainCamera.transform.forward * 1000, Color.red);
-
         input.LookAt(mainCamera.transform.forward + (mainCamera.transform.right * .1f));
         RaycastHit hit;
         Physics.Raycast(mainCamera.transform.position, mainCamera.transform.forward, out hit, Mathf.Infinity, layerMask: enemyLayerMask);
-
-        //reticle.color = Color.white;
 
         if (hit.transform == null)
         {
@@ -78,28 +92,19 @@ public class ShooterAddTargets : Singleton<ShooterAddTargets>
         }
     }
 
-    private void OnIndicatorCreated(GameObject indicator)
-    {
-        indicatorList.Add(indicator.transform);
-    }
 
-
-    //add targets script
-    private void PositionXIndicator(bool state)
-    {
-        if (targets.Count > 0)
+    private void PositionXIndicator()
+    {        
+        for (int i = 0; i < targets.Count; i++)
         {
-            for (int i = 0; i < targets.Count; i++)
-            {
-                OnPositionIndicator(indicatorList[i], targets[i]);
+            OnPositionTarget(targets[i], i);
 
-            }
-        }
+        }        
     }
 
-    private void RemoveTarget(int i)
+    private void RemoveTargets()
     {
-        OnRemoveTarget(indicatorList[i].gameObject);
+        targets.Clear();
     }
 
 }

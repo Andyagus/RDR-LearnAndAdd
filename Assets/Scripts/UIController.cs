@@ -10,45 +10,53 @@ public class UIController : Singleton<UIController>
     public Transform canvas;
     public GameObject xIndicatorPrefab;
     private Camera mainCamera;
-
-    public Action<GameObject> OnIndicatorCreated = (GameObject indicator) => { };    
+    public List<GameObject> indicatorList = new List<GameObject>();
 
     private void Start()
     {
         InitializeMembers();  
     }
 
+    private void Update()
+    {
+        Debug.Log(indicatorList.Count);
+    }
+
     private void InitializeMembers()
     {
         mainCamera = CameraController.instance.mainCamera; 
         ShooterAddTargets.instance.OnAddTarget += CreateIndicator;
-        ShooterAddTargets.instance.OnPositionIndicator += PositionTargets;
-        ShooterAddTargets.instance.OnRemoveTarget += ClearIndiciator;
-        //ShooterAddTargets.instance.ClearTargets += RemoveTargets;
+        ShooterAddTargets.instance.OnPositionTarget += PositionTargets;
+        ShooterShotSequence.instance.OnSequenceFired += ClearIndiciator;
+        ShooterShotSequence.instance.OnSequenceComplete += DestroyIndicators;
+        
     }
 
     private void CreateIndicator(Transform hitTransform)
     {
-        Debug.Log("ADd target");
         Vector3 worldToScreenPointPos = mainCamera.WorldToScreenPoint(hitTransform.position);
         GameObject indicator = Instantiate(xIndicatorPrefab, canvas);
         indicator.transform.position = worldToScreenPointPos;
-
-        OnIndicatorCreated(indicator);
+        indicatorList.Add(indicator);
     }
 
-    private void PositionTargets(Transform indicator, Transform target)
+
+    private void PositionTargets(Transform target, int index)
+    {     
+        indicatorList[index].transform.position = mainCamera.WorldToScreenPoint(target.position);
+    }
+
+    private void ClearIndiciator(int index)
     {
-        indicator.position = mainCamera.WorldToScreenPoint(target.position);
+        indicatorList[index].gameObject.GetComponent<Image>().color = Color.clear;        
     }
 
-    private void ClearIndiciator(GameObject indicator)
+    private void DestroyIndicators()
     {
-        Debug.Log($"{indicator} removed!");
-        Destroy(indicator);
+        foreach(GameObject indicator in indicatorList)
+        {
+            Destroy(indicator);
+        }
+        indicatorList.Clear();
     }
-    //private void RemoveTargets()
-    //{
-
-    //}
 }
