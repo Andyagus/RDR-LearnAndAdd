@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -12,14 +13,15 @@ public class MovementInput : Singleton<MovementInput>
     public bool blockRotationPlayer;
     public float desiredRotationSpeed = 0.1f;
     public Animator anim;
-    public float Speed;
+    public float speed;
     public float allowPlayerRotation = 0.1f;
     public Camera cam;
     public CharacterController controller;
     public bool isGrounded;
     private float verticalVel;
     private Vector3 moveVector;
-    
+
+    public Action<float> OnPlayerMovement = (float speed) => { };
 
     void Start()
     {
@@ -75,20 +77,17 @@ public class MovementInput : Singleton<MovementInput>
         transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(pos), desiredRotationSpeed);
     }
 
-    public void RotateToCamera()
-    {
-
-    }
 
     void InputMagnitude()
     {
         InputX = Input.GetAxis("Horizontal");
         InputZ = Input.GetAxis("Vertical");
 
-        Speed = new Vector2(InputX, InputZ).sqrMagnitude;
+        speed = new Vector2(InputX, InputZ).sqrMagnitude;
 
-        if(Speed > allowPlayerRotation)
+        if(speed > allowPlayerRotation)
         {
+            OnPlayerMovement(speed);
             PlayerMoveAndRotation();
         }
         

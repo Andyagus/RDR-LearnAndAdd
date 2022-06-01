@@ -45,7 +45,7 @@ public class ShooterWeaponPosition : Singleton<ShooterWeaponPosition>
 
     private void WeaponPosition()
     {
-        bool state = input.Speed > 0;
+        bool state = input.speed > 0;
         var pos = state ? gunAimPosition : gunIdlePosition;
         var rot = state ? gunAimRotation : gunAimRotation;
         gun.transform.DOLocalMove(pos, .3f);

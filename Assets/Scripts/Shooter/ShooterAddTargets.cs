@@ -87,7 +87,6 @@ public class ShooterAddTargets : Singleton<ShooterAddTargets>
             //not good for enemy - can refactor 
             hit.transform.GetComponentInParent<EnemyController>().aimed = true;
             targets.Add(hit.transform);
-
             OnAddTarget(hit.transform);
         }
     }
