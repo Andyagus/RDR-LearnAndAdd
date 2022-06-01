@@ -13,16 +13,18 @@ public class ShooterController : Singleton<ShooterController>
     private MovementInput input;
 
     private bool aiming = false;
-    
+    private bool sequence = false;
+
     [Header("Events")]
     public Action<Transform> OnPlayerPosition = (Transform playerPosition) => { };
-    
-    //if true player has aimed if false, done aiming
-    public Action<bool> OnPlayerAim = (bool state) => { };    
-    public Action OnPlayerAiming = () => { };    
+
+    public Action OnPlayerAiming = () => { };
+    public Action OnPlayerAim = () => { };
+    public Action OnPlayerAimed = () => { };
 
     public Action OnLostWeapon = () => { };
     public Action OnWeaponFound = () => { };
+
 
     private void Awake()
     {
@@ -40,10 +42,10 @@ public class ShooterController : Singleton<ShooterController>
     {
         EnemyManager.instance.OnEnemyRegistered += FindEnemy;
         LevelManager.instance.OnGameOver += OnPlayerDeath;
-        ShooterShotSequence.instance.OnSequenceComplete += EnableInput;
-        ShooterShotSequence.instance.OnSequenceStart += DisableInput;
-    }
+        ShooterShotSequence.instance.OnSequenceStart += OnSequenceStart;
+        ShooterShotSequence.instance.OnSequenceComplete += OnSequenceComplete;
 
+    }
 
     public void FindEnemy(EnemyController enemy)
     {        
@@ -57,37 +59,39 @@ public class ShooterController : Singleton<ShooterController>
 
         if (Input.GetMouseButtonDown(1))
         {
+            OnPlayerAim();
             Aim(true);
-            OnPlayerAim(true);
         }
-        if (Input.GetMouseButtonUp(1))
+        if (Input.GetMouseButtonUp(1) && !sequence)
         {
-            Aim(false);
-            OnPlayerAim(false);
+            OnPlayerAimed();
         }
 
         if (aiming)
         {
             OnPlayerAiming();
-        }
-        
+        } 
     }
 
-    private void DisableInput()
+
+    private void Aim(bool state)
     {
+        aiming = state;
+    }
+ 
+    private void OnSequenceStart()
+    {
+        sequence = true;
         input.enabled = false;
     }
 
-    private void EnableInput()
+    private void OnSequenceComplete()
     {
+        sequence = false;
         input.enabled = true;
+        aiming = false;        
     }    
 
-    private void Aim(bool state) {
-
-        aiming = state;
-               
-    }
 
     //TODO apply to refactor
    

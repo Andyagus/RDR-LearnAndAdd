@@ -23,46 +23,40 @@ public class ShooterShotSequence : Singleton<ShooterShotSequence>
     public Action OnSequenceStart = () => { };
     public Action OnSequenceComplete = () => { };
 
-    //public Action OnDeadEyeStart = () => { };
-    //public Action OnDeadEyeEnded = () => { };
-
+    
 
     private void Start()
     {
         InitializeMembers();
     }
 
-    private void Update()
-    {
-        //Debug.Log($"Target list from shot sequence: {targetList.Count}");
-    }
 
     private void InitializeMembers()
     {
         anim = GetComponent<Animator>();
         ShooterAddTargets.instance.OnShooterTargets += UpdateTargetList;
-        ShooterController.instance.OnPlayerAim += StartSequence;
+        ShooterController.instance.OnPlayerAimed += StartSequence;
+        ShooterEnemyController.instance.OnPlayerAttack += KillSequence;
     }
 
-    private void StartSequence(bool state)
+    private void KillSequence()
     {
-        if(state == false)
-        {
-            ShotSequence();
-        }
+        Debug.Log("Kill Sequence");
+        sequence.Kill();
+        OnSequenceComplete();
+    }
+
+    private void StartSequence()
+    {
+        Debug.Log("Start Sequence");
+        ShotSequence();
+        
     }
 
     private void ShotSequence()
     {
-
-        
-        //if (targets.Count > 0 && !LevelManager.instance.gameOver && !zombieAttack)
-        //Debug.Log(targetList.Count);
-
         if(targetList.Count > 0)
         {
-            //DeadEye(true);
-
             OnSequenceStart();
 
             sequence = DOTween.Sequence();
@@ -70,11 +64,9 @@ public class ShooterShotSequence : Singleton<ShooterShotSequence>
 
             for (var i = 0; i < targetList.Count; i++)
             {
-                //TODO -> DeadEye(true);
                 
                 var currentTarget = targetList[i];
                 var currentIndex = i;
-                //var currentIndicator = indicatorList[i];
 
                 sequence.Append(transform.DOLookAt(currentTarget.GetComponentInParent<EnemyController>().transform.position, .2f));
                 sequence.AppendCallback(() => anim.SetTrigger("fire"));
@@ -87,20 +79,14 @@ public class ShooterShotSequence : Singleton<ShooterShotSequence>
                 sequence.AppendInterval(1.75f);
             }
 
-
-            //sequence.AppendCallback(() => Aim(false));
-            //sequence.AppendCallback(() => DeadEye(false));
             sequence.AppendCallback(() => OnSequenceComplete());
 
         }
         else
         {
-            //Aim(false);
             OnSequenceComplete();
         }
     }
-
-    //shot sequence script
 
     private void FirePolish()
     {
@@ -113,11 +99,6 @@ public class ShooterShotSequence : Singleton<ShooterShotSequence>
     private void UpdateTargetList(List<Transform> targets)
     {
         this.targetList = targets;
-
-        //foreach (var target in targets)
-        //{
-            
-        //}
     }
 
 }

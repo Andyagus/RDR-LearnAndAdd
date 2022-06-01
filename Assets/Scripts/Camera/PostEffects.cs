@@ -36,8 +36,8 @@ public class PostEffects : Singleton<PostEffects>
     private void InitializeEvents()
     {
         CameraController.instance.OnPostProcessSetup += OnPostProcessSetup;
-        ShooterController.instance.OnPlayerAiming += TurnOnAimingEffects;
-        ShooterController.instance.OnPlayerAim += TurnOffAimingEffects;
+        ShooterController.instance.OnPlayerAim += TurnOnAimingEffects;
+        ShooterController.instance.OnPlayerAimed += TurnOffAimingEffects;
         //EnemyManager.instance.OnEnemyRegistered += SubscribeToEnemyAttack;
         ShooterEnemyController.instance.OnPlayerAttack += IncreaseVignette;
         ShooterHealth.instance.OnRestoreFractionOfHealth += OnRestoreVignette;
@@ -65,19 +65,15 @@ public class PostEffects : Singleton<PostEffects>
 
     private void TurnOnAimingEffects()
     {
-        //playerAiming = true;
         AdjustVignetteColor(VignetteType.aiming);
         AdjustColorGrading(true);
         AdjustAimVignette(true);
     }
 
-    private void TurnOffAimingEffects(bool state)
+    private void TurnOffAimingEffects()
     {
-        if(state == false)
-        {
-            AdjustColorGrading(false);
-            AdjustAimVignette(false);
-        }
+        AdjustColorGrading(false);
+        AdjustAimVignette(false);       
     }
 
     private void AdjustAimVignette(bool state)

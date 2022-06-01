@@ -992,7 +992,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 419099223}
-  m_LocalRotation: {x: 0.12389425, y: 0.04880179, z: -0.006100704, w: 0.9910759}
+  m_LocalRotation: {x: 0.12389425, y: 0.04880607, z: -0.0061012404, w: 0.9910757}
   m_LocalPosition: {x: -1.37, y: 2, z: 3.6000001}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
@@ -1260,7 +1260,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 460102724}
-  m_LocalRotation: {x: 0.12389424, y: 0.048801776, z: -0.0061006458, w: 0.99107593}
+  m_LocalRotation: {x: 0.12389423, y: 0.04880606, z: -0.0061011543, w: 0.9910757}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -1643,7 +1643,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 651235593}
-  m_LocalRotation: {x: 0.2562761, y: 0.019200329, z: -0.0050916355, w: 0.96639955}
+  m_LocalRotation: {x: 0.2562761, y: 0.019204978, z: -0.0050928677, w: 0.96639943}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -5272,6 +5272,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gun: {fileID: 922432698}
+--- !u!114 &1173127134
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1173127121}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fb031a908fc234fecb4858dd4f8c0a1e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1254204284
 GameObject:
   m_ObjectHideFlags: 3
@@ -5340,7 +5352,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1254204284}
-  m_LocalRotation: {x: 0.11604254, y: 0.04884857, z: -0.00571409, w: 0.99202585}
+  m_LocalRotation: {x: 0.11604251, y: 0.048852853, z: -0.0057145976, w: 0.9920257}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -6024,7 +6036,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1572393801}
-  m_LocalRotation: {x: 0.24775235, y: 0.019244444, z: -0.004922314, w: 0.96861976}
+  m_LocalRotation: {x: 0.24775234, y: 0.01924911, z: -0.004923505, w: 0.96861964}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -6702,7 +6714,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1700486477}
-  m_LocalRotation: {x: 0.1081875, y: 0.048892263, z: -0.005327317, w: 0.99291325}
+  m_LocalRotation: {x: 0.10818748, y: 0.048896555, z: -0.0053277863, w: 0.992913}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -7522,7 +7534,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2030588210}
-  m_LocalRotation: {x: 0.26478532, y: 0.019154543, z: -0.005260135, w: 0.9641028}
+  m_LocalRotation: {x: 0.2647853, y: 0.019159054, z: -0.005260952, w: 0.96410275}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -7589,7 +7601,7 @@ PrefabInstance:
     - target: {fileID: 2322486410762523310, guid: eba811a9865844ef8be705aac11e1110,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2322486410762523304, guid: eba811a9865844ef8be705aac11e1110,
         type: 3}
@@ -7649,12 +7661,12 @@ PrefabInstance:
     - target: {fileID: 2322486410762523311, guid: eba811a9865844ef8be705aac11e1110,
         type: 3}
       propertyPath: limit
-      value: 1
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 2322486410762523311, guid: eba811a9865844ef8be705aac11e1110,
         type: 3}
       propertyPath: frequency
-      value: 7
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 615528294322004615, guid: eba811a9865844ef8be705aac11e1110,
         type: 3}

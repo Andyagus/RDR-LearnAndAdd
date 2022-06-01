@@ -39,8 +39,8 @@ public class CameraController : Singleton<CameraController>
     private void InitializeEvents()
     {
         SwitchCinemacineCamera.instance.OnCameraChange += OnCameraChange;
-        ShooterController.instance.OnPlayerAiming += TurnOnZoomCameraSettings;
-        ShooterController.instance.OnPlayerAim += TurnOffZoomCameraSettings;
+        ShooterController.instance.OnPlayerAim += TurnOnZoomCameraSettings;
+        ShooterController.instance.OnPlayerAimed += TurnOffZoomCameraSettings;
     }
 
     private void OnCameraChange(CinemachineVirtualCameraBase camera, CameraSetting cameraSetting)
@@ -66,14 +66,12 @@ public class CameraController : Singleton<CameraController>
         }
     }
 
-    private void TurnOffZoomCameraSettings(bool state)
+    private void TurnOffZoomCameraSettings()
     {
-        if (state == false)
-        {
-            DOVirtual.Float(zoomOffsetAmount, originalOffsetAmount, aimTime, HorizontalOffset);
-            DOVirtual.Float(zoomFov, originalFov, aimTime, CameraZoom);
-            DOVirtual.Float(postTimeScale, originalTimeScale, aimTime, SetTimeScale);
-        }
+        DOVirtual.Float(zoomOffsetAmount, originalOffsetAmount, aimTime, HorizontalOffset);
+        DOVirtual.Float(zoomFov, originalFov, aimTime, CameraZoom);
+        DOVirtual.Float(postTimeScale, originalTimeScale, aimTime, SetTimeScale);
+        
     }
 
     private void CameraZoom(float zoomAmt)

@@ -28,7 +28,8 @@ public class ShooterWeaponController : MonoBehaviour
         gunIdlePosition = gun.transform.localPosition;
         gunIdleRotation = gun.transform.localEulerAngles;
         MovementInput.instance.OnPlayerMovement += OnPlayerMovement;
-        ShooterController.instance.OnPlayerAim += OnPlayerAim;
+        ShooterController.instance.OnPlayerAim += OnPlayerAiming;
+        ShooterController.instance.OnPlayerAimed += OnPlayerDoneAiming;
     }
 
     private void OnPlayerMovement(float speed)
@@ -43,21 +44,29 @@ public class ShooterWeaponController : MonoBehaviour
         }
     }
 
-    private void OnPlayerAim(bool state)
-    {
+    //private void OnPlayerAim(bool state)
+    //{
 
-        if (state)
-        {
-            aiming = true;
-        }
-        else
-        {
-            aiming = false;
-        }
+    //    if (state)
+    //    {
+    //        aiming = true;
+    //    }
+    //    else
+    //    {
+    //        aiming = false;
+    //    }
         
+    //}
+
+    private void OnPlayerAiming()
+    {
+        aiming = true;
     }
 
-    
+    private void OnPlayerDoneAiming()
+    {
+        aiming = false;
+    }    
 
     private void AdjustGunPosition()
     {

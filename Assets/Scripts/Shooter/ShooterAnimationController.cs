@@ -8,23 +8,30 @@ public class ShooterAnimationController : MonoBehaviour
     private Animator animator;
     private bool sequenceAnimationLock;
     private bool sequence;
+    private bool aiming;
 
     private void Start()
     {
         InitializeMembers();   
     }
 
+    private void Update()
+    {
+        //AimWeapon();
+
+    }
+
     private void InitializeMembers()
     {
+        animator = GetComponent<Animator>();
         MovementInput.instance.OnPlayerMovement += MovementSpeed;
-
-        ShooterController.instance.OnPlayerAim += AimWeapon;
+        ShooterController.instance.OnPlayerAim += OnPlayerAim;
+        ShooterController.instance.OnPlayerAimed += OnPlayerAimed;
+        ShooterController.instance.OnPlayerAiming += OnPlayerAiming;
+        //ShooterController.instance.OnPlayerAim += OnPlayerAim;
         ShooterShotSequence.instance.OnSequenceStart += OnSequenceStart;
         ShooterShotSequence.instance.OnSequenceComplete += OnSequenceComplete;
-        ShooterEnemyController.instance.OnPlayerAttack += ShooterAttackAnimation;
-        
-
-        animator = GetComponent<Animator>();
+        ShooterEnemyController.instance.OnPlayerAttack += ShooterAttackAnimation;       
     }
   
     private void MovementSpeed(float speed)
@@ -34,34 +41,39 @@ public class ShooterAnimationController : MonoBehaviour
 
     private void OnSequenceStart()
     {
-        sequence = true;
-        sequenceAnimationLock = true;
         animator.speed = 1.235f;
+        sequence = true;
+
     }
 
     private void OnSequenceComplete()
     {
-        sequence = false;
         animator.speed = 1;
-        AimWeapon(false);
+        sequence = false;
+
+        animator.SetBool("aiming", false);
+
     }
 
-    private void AimWeapon(bool state)
+    private void OnPlayerAim()
     {
-        if (state)
-        {
-            animator.SetBool("aiming", true);
-        }
-        else if (state == false && sequenceAnimationLock == false)
-        {
-            animator.SetBool("aiming", false);
-        }
-        else if (state == false && sequenceAnimationLock == true && sequence == false)
-        {
-            animator.SetBool("aiming", false);
-            sequenceAnimationLock = false;
-        }     
+        animator.SetBool("aiming", true);
     }
+
+    private void OnPlayerAimed()
+    {
+
+        if (sequence == false)
+        {
+            animator.SetBool("aiming", false);
+        }
+
+    }
+
+    private void OnPlayerAiming()
+    {
+    }
+
 
     private void ShooterAttackAnimation()
     {
