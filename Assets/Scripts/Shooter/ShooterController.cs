@@ -81,7 +81,6 @@ public class ShooterController : Singleton<ShooterController>
 
     private void DisableInput()
     {
-        Debug.Log("Input is disabled");
         input.enabled = false;
     }
 

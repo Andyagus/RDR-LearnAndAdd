@@ -70,7 +70,6 @@ public class CameraController : Singleton<CameraController>
     {
         if (state == false)
         {
-            Debug.Log("Camera Controller, turn off zoom called");
             DOVirtual.Float(zoomOffsetAmount, originalOffsetAmount, aimTime, HorizontalOffset);
             DOVirtual.Float(zoomFov, originalFov, aimTime, CameraZoom);
             DOVirtual.Float(postTimeScale, originalTimeScale, aimTime, SetTimeScale);
