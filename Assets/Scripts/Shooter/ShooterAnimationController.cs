@@ -25,9 +25,12 @@ public class ShooterAnimationController : MonoBehaviour
     }
 
     private void MovementSpeed(float speed)
-    {
+    {        
         animator.SetFloat("speed", speed);
+        Debug.Log($"Player moving at speed: {speed}");
     }
+
+
 
     private void SpeedUpAnimation()
     {
@@ -42,6 +45,7 @@ public class ShooterAnimationController : MonoBehaviour
     private void AimWeapon(bool state)
     {        
         animator.SetBool("aiming", true);
+        Debug.Log("Aiming Weapon");
     }
 
     private void StopAimWeapon()

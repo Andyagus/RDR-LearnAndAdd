@@ -22,6 +22,8 @@ public class MovementInput : Singleton<MovementInput>
     private Vector3 moveVector;
 
     public Action<float> OnPlayerMovement = (float speed) => { };
+    public Action OnPlayerStopped = () => { };
+
 
     void Start()
     {
@@ -85,11 +87,11 @@ public class MovementInput : Singleton<MovementInput>
 
         speed = new Vector2(InputX, InputZ).sqrMagnitude;
 
-        if(speed > allowPlayerRotation)
+        OnPlayerMovement(speed);
+
+        if (speed > allowPlayerRotation)
         {
-            OnPlayerMovement(speed);
             PlayerMoveAndRotation();
-        }
-        
+        }        
     }
 }
