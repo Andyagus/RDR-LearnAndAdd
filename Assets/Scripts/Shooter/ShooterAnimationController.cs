@@ -16,8 +16,8 @@ public class ShooterAnimationController : MonoBehaviour
     private void InitializeMembers()
     {
         MovementInput.instance.OnPlayerMovement += MovementSpeed;
-        ShooterController.instance.OnPlayerAiming += AimWeapon;
-        ShooterController.instance.OnPlayerStoppedAim += StopAimWeapon;
+
+        ShooterController.instance.OnPlayerAim += AimWeapon;
         ShooterShotSequence.instance.OnSequenceStart += SpeedUpAnimation;
         ShooterShotSequence.instance.OnSequenceComplete += NormalAnimationSpeed; 
 
@@ -27,10 +27,7 @@ public class ShooterAnimationController : MonoBehaviour
     private void MovementSpeed(float speed)
     {        
         animator.SetFloat("speed", speed);
-        Debug.Log($"Player moving at speed: {speed}");
     }
-
-
 
     private void SpeedUpAnimation()
     {
@@ -43,14 +40,17 @@ public class ShooterAnimationController : MonoBehaviour
     }
 
     private void AimWeapon(bool state)
-    {        
-        animator.SetBool("aiming", true);
-        Debug.Log("Aiming Weapon");
-    }
-
-    private void StopAimWeapon()
     {
-        animator.SetBool("aiming", false);
+        if (state)
+        {
+            Debug.Log("Aiming Animation");
+            animator.SetBool("aiming", true);
+        }
+        else
+        {
+            Debug.Log("stopped aiming animation");
+            animator.SetBool("aiming", false);
+        }
     }
 
 }

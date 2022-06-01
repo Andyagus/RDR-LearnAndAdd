@@ -41,12 +41,15 @@ public class ShooterShotSequence : Singleton<ShooterShotSequence>
     {
         anim = GetComponent<Animator>();
         ShooterAddTargets.instance.OnShooterTargets += UpdateTargetList;
-        ShooterController.instance.OnPlayerStoppedAim += StartSequence;
+        ShooterController.instance.OnPlayerAim += StartSequence;
     }
 
-    private void StartSequence()
+    private void StartSequence(bool state)
     {
-        ShotSequence();
+        if(state == false)
+        {
+            ShotSequence();
+        }
     }
 
     private void ShotSequence()

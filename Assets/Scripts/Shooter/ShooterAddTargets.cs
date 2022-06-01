@@ -52,7 +52,7 @@ public class ShooterAddTargets : Singleton<ShooterAddTargets>
 
     }
 
-    private void StartPositioningTargets(bool state)
+    private void StartPositioningTargets()
     {
         positionTargets = true;
     }
@@ -62,7 +62,7 @@ public class ShooterAddTargets : Singleton<ShooterAddTargets>
         positionTargets = false;
     }
 
-    private void AddTargets(bool state)
+    private void AddTargets()
     {
 
         Debug.DrawRay(mainCamera.transform.position, mainCamera.transform.forward * 1000, Color.red);
@@ -80,11 +80,8 @@ public class ShooterAddTargets : Singleton<ShooterAddTargets>
             return;
         }
 
-        //reticle.color = Color.red;
-
         if (!targets.Contains(hit.transform) && !hit.transform.GetComponentInParent<EnemyController>().aimed)
         {
-            //not good for enemy - can refactor 
             hit.transform.GetComponentInParent<EnemyController>().aimed = true;
             targets.Add(hit.transform);
             OnAddTarget(hit.transform);

@@ -22,12 +22,10 @@ public class ShooterController : Singleton<ShooterController>
     
     [Header("Events")]
     public Action<Transform> OnPlayerPosition = (Transform playerPosition) => { };
-    //post effects, camera controller, animation controller, shooter controller……
-    public Action OnPlayerAimed = () => { };
-    public Action OnPlayerStoppedAim = () => { };
-
-    public Action<bool> OnPlayerAiming = (bool aiming) => { };
-    public Action OnPlayerStoppedAiming = () => { };
+    
+    //if true player has aimed if false, done aiming
+    public Action<bool> OnPlayerAim = (bool state) => { };    
+    public Action OnPlayerAiming = () => { };    
 
     public Action OnLostWeapon = () => { };
     public Action OnWeaponFound = () => { };
@@ -66,24 +64,19 @@ public class ShooterController : Singleton<ShooterController>
         if (Input.GetMouseButtonDown(1))
         {
             Aim(true);
-            OnPlayerAimed();
+            OnPlayerAim(true);
         }
         if (Input.GetMouseButtonUp(1))
         {
             Aim(false);
-            OnPlayerStoppedAim();
+            OnPlayerAim(false);
         }
 
-        //continuously running events;
         if (aiming)
         {
-            OnPlayerAiming(true);
+            OnPlayerAiming();
         }
-        else if (!aiming)
-        {
-            //probably don't need this but put in for now
-            OnPlayerStoppedAiming();
-        }
+        
     }
 
     private void DisableInput()
