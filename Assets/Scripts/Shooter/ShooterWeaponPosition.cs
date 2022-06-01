@@ -26,6 +26,9 @@ public class ShooterWeaponPosition : Singleton<ShooterWeaponPosition>
     public Action OnLostWeapon = () => { };
     public Action OnWeaponFound = () => { };
 
+    //GunIsGrounded();
+
+
     private void Awake()
     {
         InitializeMembers();  

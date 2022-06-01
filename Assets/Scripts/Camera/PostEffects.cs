@@ -38,7 +38,8 @@ public class PostEffects : Singleton<PostEffects>
         CameraController.instance.OnPostProcessSetup += OnPostProcessSetup;
         ShooterController.instance.OnPlayerAiming += TurnOnAimingEffects;
         ShooterController.instance.OnPlayerAim += TurnOffAimingEffects;
-        EnemyManager.instance.OnEnemyRegistered += SubscribeToEnemyAttack;
+        //EnemyManager.instance.OnEnemyRegistered += SubscribeToEnemyAttack;
+        ShooterEnemyController.instance.OnPlayerAttack += IncreaseVignette;
         ShooterHealth.instance.OnRestoreFractionOfHealth += OnRestoreVignette;
         ScoreManager.instance.OnTimesThreeMultiplier += OnStartBloom;
         ScoreManager.instance.OnRestartMultiplier += OnStopBloom;
@@ -96,13 +97,8 @@ public class PostEffects : Singleton<PostEffects>
 
     }
 
-    private void SubscribeToEnemyAttack(EnemyController enemy)
-    {
-        enemy.OnEnemyAttack += IncreaseVignette;
-    }
 
-
-    private void IncreaseVignette(int attackStrength)
+    private void IncreaseVignette()
     {
         AdjustVignetteColor(VignetteType.attack);
         AdjustVignetteOnAttack(true);

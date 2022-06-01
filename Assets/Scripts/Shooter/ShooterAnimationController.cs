@@ -20,7 +20,9 @@ public class ShooterAnimationController : MonoBehaviour
 
         ShooterController.instance.OnPlayerAim += AimWeapon;
         ShooterShotSequence.instance.OnSequenceStart += OnSequenceStart;
-        ShooterShotSequence.instance.OnSequenceComplete += OnSequenceComplete; 
+        ShooterShotSequence.instance.OnSequenceComplete += OnSequenceComplete;
+        ShooterEnemyController.instance.OnPlayerAttack += ShooterAttackAnimation;
+        
 
         animator = GetComponent<Animator>();
     }
@@ -40,7 +42,6 @@ public class ShooterAnimationController : MonoBehaviour
     private void OnSequenceComplete()
     {
         sequence = false;
-        Debug.Log("On sequence complete");
         animator.speed = 1;
         AimWeapon(false);
     }
@@ -60,6 +61,11 @@ public class ShooterAnimationController : MonoBehaviour
             animator.SetBool("aiming", false);
             sequenceAnimationLock = false;
         }     
+    }
+
+    private void ShooterAttackAnimation()
+    {
+        animator.SetTrigger("onAttack");
     }
 
 }

@@ -34,7 +34,7 @@ public class EnemyController : MonoBehaviour
     public bool inRange;
 
     public Action<EnemyController> OnEnemyShot = (EnemyController enemy) => {};   
-    public Action<int> OnEnemyAttack = (int attackStrength) => {};
+    public Action OnEnemyAttack = () => {};
 
     public EnemyState enemyState;
 
@@ -67,7 +67,7 @@ public class EnemyController : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.B))
         {
-            OnEnemyAttack(2);
+            OnEnemyAttack();
         }
 
     }
@@ -205,7 +205,7 @@ public class EnemyController : MonoBehaviour
 
         if(playerHit == true && hitPlayerRb.Length > 0)
         {
-            OnEnemyAttack(attackStrength);
+            OnEnemyAttack();
             playerHit = false;
         }
 

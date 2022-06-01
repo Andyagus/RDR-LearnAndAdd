@@ -57,7 +57,7 @@ public class ScoreManager : Singleton<ScoreManager>
         }
     }
 
-    private void OnEnemyAttack(int attackStrength)
+    private void OnEnemyAttack()
     {
         OnRestartMultiplier();        
         ResetMultiplier();         

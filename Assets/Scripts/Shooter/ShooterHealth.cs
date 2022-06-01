@@ -8,9 +8,6 @@ using DG.Tweening;
 
 public class ShooterHealth : Singleton<ShooterHealth>
 {
-    [Header("Restore Health")]
-    //private bool restoreHealth;
-
     [Header("Camera")]
     private Camera mainCamera;
 
@@ -22,9 +19,8 @@ public class ShooterHealth : Singleton<ShooterHealth>
     public Slider healthSlider;
     public Gradient sliderGradient;
     public Image sliderFill;
-
-    [Header("Information from events")]
-    private int attackStrength;
+ 
+    private int attackStrength = 2;
 
     public Action OnRestoreFractionOfHealth = () => { };
     public Action OnPlayerDeath = () => { };
@@ -38,15 +34,14 @@ public class ShooterHealth : Singleton<ShooterHealth>
     private void Start()
     {
         currentHealth = maxHealth;
-        mainCamera = Camera.main;
+        mainCamera = CameraController.instance.mainCamera;
         SetMaxHealth();
     }
 
 
     private void InitializeEvents()
     {
-        EnemyManager.instance.OnEnemyRegistered +=
-            (EnemyController enemy) => enemy.OnEnemyAttack += TakeDamage;
+        ShooterEnemyController.instance.OnPlayerAttack += TakeDamage;
         EnemyProximityManager.instance.OnNoEnemyInRange += RestoreHealth;
         EnemyProximityManager.instance.OnEnemyInRange += StopRestoringHealth;
     }
@@ -57,9 +52,8 @@ public class ShooterHealth : Singleton<ShooterHealth>
         sliderFill.color = sliderGradient.Evaluate(1f);
     }
 
-    private void TakeDamage(int attackStrength)
-    {
-        this.attackStrength = attackStrength;
+    private void TakeDamage()
+    {       
         ImpactHealth(true);
     }
  
