@@ -114,18 +114,7 @@ public class ShooterController : Singleton<ShooterController>
         {
             OnPlayerDoneAim();
         }
-    } 
-
-    //TODO apply to refactor
-   
-    private void StopShotSequence()
-    {
-        //DeadEye(false);
-        //sequence.Kill();
-        //Aim(false);
     }
-
-    //TODO apply to refactor
 
     private void OnPlayerDeath()
     {
@@ -134,7 +123,5 @@ public class ShooterController : Singleton<ShooterController>
         //reticle.color = Color.clear;
         //GetComponent<CharacterController>().enabled = false;
     }
-
-
 
 }

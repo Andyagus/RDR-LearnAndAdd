@@ -57,7 +57,6 @@ public class ShooterShotSequence : Singleton<ShooterShotSequence>
 
     private void ShotSequence()
     {
-        Debug.Log("Shot Sequence Running");
         if(targetList.Count > 0)
         {
             OnSequenceStart();
@@ -81,13 +80,11 @@ public class ShooterShotSequence : Singleton<ShooterShotSequence>
                 sequence.AppendInterval(1.75f);
             }
 
-            sequence.AppendCallback(() => Debug.Log("On Sequence Complete 82"));
             sequence.AppendCallback(() => OnSequenceComplete());
 
         }
         else
         {
-            Debug.Log("On Sequence Complete 88");
             OnSequenceComplete();
         }
     }
