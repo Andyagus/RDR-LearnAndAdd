@@ -44,7 +44,7 @@ public class PostEffects : Singleton<PostEffects>
 
 
         ShooterEnemyController.instance.OnPlayerAttack += OnPlayerAttack;
-
+        //ShooterController.instance.OnPlayerHit += OnPlayerHit;
 
         ShooterHealth.instance.OnRestoreFractionOfHealth += OnRestoreVignette;
         ScoreManager.instance.OnTimesThreeMultiplier += OnStartBloom;
@@ -73,30 +73,28 @@ public class PostEffects : Singleton<PostEffects>
     {
         IncreaseVignette();
     }
-    
+
+    private void IncreaseVignette()
+    {        
+        AdjustVignetteOnAttack(true);
+    }
+
+    private void AdjustVignetteOnAttack(bool state)
+    {
+        //TODO
+        var attackAmount = state ? 2 : -2;
+        vignette.intensity.value += (float)attackAmount / 10;
+    }
+
+
     private void TurnOnAimingEffects()
     {
-        AdjustVignetteColor(VignetteType.aiming);
         AdjustColorGrading(true);
-        AdjustAimVignette(true);
     }
 
     private void TurnOffAimingEffects()
     {
         AdjustColorGrading(false);
-        AdjustAimVignette(false);
-    }
-
-    private void AdjustAimVignette(bool state)
-    {
-        if (state)
-        {
-            DOVirtual.Float(originalVigentteAmount, postVignetteAmount, aimTime, TweenVignetteAmount);
-
-        }
-        else{
-            DOVirtual.Float(postVignetteAmount, originalVigentteAmount, aimTime, TweenVignetteAmount);
-        }
     }
 
     private void AdjustColorGrading(bool state)
@@ -106,23 +104,13 @@ public class PostEffects : Singleton<PostEffects>
         DOVirtual.Color(originalColorGrade, postColorGrading, aimTime, TweenColorGrading);
     }
 
-    private void IncreaseVignette()
-    {
-        AdjustVignetteColor(VignetteType.attack);
-        AdjustVignetteOnAttack(true);
-    }
-
+  
     private void OnRestoreVignette()
     {
         AdjustVignetteOnAttack(false);
     }
 
-    private void AdjustVignetteOnAttack(bool state)
-    {
-        //TODO
-        var attackAmount = state ? 2 : -2;
-        vignette.intensity.value += (float)attackAmount / 10;
-    }
+   
 
     private void OnStartBloom()
     {
@@ -152,25 +140,7 @@ public class PostEffects : Singleton<PostEffects>
         colorGrading.colorFilter.value = colorAmount;
     }   
 
-    private void AdjustVignetteColor(VignetteType vignetteType)
-    {
-        switch (vignetteType)
-        {
-            case VignetteType.aiming:
-                vignette.color.value = Color.black;
-                break;
-            case VignetteType.attack:
-                vignette.color.value = Color.red;
-                break;
-        }
-    }
-
-    private void TweenVignetteAmount(float vignetteAmount)
-    {
-        //Debug.Log("Tween Vignette amount");
-        vignette.intensity.value = vignetteAmount;
-    }
-
+   
     private void TweenPlayerBloom(float thresholdAmount)
     {
         bloom.threshold.value = thresholdAmount;

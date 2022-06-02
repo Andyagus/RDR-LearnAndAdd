@@ -26,8 +26,11 @@ public class ShooterController : Singleton<ShooterController>
     //TODO can work with name
     public Action OnPlayerShot = () => { };
 
+    //public Action OnPlayerHit = () => { };
+
     public Action OnLostWeapon = () => { };
     public Action OnWeaponFound = () => { };
+
 
 
     private void Awake()
@@ -47,8 +50,11 @@ public class ShooterController : Singleton<ShooterController>
         LevelManager.instance.OnGameOver += OnPlayerDeath;
         ShooterShotSequence.instance.OnSequenceStart += OnSequenceStart;
         ShooterShotSequence.instance.OnSequenceComplete += OnSequenceComplete;
-        //
         ShooterShotSequence.instance.OnSequenceEndedEarly += OnSequenceEndedEarly;
+
+        ShooterEnemyController.instance.OnPlayerAttack += OnPlayerAttack;
+
+        
     }
 
 
@@ -76,16 +82,22 @@ public class ShooterController : Singleton<ShooterController>
         }
     }
 
+    private void OnPlayerAttack()
+    {
+        if (aiming)
+        {
+            Aim(false);
+        }
+    }
+
     private void OnSequenceStart()
     {
         sequence = true;
         input.enabled = false;
-        Debug.Log($"input enabled {input.enabled}");
     }
 
     private void OnSequenceEndedEarly()
     {
-        Debug.Log("Sequence Ended Early");
     }
 
     private void OnSequenceComplete()
