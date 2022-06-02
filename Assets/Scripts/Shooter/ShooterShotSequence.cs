@@ -25,7 +25,7 @@ public class ShooterShotSequence : Singleton<ShooterShotSequence>
 
     public Action OnSequenceStart = () => { };
     public Action OnSequenceComplete = () => { };
-    public Action OnSequenceEndedEarly = () => { };
+    //public Action OnSequenceEndedEarly = () => { };
 
     private void Start()
     {
@@ -38,14 +38,20 @@ public class ShooterShotSequence : Singleton<ShooterShotSequence>
         anim = GetComponent<Animator>();
         ShooterAddTargets.instance.OnShooterTargets += UpdateTargetList;
         ShooterController.instance.OnPlayerShot += StartSequence;
-        ShooterEnemyController.instance.OnPlayerAttack += EndSequenceEarly;
+        ShooterEnemyController.instance.OnPlayerAttack += OnPlayerAttack;
 
     }
 
-    private void EndSequenceEarly()
+    private void OnPlayerAttack()
     {
-        OnSequenceEndedEarly();
+        OnSequenceComplete();
+        sequence.Kill();
     }
+
+    //private void EndSequenceEarly()
+    //{
+    //    OnSequenceEndedEarly();
+    //}
 
     //private void SequenceStop()
     //{

@@ -40,11 +40,8 @@ public class PostEffects : Singleton<PostEffects>
         CameraController.instance.OnPostProcessSetup += OnPostProcessSetup;
         ShooterController.instance.OnPlayerAim += TurnOnAimingEffects;
         ShooterController.instance.OnPlayerDoneAim += TurnOffAimingEffects;
-        //EnemyManager.instance.OnEnemyRegistered += SubscribeToEnemyAttack;
-
 
         ShooterEnemyController.instance.OnPlayerAttack += OnPlayerAttack;
-        //ShooterController.instance.OnPlayerHit += OnPlayerHit;
 
         ShooterHealth.instance.OnRestoreFractionOfHealth += OnRestoreVignette;
         ScoreManager.instance.OnTimesThreeMultiplier += OnStartBloom;
@@ -79,6 +76,11 @@ public class PostEffects : Singleton<PostEffects>
         AdjustVignetteOnAttack(true);
     }
 
+    private void OnRestoreVignette()
+    {
+        AdjustVignetteOnAttack(false);
+    }
+
     private void AdjustVignetteOnAttack(bool state)
     {
         //TODO
@@ -103,14 +105,6 @@ public class PostEffects : Singleton<PostEffects>
         var postColorGrading = state ? deadEyeColor : originalColorGrade;
         DOVirtual.Color(originalColorGrade, postColorGrading, aimTime, TweenColorGrading);
     }
-
-  
-    private void OnRestoreVignette()
-    {
-        AdjustVignetteOnAttack(false);
-    }
-
-   
 
     private void OnStartBloom()
     {

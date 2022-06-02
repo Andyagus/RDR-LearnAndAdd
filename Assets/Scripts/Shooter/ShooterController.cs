@@ -50,7 +50,7 @@ public class ShooterController : Singleton<ShooterController>
         LevelManager.instance.OnGameOver += OnPlayerDeath;
         ShooterShotSequence.instance.OnSequenceStart += OnSequenceStart;
         ShooterShotSequence.instance.OnSequenceComplete += OnSequenceComplete;
-        ShooterShotSequence.instance.OnSequenceEndedEarly += OnSequenceEndedEarly;
+
 
         ShooterEnemyController.instance.OnPlayerAttack += OnPlayerAttack;
 
