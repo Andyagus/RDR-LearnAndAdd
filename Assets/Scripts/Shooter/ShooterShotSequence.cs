@@ -35,7 +35,7 @@ public class ShooterShotSequence : Singleton<ShooterShotSequence>
     {
         anim = GetComponent<Animator>();
         ShooterAddTargets.instance.OnShooterTargets += UpdateTargetList;
-        ShooterController.instance.OnPlayerAimed += StartSequence;
+        ShooterController.instance.OnPlayerShot += StartSequence;
         ShooterEnemyController.instance.OnPlayerAttack += KillSequence;
     }
 

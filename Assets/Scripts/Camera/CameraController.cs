@@ -40,7 +40,7 @@ public class CameraController : Singleton<CameraController>
     {
         SwitchCinemacineCamera.instance.OnCameraChange += OnCameraChange;
         ShooterController.instance.OnPlayerAim += TurnOnZoomCameraSettings;
-        ShooterController.instance.OnPlayerAimed += TurnOffZoomCameraSettings;
+        ShooterController.instance.OnPlayerDoneAim += TurnOffZoomCameraSettings;
     }
 
     private void OnCameraChange(CinemachineVirtualCameraBase camera, CameraSetting cameraSetting)

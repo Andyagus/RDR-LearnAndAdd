@@ -15,12 +15,18 @@ public class ShooterController : Singleton<ShooterController>
     private bool aiming = false;
     private bool sequence = false;
 
+    private List<Transform> targets = new List<Transform>();
+
     [Header("Events")]
     public Action<Transform> OnPlayerPosition = (Transform playerPosition) => { };
 
     public Action OnPlayerAiming = () => { };
+
     public Action OnPlayerAim = () => { };
-    public Action OnPlayerAimed = () => { };
+    public Action OnPlayerDoneAim = () => { };
+
+    //TODO can work with name
+    public Action OnPlayerShot = () => { };
 
     public Action OnLostWeapon = () => { };
     public Action OnWeaponFound = () => { };
@@ -44,7 +50,7 @@ public class ShooterController : Singleton<ShooterController>
         LevelManager.instance.OnGameOver += OnPlayerDeath;
         ShooterShotSequence.instance.OnSequenceStart += OnSequenceStart;
         ShooterShotSequence.instance.OnSequenceComplete += OnSequenceComplete;
-
+        ShooterAddTargets.instance.OnShooterTargets += OnShooterTargets;
     }
 
     public void FindEnemy(EnemyController enemy)
@@ -57,41 +63,59 @@ public class ShooterController : Singleton<ShooterController>
 
         OnPlayerPosition(this.gameObject.transform);
 
-        if (Input.GetMouseButtonDown(1))
-        {
-            OnPlayerAim();
-            Aim(true);
-        }
-        if (Input.GetMouseButtonUp(1) && !sequence)
-        {
-            OnPlayerAimed();
-        }
-
         if (aiming)
         {
             OnPlayerAiming();
-        } 
+        }
+
+        if(Input.GetMouseButtonDown(1) && !sequence)
+        {
+            Aim(true);
+        }
+
+        if(Input.GetMouseButtonUp(1) && aiming)
+        {
+            OnPlayerShot();
+            //Aim(false);
+        }
+    }
+
+    private void OnSequenceComplete()
+    {
+        Aim(false);
+
+        input.enabled = true;
     }
 
 
     private void Aim(bool state)
     {
         aiming = state;
+
+
+        //OnPlayerAim can be bool potentially
+        if (state == true)
+        {
+            OnPlayerAim();
+        }else if(state == false)
+        {
+            OnPlayerDoneAim();
+        }
     }
  
+
+    private void OnShooterTargets(List<Transform> targets)
+    {
+        this.targets = targets;
+    }
+
     private void OnSequenceStart()
     {
         sequence = true;
         input.enabled = false;
     }
 
-    private void OnSequenceComplete()
-    {
-        sequence = false;
-        input.enabled = true;
-        aiming = false;        
-    }    
-
+ 
 
     //TODO apply to refactor
    

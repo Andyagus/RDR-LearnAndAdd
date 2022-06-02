@@ -37,7 +37,7 @@ public class PostEffects : Singleton<PostEffects>
     {
         CameraController.instance.OnPostProcessSetup += OnPostProcessSetup;
         ShooterController.instance.OnPlayerAim += TurnOnAimingEffects;
-        ShooterController.instance.OnPlayerAimed += TurnOffAimingEffects;
+        ShooterController.instance.OnPlayerDoneAim += TurnOffAimingEffects;
         //EnemyManager.instance.OnEnemyRegistered += SubscribeToEnemyAttack;
         ShooterEnemyController.instance.OnPlayerAttack += IncreaseVignette;
         ShooterHealth.instance.OnRestoreFractionOfHealth += OnRestoreVignette;

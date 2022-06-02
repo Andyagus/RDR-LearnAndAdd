@@ -26,7 +26,7 @@ public class ShooterAnimationController : MonoBehaviour
         animator = GetComponent<Animator>();
         MovementInput.instance.OnPlayerMovement += MovementSpeed;
         ShooterController.instance.OnPlayerAim += OnPlayerAim;
-        ShooterController.instance.OnPlayerAimed += OnPlayerAimed;
+        ShooterController.instance.OnPlayerDoneAim += OnPlayerAimed;
         ShooterController.instance.OnPlayerAiming += OnPlayerAiming;
         //ShooterController.instance.OnPlayerAim += OnPlayerAim;
         ShooterShotSequence.instance.OnSequenceStart += OnSequenceStart;
@@ -69,11 +69,6 @@ public class ShooterAnimationController : MonoBehaviour
         }
 
     }
-
-    private void OnPlayerAiming()
-    {
-    }
-
 
     private void ShooterAttackAnimation()
     {

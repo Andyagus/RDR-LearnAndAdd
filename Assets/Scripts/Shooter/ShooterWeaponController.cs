@@ -29,7 +29,7 @@ public class ShooterWeaponController : MonoBehaviour
         gunIdleRotation = gun.transform.localEulerAngles;
         MovementInput.instance.OnPlayerMovement += OnPlayerMovement;
         ShooterController.instance.OnPlayerAim += OnPlayerAiming;
-        ShooterController.instance.OnPlayerAimed += OnPlayerDoneAiming;
+        ShooterController.instance.OnPlayerDoneAim += OnPlayerDoneAiming;
     }
 
     private void OnPlayerMovement(float speed)
