@@ -96,10 +96,6 @@ public class ShooterController : Singleton<ShooterController>
         input.enabled = false;
     }
 
-    private void OnSequenceEndedEarly()
-    {
-    }
-
     private void OnSequenceComplete()
     {
         Aim(false);

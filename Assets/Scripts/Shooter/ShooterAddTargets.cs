@@ -56,6 +56,8 @@ public class ShooterAddTargets : Singleton<ShooterAddTargets>
         positionTargets = false;
     }
 
+  
+
     private void AddTargets()
     {
 

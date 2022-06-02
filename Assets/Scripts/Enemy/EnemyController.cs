@@ -45,7 +45,6 @@ public class EnemyController : MonoBehaviour
 
     void Start()
     {
-        InitializeEvents();
         enemyNavMesh = GetComponent<NavMeshAgent>();
         anim = GetComponent<Animator>();
         shooter = FindObjectOfType<ShooterController>();
@@ -69,13 +68,29 @@ public class EnemyController : MonoBehaviour
         {
             OnEnemyAttack();
         }
-
     }
 
     private void InitializeEvents()
     {
+
         FindZombieSpawner();
+        ShooterShotSequence.instance.OnSequenceComplete += OnSequenceComplete;
     }
+
+
+    private void OnSequenceComplete()
+    {
+        if (aimed == true)
+        {
+            if(shot == false)
+            {
+                aimed = false;                
+            }
+        }
+
+        Debug.Log(aimed);
+    }
+
 
     private void FindZombieSpawner()
     {

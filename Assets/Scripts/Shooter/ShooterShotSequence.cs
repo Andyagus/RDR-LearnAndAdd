@@ -25,7 +25,6 @@ public class ShooterShotSequence : Singleton<ShooterShotSequence>
 
     public Action OnSequenceStart = () => { };
     public Action OnSequenceComplete = () => { };
-    //public Action OnSequenceEndedEarly = () => { };
 
     private void Start()
     {
@@ -45,33 +44,11 @@ public class ShooterShotSequence : Singleton<ShooterShotSequence>
     private void OnPlayerAttack()
     {
         OnSequenceComplete();
+        Debug.Log("On Sequence Complete 46");
         sequence.Kill();
     }
 
-    //private void EndSequenceEarly()
-    //{
-    //    OnSequenceEndedEarly();
-    //}
 
-    //private void SequenceStop()
-    //{
-    //    OnSequenceKill();
-    //    ResetAimFilter();
-    //    //OnSequenceComplete();
-    //    sequence.Kill();
-    //}
-
-    //private void ResetAimFilter()
-    //{
-    //    foreach (var target in targetList)
-    //    {
-    //        var enemyController = target.GetComponentInParent<EnemyController>();
-    //        if(enemyController.aimed == true && !enemyController.shot)
-    //        {
-    //            enemyController.aimed = false;
-    //        }
-    //    }
-    //}
     private void StartSequence()
     {
         ShotSequence();    
@@ -80,6 +57,7 @@ public class ShooterShotSequence : Singleton<ShooterShotSequence>
 
     private void ShotSequence()
     {
+        Debug.Log("Shot Sequence Running");
         if(targetList.Count > 0)
         {
             OnSequenceStart();
@@ -103,11 +81,13 @@ public class ShooterShotSequence : Singleton<ShooterShotSequence>
                 sequence.AppendInterval(1.75f);
             }
 
+            sequence.AppendCallback(() => Debug.Log("On Sequence Complete 82"));
             sequence.AppendCallback(() => OnSequenceComplete());
 
         }
         else
         {
+            Debug.Log("On Sequence Complete 88");
             OnSequenceComplete();
         }
     }
