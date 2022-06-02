@@ -13,16 +13,12 @@ public class ShooterAddTargets : Singleton<ShooterAddTargets>
 
     private bool positionTargets = false;
 
-    //enemy layer mask for adding targets
     public LayerMask enemyLayerMask;    
     public Action<List<Transform>> OnShooterTargets = (List<Transform> targets) => { };
     public List<Transform> targets = new List<Transform>();
-    //TODO can be moved ot ui controller
     public Action<Transform> OnAddTarget = (Transform hitPosition) => { };    
     public Action<GameObject> OnRemoveTarget = (GameObject target) => { };    
     public Action<Transform, int> OnPositionTarget = (Transform target, int index) => { };
-
-
 
     private void Awake()
     {
@@ -30,8 +26,7 @@ public class ShooterAddTargets : Singleton<ShooterAddTargets>
     }
 
     private void Update()
-    {
-        //Debug.Log("Target Count: " + targets.Count);
+    {        
         OnShooterTargets(targets);
 
         if(positionTargets == true && targets.Count > 0)
@@ -48,7 +43,6 @@ public class ShooterAddTargets : Singleton<ShooterAddTargets>
         ShooterController.instance.OnPlayerAiming += StartPositioningTargets;
         ShooterShotSequence.instance.OnSequenceComplete += StopPositioningTargets;
         ShooterShotSequence.instance.OnSequenceComplete += RemoveTargets;
-        //ShooterShotSequence.instance.OnRemoveTargetByIndex += RemoveTarget;
 
     }
 

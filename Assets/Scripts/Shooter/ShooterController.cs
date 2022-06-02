@@ -60,14 +60,16 @@ public class ShooterController : Singleton<ShooterController>
 
         OnPlayerPosition(this.gameObject.transform);
 
-        if (aiming)
-        {
-            OnPlayerAiming();
-        }
-
         if(Input.GetMouseButtonDown(1) && !sequence)
         {
+            //items need to be called once to initiate and once to end...thats the difference.  
             Aim(true);
+        }
+
+        if (aiming)
+        {
+            //needs to be called on a constant update - begging and end of sequence
+            OnPlayerAiming();
         }
 
         if(Input.GetMouseButtonUp(1) && aiming)
@@ -76,10 +78,16 @@ public class ShooterController : Singleton<ShooterController>
         }
     }
 
+    private void OnSequenceStart()
+    {
+        sequence = true;
+        input.enabled = false;
+    }
+
     private void OnSequenceComplete()
     {
         Aim(false);
-
+        sequence = false;
         input.enabled = true;
     }
 
@@ -95,16 +103,7 @@ public class ShooterController : Singleton<ShooterController>
         {
             OnPlayerDoneAim();
         }
-    }
- 
-
-    private void OnSequenceStart()
-    {
-        sequence = true;
-        input.enabled = false;
-    }
-
- 
+    } 
 
     //TODO apply to refactor
    
