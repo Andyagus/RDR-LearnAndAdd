@@ -41,14 +41,12 @@ public class ShooterShotSequence : Singleton<ShooterShotSequence>
 
     private void KillSequence()
     {
-        Debug.Log("Kill Sequence");
         sequence.Kill();
         OnSequenceComplete();
     }
 
     private void StartSequence()
     {
-        Debug.Log("Start Sequence");
         ShotSequence();
         
     }

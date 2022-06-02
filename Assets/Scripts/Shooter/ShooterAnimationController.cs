@@ -27,10 +27,6 @@ public class ShooterAnimationController : MonoBehaviour
         MovementInput.instance.OnPlayerMovement += MovementSpeed;
         ShooterController.instance.OnPlayerAim += OnPlayerAim;
         ShooterController.instance.OnPlayerDoneAim += OnPlayerAimed;
-        ShooterController.instance.OnPlayerAiming += OnPlayerAiming;
-        //ShooterController.instance.OnPlayerAim += OnPlayerAim;
-        ShooterShotSequence.instance.OnSequenceStart += OnSequenceStart;
-        ShooterShotSequence.instance.OnSequenceComplete += OnSequenceComplete;
         ShooterEnemyController.instance.OnPlayerAttack += ShooterAttackAnimation;       
     }
   
@@ -39,35 +35,14 @@ public class ShooterAnimationController : MonoBehaviour
         animator.SetFloat("speed", speed);
     }
 
-    private void OnSequenceStart()
-    {
-        animator.speed = 1.235f;
-        sequence = true;
-
-    }
-
-    private void OnSequenceComplete()
-    {
-        animator.speed = 1;
-        sequence = false;
-
-        animator.SetBool("aiming", false);
-
-    }
-
     private void OnPlayerAim()
     {
         animator.SetBool("aiming", true);
     }
 
     private void OnPlayerAimed()
-    {
-
-        if (sequence == false)
-        {
-            animator.SetBool("aiming", false);
-        }
-
+    {     
+        animator.SetBool("aiming", false);        
     }
 
     private void ShooterAttackAnimation()

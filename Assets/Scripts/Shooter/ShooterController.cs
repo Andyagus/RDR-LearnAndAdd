@@ -15,8 +15,6 @@ public class ShooterController : Singleton<ShooterController>
     private bool aiming = false;
     private bool sequence = false;
 
-    private List<Transform> targets = new List<Transform>();
-
     [Header("Events")]
     public Action<Transform> OnPlayerPosition = (Transform playerPosition) => { };
 
@@ -50,7 +48,6 @@ public class ShooterController : Singleton<ShooterController>
         LevelManager.instance.OnGameOver += OnPlayerDeath;
         ShooterShotSequence.instance.OnSequenceStart += OnSequenceStart;
         ShooterShotSequence.instance.OnSequenceComplete += OnSequenceComplete;
-        ShooterAddTargets.instance.OnShooterTargets += OnShooterTargets;
     }
 
     public void FindEnemy(EnemyController enemy)
@@ -76,7 +73,6 @@ public class ShooterController : Singleton<ShooterController>
         if(Input.GetMouseButtonUp(1) && aiming)
         {
             OnPlayerShot();
-            //Aim(false);
         }
     }
 
@@ -92,8 +88,6 @@ public class ShooterController : Singleton<ShooterController>
     {
         aiming = state;
 
-
-        //OnPlayerAim can be bool potentially
         if (state == true)
         {
             OnPlayerAim();
@@ -103,11 +97,6 @@ public class ShooterController : Singleton<ShooterController>
         }
     }
  
-
-    private void OnShooterTargets(List<Transform> targets)
-    {
-        this.targets = targets;
-    }
 
     private void OnSequenceStart()
     {
