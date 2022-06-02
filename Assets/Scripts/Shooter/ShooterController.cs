@@ -52,7 +52,8 @@ public class ShooterController : Singleton<ShooterController>
         LevelManager.instance.OnGameOver += OnGameOver;
         ShooterShotSequence.instance.OnSequenceStart += OnSequenceStart;
         ShooterShotSequence.instance.OnSequenceComplete += OnSequenceComplete;
-        ShooterEnemyController.instance.OnPlayerAttack += OnPlayerAttack;        
+        ShooterEnemyController.instance.OnPlayerAttack += OnPlayerAttack;
+        EnemyProximityManager.instance.OnNoEnemyInRange += OnPlayerRelease;
     }
 
 
@@ -90,6 +91,11 @@ public class ShooterController : Singleton<ShooterController>
         }
 
         OnPlayerHit();
+    }
+
+    private void OnPlayerRelease()
+    {
+        attack = false;
     }
    
     private void OnSequenceStart()

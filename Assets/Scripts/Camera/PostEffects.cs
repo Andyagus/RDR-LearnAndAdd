@@ -42,11 +42,11 @@ public class PostEffects : Singleton<PostEffects>
         ShooterController.instance.OnPlayerDoneAim += TurnOffAimingEffects;
 
         ShooterController.instance.OnPlayerHit += OnPlayerAttack;
+        ShooterController.instance.OnPlayerDeath += GameOverColorFilter;
 
         ShooterHealth.instance.OnRestoreFractionOfHealth += OnRestoreVignette;
         ScoreManager.instance.OnTimesThreeMultiplier += OnStartBloom;
         ScoreManager.instance.OnRestartMultiplier += OnStopBloom;
-        LevelManager.instance.OnGameOver += GameOverColorFilter;
     }
 
     private void OnPostProcessSetup(Camera mainCamera)
@@ -100,7 +100,6 @@ public class PostEffects : Singleton<PostEffects>
 
     private void AdjustColorGrading(bool state)
     {
-        Debug.Log("Adjust Color Grading Called");
         var originalColorGrading = state ? originalColorGrade : deadEyeColor;
         var postColorGrading = state ? deadEyeColor : originalColorGrade;
         DOVirtual.Color(originalColorGrade, postColorGrading, aimTime, TweenColorGrading);
