@@ -25,7 +25,7 @@ public class ShooterShotSequence : Singleton<ShooterShotSequence>
 
     public Action OnSequenceStart = () => { };
     public Action OnSequenceComplete = () => { };
-
+    public Action OnSequenceKill = () => { };
 
     private void Start()
     {
@@ -38,26 +38,20 @@ public class ShooterShotSequence : Singleton<ShooterShotSequence>
         anim = GetComponent<Animator>();
         ShooterAddTargets.instance.OnShooterTargets += UpdateTargetList;
         ShooterController.instance.OnPlayerShot += StartSequence;
-        ShooterEnemyController.instance.OnPlayerAttack += KillSequence;
+        ShooterEnemyController.instance.OnPlayerAttack += SequenceStop;
     }
 
-    private void KillSequence()
+    private void SequenceStop()
     {
+        OnSequenceKill();
         ResetAimFilter();
-        OnSequenceComplete();
+        //OnSequenceComplete();
         sequence.Kill();
     }
 
     private void StartSequence()
     {
-        ShotSequence();
-        
-    }
-
-
-    private void Update()
-    {
-      
+        ShotSequence();    
     }
 
     private void ResetAimFilter()

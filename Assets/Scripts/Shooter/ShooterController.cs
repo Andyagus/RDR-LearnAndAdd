@@ -47,6 +47,7 @@ public class ShooterController : Singleton<ShooterController>
         LevelManager.instance.OnGameOver += OnPlayerDeath;
         ShooterShotSequence.instance.OnSequenceStart += OnSequenceStart;
         ShooterShotSequence.instance.OnSequenceComplete += OnSequenceComplete;
+        //ShooterShotSequence.instance.OnSequenceKill += OnSequenceKill;
     }
 
     //public void FindEnemy(EnemyController enemy)
@@ -90,6 +91,10 @@ public class ShooterController : Singleton<ShooterController>
         input.enabled = true;
     }
 
+    private void OnSequenceKill()
+    {
+
+    }
 
     private void Aim(bool state)
     {

@@ -9,6 +9,8 @@ public class PostEffects : Singleton<PostEffects>
     private PostProcessVolume postVolume;
     private PostProcessProfile postProfile;
 
+    private float runningSum = 0;
+
     [SerializeField] private float aimTime = 0.4f;
 
     //Bloom Settings
@@ -39,7 +41,9 @@ public class PostEffects : Singleton<PostEffects>
         ShooterController.instance.OnPlayerAim += TurnOnAimingEffects;
         ShooterController.instance.OnPlayerDoneAim += TurnOffAimingEffects;
         //EnemyManager.instance.OnEnemyRegistered += SubscribeToEnemyAttack;
-        ShooterEnemyController.instance.OnPlayerAttack += IncreaseVignette;
+
+
+        ShooterEnemyController.instance.OnPlayerAttack += OnPlayerAttack;
         ShooterHealth.instance.OnRestoreFractionOfHealth += OnRestoreVignette;
         ScoreManager.instance.OnTimesThreeMultiplier += OnStartBloom;
         ScoreManager.instance.OnRestartMultiplier += OnStopBloom;
@@ -63,6 +67,11 @@ public class PostEffects : Singleton<PostEffects>
         vignette = postProfile.GetSetting<Vignette>();
     }
 
+    private void OnPlayerAttack()
+    {
+        IncreaseVignette();
+    }
+    
     private void TurnOnAimingEffects()
     {
         AdjustVignetteColor(VignetteType.aiming);
@@ -73,26 +82,27 @@ public class PostEffects : Singleton<PostEffects>
     private void TurnOffAimingEffects()
     {
         AdjustColorGrading(false);
-        AdjustAimVignette(false);       
+        AdjustAimVignette(false);
     }
 
     private void AdjustAimVignette(bool state)
     {
-        if(state)
+        if (state)
+        {
             DOVirtual.Float(originalVigentteAmount, postVignetteAmount, aimTime, TweenVignetteAmount);
-        else
+
+        }
+        else{
             DOVirtual.Float(postVignetteAmount, originalVigentteAmount, aimTime, TweenVignetteAmount);
+        }
     }
 
     private void AdjustColorGrading(bool state)
     {
         var originalColorGrading = state ? originalColorGrade : deadEyeColor;
         var postColorGrading = state ? deadEyeColor : originalColorGrade;
-
         DOVirtual.Color(originalColorGrade, postColorGrading, aimTime, TweenColorGrading);
-
     }
-
 
     private void IncreaseVignette()
     {
@@ -107,8 +117,10 @@ public class PostEffects : Singleton<PostEffects>
 
     private void AdjustVignetteOnAttack(bool state)
     {
+        //TODO
         var attackAmount = state ? 2 : -2;
-        vignette.intensity.value += (float)attackAmount / 10;
+        vignette.intensity.value += .1f;
+        //vignette.intensity.value += (float)attackAmount / 10;
     }
 
     private void OnStartBloom()
@@ -128,7 +140,6 @@ public class PostEffects : Singleton<PostEffects>
         var thresholdValue = state ? 0.59f : 1f;
         DOVirtual.Float(bloom.threshold.value, thresholdValue, 0.4f, TweenPlayerBloom);
     }
-
 
     private void GameOverColorFilter()
     {
@@ -155,6 +166,7 @@ public class PostEffects : Singleton<PostEffects>
 
     private void TweenVignetteAmount(float vignetteAmount)
     {
+        //Debug.Log("Tween Vignette amount");
         vignette.intensity.value = vignetteAmount;
     }
 

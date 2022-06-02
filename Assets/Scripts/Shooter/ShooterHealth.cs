@@ -28,7 +28,6 @@ public class ShooterHealth : Singleton<ShooterHealth>
     private void Awake()
     {
         InitializeEvents();        
-
     }
 
     private void Start()
@@ -37,7 +36,6 @@ public class ShooterHealth : Singleton<ShooterHealth>
         mainCamera = CameraController.instance.mainCamera;
         SetMaxHealth();
     }
-
 
     private void InitializeEvents()
     {
@@ -95,6 +93,5 @@ public class ShooterHealth : Singleton<ShooterHealth>
         }
 
     }
-
 
 }

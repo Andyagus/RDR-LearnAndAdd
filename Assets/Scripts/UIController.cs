@@ -60,8 +60,6 @@ public class UIController : Singleton<UIController>
 
     private void DestroyIndicators()
     {
-        Debug.Log("Indicators Removed");
-
         foreach (GameObject indicator in indicatorList)
         {
             Destroy(indicator);
