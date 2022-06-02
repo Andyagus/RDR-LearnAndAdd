@@ -65,7 +65,6 @@ public class CameraController : Singleton<CameraController>
 
     private void TurnOffZoomCameraSettings()
     {
-        Debug.Log("Turn off zoom camera settings");
         DOVirtual.Float(zoomOffsetAmount, originalOffsetAmount, aimTime, HorizontalOffset);
         DOVirtual.Float(zoomFov, originalFov, aimTime, CameraZoom);
         DOVirtual.Float(postTimeScale, originalTimeScale, aimTime, SetTimeScale);

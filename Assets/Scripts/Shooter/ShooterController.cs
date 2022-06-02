@@ -44,16 +44,15 @@ public class ShooterController : Singleton<ShooterController>
 
     private void InitializeEvents()
     {
-        EnemyManager.instance.OnEnemyRegistered += FindEnemy;
         LevelManager.instance.OnGameOver += OnPlayerDeath;
         ShooterShotSequence.instance.OnSequenceStart += OnSequenceStart;
         ShooterShotSequence.instance.OnSequenceComplete += OnSequenceComplete;
     }
 
-    public void FindEnemy(EnemyController enemy)
-    {        
-        enemy.OnEnemyAttack += OnPlayerAttacked;
-    }
+    //public void FindEnemy(EnemyController enemy)
+    //{        
+    //    enemy.OnEnemyAttack += OnPlayerAttacked;
+    //}
 
     void Update()
     {
@@ -86,7 +85,6 @@ public class ShooterController : Singleton<ShooterController>
 
     private void OnSequenceComplete()
     {
-        Debug.Log("Shooter Controller: On Sequence Complete");
         Aim(false);
         sequence = false;
         input.enabled = true;
@@ -95,7 +93,6 @@ public class ShooterController : Singleton<ShooterController>
 
     private void Aim(bool state)
     {
-        Debug.Log(state);
         aiming = state;
 
         if (state == true)

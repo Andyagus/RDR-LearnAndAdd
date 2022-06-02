@@ -10,7 +10,9 @@ public class ShooterShotSequence : Singleton<ShooterShotSequence>
     private Sequence sequence;
     //private List<Transform> indicatorList;
     private List<Transform> targetList = new List<Transform>();
-    
+    private List<Transform> enemiesShot = new List<Transform>();
+
+
     private Animator anim;
     public GameObject gun;
     //private Image reticle;
@@ -19,11 +21,11 @@ public class ShooterShotSequence : Singleton<ShooterShotSequence>
     public Action<int> OnRemoveTargetByIndex = (int i) => { };
     public Action OnClearAllTargets = () => { };
     public Action<int> OnSequenceFired = (int index) => { };
+    //public Action<EnemyController> OnEnemyShot = (EnemyController EnemyController) => { };
 
     public Action OnSequenceStart = () => { };
     public Action OnSequenceComplete = () => { };
 
-    
 
     private void Start()
     {
@@ -41,6 +43,7 @@ public class ShooterShotSequence : Singleton<ShooterShotSequence>
 
     private void KillSequence()
     {
+        ResetAimFilter();
         OnSequenceComplete();
         sequence.Kill();
     }
@@ -49,6 +52,24 @@ public class ShooterShotSequence : Singleton<ShooterShotSequence>
     {
         ShotSequence();
         
+    }
+
+
+    private void Update()
+    {
+      
+    }
+
+    private void ResetAimFilter()
+    {
+        foreach (var target in targetList)
+        {
+            var enemyController = target.GetComponentInParent<EnemyController>();
+            if(enemyController.aimed == true && !enemyController.shot)
+            {
+                enemyController.aimed = false;
+            }
+        }
     }
 
     private void ShotSequence()
@@ -71,7 +92,6 @@ public class ShooterShotSequence : Singleton<ShooterShotSequence>
                 sequence.AppendInterval(0.1f);
                 sequence.AppendCallback(FirePolish);
                 sequence.AppendCallback(() => currentTarget.GetComponentInParent<EnemyController>().Ragdoll(true, currentTarget));
-
 
                 sequence.AppendCallback(() => OnSequenceFired(currentIndex));
                 sequence.AppendInterval(1.75f);

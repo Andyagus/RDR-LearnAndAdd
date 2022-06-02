@@ -92,6 +92,7 @@ public class ShooterAddTargets : Singleton<ShooterAddTargets>
 
     private void RemoveTargets()
     {
+        Debug.Log("Targets Cleared");
         targets.Clear();
     }
 
