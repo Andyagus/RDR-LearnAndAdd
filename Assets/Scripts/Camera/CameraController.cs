@@ -18,10 +18,10 @@ public class CameraController : Singleton<CameraController>
     private float originalFov;
     public float zoomFov;
     private float originalTimeScale = 1;
-    private float postTimeScale = 0.7f;
+    private float postTimeScale = 1f;
     //temp
-    bool playerCanAim = true;
 
+    bool playerCanAim = true;
 
     public Action<Camera> OnPostProcessSetup = (Camera mainCamera) => { };
 
@@ -56,18 +56,16 @@ public class CameraController : Singleton<CameraController>
 
     private void TurnOnZoomCameraSettings()
     {
-        if (playerCanAim)
-        {
-            //Debug.Log("Zoom camera settings called");
-            DOVirtual.Float(originalOffsetAmount, zoomOffsetAmount, aimTime, HorizontalOffset);
-            DOVirtual.Float(originalFov, zoomFov, aimTime, CameraZoom);
-            DOVirtual.Float(originalTimeScale, postTimeScale, aimTime, SetTimeScale);
-            playerCanAim = false;
-        }
+
+        DOVirtual.Float(originalOffsetAmount, zoomOffsetAmount, aimTime, HorizontalOffset);
+        DOVirtual.Float(originalFov, zoomFov, aimTime, CameraZoom);
+        DOVirtual.Float(originalTimeScale, postTimeScale, aimTime, SetTimeScale);
+       
     }
 
     private void TurnOffZoomCameraSettings()
     {
+        Debug.Log("Turn off zoom camera settings");
         DOVirtual.Float(zoomOffsetAmount, originalOffsetAmount, aimTime, HorizontalOffset);
         DOVirtual.Float(zoomFov, originalFov, aimTime, CameraZoom);
         DOVirtual.Float(postTimeScale, originalTimeScale, aimTime, SetTimeScale);

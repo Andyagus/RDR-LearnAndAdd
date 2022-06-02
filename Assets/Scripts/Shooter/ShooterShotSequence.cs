@@ -41,8 +41,8 @@ public class ShooterShotSequence : Singleton<ShooterShotSequence>
 
     private void KillSequence()
     {
-        sequence.Kill();
         OnSequenceComplete();
+        sequence.Kill();
     }
 
     private void StartSequence()

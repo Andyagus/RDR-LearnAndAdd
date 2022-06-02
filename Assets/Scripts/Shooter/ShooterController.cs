@@ -86,6 +86,7 @@ public class ShooterController : Singleton<ShooterController>
 
     private void OnSequenceComplete()
     {
+        Debug.Log("Shooter Controller: On Sequence Complete");
         Aim(false);
         sequence = false;
         input.enabled = true;
@@ -94,6 +95,7 @@ public class ShooterController : Singleton<ShooterController>
 
     private void Aim(bool state)
     {
+        Debug.Log(state);
         aiming = state;
 
         if (state == true)
