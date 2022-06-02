@@ -19,6 +19,7 @@ public class UIController : Singleton<UIController>
 
     private void Update()
     {
+        Debug.Log("indicator count: " + indicatorList.Count);
 
     }
 

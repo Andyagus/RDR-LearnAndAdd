@@ -85,12 +85,6 @@ public class EnemyProximityManager : Singleton<EnemyProximityManager>
         }
     }
 
-
-    //private void EnemyShot(EnemyController enemy)
-    //{
-    //    enemySet.Remove(enemy.GetInstanceID());
-    //}
-
     private void LogListOfEnemiesInRange()
     {
         if(enemySet.Count == 0)

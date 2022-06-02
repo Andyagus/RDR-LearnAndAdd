@@ -31,7 +31,6 @@ public class ShooterAnimationController : MonoBehaviour
 
     private void OnPlayerAim()
     {
-        Debug.Log("Animation Controller: On Player Aim");
         animator.SetBool("aiming", true);
     }
 
@@ -42,7 +41,7 @@ public class ShooterAnimationController : MonoBehaviour
 
     private void ShooterAttackAnimation()
     {
-        //animator.SetTrigger("onAttack");
+        animator.SetTrigger("onAttack");
     }
 
 }

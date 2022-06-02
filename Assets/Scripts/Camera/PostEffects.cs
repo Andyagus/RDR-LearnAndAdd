@@ -44,6 +44,8 @@ public class PostEffects : Singleton<PostEffects>
 
 
         ShooterEnemyController.instance.OnPlayerAttack += OnPlayerAttack;
+
+
         ShooterHealth.instance.OnRestoreFractionOfHealth += OnRestoreVignette;
         ScoreManager.instance.OnTimesThreeMultiplier += OnStartBloom;
         ScoreManager.instance.OnRestartMultiplier += OnStopBloom;
@@ -119,8 +121,7 @@ public class PostEffects : Singleton<PostEffects>
     {
         //TODO
         var attackAmount = state ? 2 : -2;
-        vignette.intensity.value += .1f;
-        //vignette.intensity.value += (float)attackAmount / 10;
+        vignette.intensity.value += (float)attackAmount / 10;
     }
 
     private void OnStartBloom()

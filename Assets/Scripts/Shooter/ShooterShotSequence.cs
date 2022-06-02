@@ -25,7 +25,7 @@ public class ShooterShotSequence : Singleton<ShooterShotSequence>
 
     public Action OnSequenceStart = () => { };
     public Action OnSequenceComplete = () => { };
-    public Action OnSequenceKill = () => { };
+    public Action OnSequenceEndedEarly = () => { };
 
     private void Start()
     {
@@ -38,33 +38,39 @@ public class ShooterShotSequence : Singleton<ShooterShotSequence>
         anim = GetComponent<Animator>();
         ShooterAddTargets.instance.OnShooterTargets += UpdateTargetList;
         ShooterController.instance.OnPlayerShot += StartSequence;
-        ShooterEnemyController.instance.OnPlayerAttack += SequenceStop;
+        ShooterEnemyController.instance.OnPlayerAttack += EndSequenceEarly;
+
     }
 
-    private void SequenceStop()
+    private void EndSequenceEarly()
     {
-        OnSequenceKill();
-        ResetAimFilter();
-        //OnSequenceComplete();
-        sequence.Kill();
+        OnSequenceEndedEarly();
     }
 
+    //private void SequenceStop()
+    //{
+    //    OnSequenceKill();
+    //    ResetAimFilter();
+    //    //OnSequenceComplete();
+    //    sequence.Kill();
+    //}
+
+    //private void ResetAimFilter()
+    //{
+    //    foreach (var target in targetList)
+    //    {
+    //        var enemyController = target.GetComponentInParent<EnemyController>();
+    //        if(enemyController.aimed == true && !enemyController.shot)
+    //        {
+    //            enemyController.aimed = false;
+    //        }
+    //    }
+    //}
     private void StartSequence()
     {
         ShotSequence();    
     }
 
-    private void ResetAimFilter()
-    {
-        foreach (var target in targetList)
-        {
-            var enemyController = target.GetComponentInParent<EnemyController>();
-            if(enemyController.aimed == true && !enemyController.shot)
-            {
-                enemyController.aimed = false;
-            }
-        }
-    }
 
     private void ShotSequence()
     {

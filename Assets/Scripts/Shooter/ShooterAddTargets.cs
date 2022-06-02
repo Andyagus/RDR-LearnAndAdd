@@ -26,7 +26,11 @@ public class ShooterAddTargets : Singleton<ShooterAddTargets>
     }
 
     private void Update()
-    {        
+    {
+
+        Debug.Log("targets count: " + targets.Count);
+
+
         OnShooterTargets(targets);
 
         if(positionTargets == true && targets.Count > 0)

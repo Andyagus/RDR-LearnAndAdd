@@ -47,32 +47,30 @@ public class ShooterController : Singleton<ShooterController>
         LevelManager.instance.OnGameOver += OnPlayerDeath;
         ShooterShotSequence.instance.OnSequenceStart += OnSequenceStart;
         ShooterShotSequence.instance.OnSequenceComplete += OnSequenceComplete;
-        //ShooterShotSequence.instance.OnSequenceKill += OnSequenceKill;
+        //
+        ShooterShotSequence.instance.OnSequenceEndedEarly += OnSequenceEndedEarly;
     }
 
-    //public void FindEnemy(EnemyController enemy)
-    //{        
-    //    enemy.OnEnemyAttack += OnPlayerAttacked;
-    //}
 
     void Update()
     {
+
+        if (sequence)
+            return;
 
         OnPlayerPosition(this.gameObject.transform);
 
         if(Input.GetMouseButtonDown(1) && !sequence)
         {
-            //items need to be called once to initiate and once to end...thats the difference.  
             Aim(true);
         }
 
         if (aiming)
         {
-            //needs to be called on a constant update - begging and end of sequence
             OnPlayerAiming();
         }
 
-        if(Input.GetMouseButtonUp(1) && aiming)
+        if(Input.GetMouseButtonUp(1) && aiming && !sequence)
         {
             OnPlayerShot();
         }
@@ -82,6 +80,12 @@ public class ShooterController : Singleton<ShooterController>
     {
         sequence = true;
         input.enabled = false;
+        Debug.Log($"input enabled {input.enabled}");
+    }
+
+    private void OnSequenceEndedEarly()
+    {
+        Debug.Log("Sequence Ended Early");
     }
 
     private void OnSequenceComplete()
@@ -89,11 +93,6 @@ public class ShooterController : Singleton<ShooterController>
         Aim(false);
         sequence = false;
         input.enabled = true;
-    }
-
-    private void OnSequenceKill()
-    {
-
     }
 
     private void Aim(bool state)
@@ -117,24 +116,6 @@ public class ShooterController : Singleton<ShooterController>
         //sequence.Kill();
         //Aim(false);
     }
-
-    public void OnPlayerAttacked()
-    {
-        //ToggleControls(true);
-        //AttackAnimation();
-
-        //if (deadEye == true)
-        //{
-        //    StopShotSequence();
-        //}
-
-
-        //if (lostWeapon == false)
-        //{
-        //    LoseGun();
-        //}
-    }
-
 
     //TODO apply to refactor
 
