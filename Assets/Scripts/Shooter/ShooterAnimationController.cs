@@ -21,7 +21,9 @@ public class ShooterAnimationController : MonoBehaviour
         MovementInput.instance.OnPlayerMovement += MovementSpeed;
         ShooterController.instance.OnPlayerAim += OnPlayerAim;
         ShooterController.instance.OnPlayerDoneAim += OnPlayerAimed;
-        ShooterEnemyController.instance.OnPlayerAttack += ShooterAttackAnimation;       
+        ShooterController.instance.OnPlayerDeath += OnPlayerDeath;
+        ShooterEnemyController.instance.OnPlayerAttack += ShooterAttackAnimation;
+
     }
   
     private void MovementSpeed(float speed)
@@ -42,6 +44,11 @@ public class ShooterAnimationController : MonoBehaviour
     private void ShooterAttackAnimation()
     {
         animator.SetTrigger("onAttack");
+    }
+
+    private void OnPlayerDeath()
+    {
+        animator.enabled = false;
     }
 
 }

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class EnemyManager : Singleton<EnemyManager>
+
 {
     public GameObject enemyPrefab;
 
@@ -15,6 +16,7 @@ public class EnemyManager : Singleton<EnemyManager>
     public Action OnEnemiesWalking = () => { };
     public Action OnEnemiesShot = () => { };
     public Action<List<EnemyController>> OnEnemiesInScene = (List<EnemyController> enemyList) => {};
+
 
     private void Awake()
     {

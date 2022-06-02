@@ -41,7 +41,7 @@ public class PostEffects : Singleton<PostEffects>
         ShooterController.instance.OnPlayerAim += TurnOnAimingEffects;
         ShooterController.instance.OnPlayerDoneAim += TurnOffAimingEffects;
 
-        ShooterEnemyController.instance.OnPlayerAttack += OnPlayerAttack;
+        ShooterController.instance.OnPlayerHit += OnPlayerAttack;
 
         ShooterHealth.instance.OnRestoreFractionOfHealth += OnRestoreVignette;
         ScoreManager.instance.OnTimesThreeMultiplier += OnStartBloom;
@@ -83,7 +83,6 @@ public class PostEffects : Singleton<PostEffects>
 
     private void AdjustVignetteOnAttack(bool state)
     {
-        //TODO
         var attackAmount = state ? 2 : -2;
         vignette.intensity.value += (float)attackAmount / 10;
     }
@@ -101,6 +100,7 @@ public class PostEffects : Singleton<PostEffects>
 
     private void AdjustColorGrading(bool state)
     {
+        Debug.Log("Adjust Color Grading Called");
         var originalColorGrading = state ? originalColorGrade : deadEyeColor;
         var postColorGrading = state ? deadEyeColor : originalColorGrade;
         DOVirtual.Color(originalColorGrade, postColorGrading, aimTime, TweenColorGrading);
@@ -126,6 +126,7 @@ public class PostEffects : Singleton<PostEffects>
 
     private void GameOverColorFilter()
     {
+        Debug.Log(colorGrading.colorFilter.value);        
         DOVirtual.Color(colorGrading.colorFilter.value, Color.red, aimTime, GameOverRedTween);
     }
 

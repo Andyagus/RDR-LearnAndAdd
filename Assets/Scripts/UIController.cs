@@ -34,7 +34,7 @@ public class UIController : Singleton<UIController>
         ShooterShotSequence.instance.OnSequenceFired += ClearIndiciator;
         ShooterShotSequence.instance.OnSequenceComplete += DestroyIndicators;
 
-
+        ShooterController.instance.OnPlayerDeath += HideReticle;
         
     }
 

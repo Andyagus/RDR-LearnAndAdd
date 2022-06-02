@@ -12,6 +12,7 @@ public class ShooterController : Singleton<ShooterController>
 {
     private MovementInput input;
 
+    private bool attack = false;
     private bool aiming = false;
     private bool sequence = false;
 
@@ -23,10 +24,11 @@ public class ShooterController : Singleton<ShooterController>
     public Action OnPlayerAim = () => { };
     public Action OnPlayerDoneAim = () => { };
 
+    public Action OnPlayerHit = () => { };
+    public Action OnPlayerDeath = () => { };
+
     //TODO can work with name
     public Action OnPlayerShot = () => { };
-
-    //public Action OnPlayerHit = () => { };
 
     public Action OnLostWeapon = () => { };
     public Action OnWeaponFound = () => { };
@@ -47,14 +49,10 @@ public class ShooterController : Singleton<ShooterController>
 
     private void InitializeEvents()
     {
-        LevelManager.instance.OnGameOver += OnPlayerDeath;
+        LevelManager.instance.OnGameOver += OnGameOver;
         ShooterShotSequence.instance.OnSequenceStart += OnSequenceStart;
         ShooterShotSequence.instance.OnSequenceComplete += OnSequenceComplete;
-
-
-        ShooterEnemyController.instance.OnPlayerAttack += OnPlayerAttack;
-
-        
+        ShooterEnemyController.instance.OnPlayerAttack += OnPlayerAttack;        
     }
 
 
@@ -84,12 +82,16 @@ public class ShooterController : Singleton<ShooterController>
 
     private void OnPlayerAttack()
     {
+        attack = true;
+
         if (aiming)
         {
             Aim(false);
         }
-    }
 
+        OnPlayerHit();
+    }
+   
     private void OnSequenceStart()
     {
         sequence = true;
@@ -110,18 +112,17 @@ public class ShooterController : Singleton<ShooterController>
         if (state == true)
         {
             OnPlayerAim();
-        }else if(state == false)
+        }else if(state == false && !attack)
         {
             OnPlayerDoneAim();
         }
     }
 
-    private void OnPlayerDeath()
+    private void OnGameOver()
     {
-        //anim.enabled = false;
-        //input.enabled = false;
-        //reticle.color = Color.clear;
-        //GetComponent<CharacterController>().enabled = false;
+        OnPlayerDeath();
+        input.enabled = false;
     }
+
 
 }
