@@ -24,6 +24,7 @@ public class ShooterAnimationController : MonoBehaviour
         ShooterController.instance.OnPlayerDeath += OnPlayerDeath;
         ShooterEnemyController.instance.OnPlayerAttack += ShooterAttackAnimation;
         ShooterWeaponController.instance.OnLostWeapon += OnLostWeapon;
+        ShooterWeaponController.instance.OnWeaponFound += OnWeaponFound;
     }
   
     private void MovementSpeed(float speed)
@@ -53,7 +54,13 @@ public class ShooterAnimationController : MonoBehaviour
 
     private void OnLostWeapon()
     {
-        animator.SetBool("LostWeapon", true);
+        animator.SetTrigger("LostWeapon");
+    }
+
+    private void OnWeaponFound()
+    {
+        
+        animator.SetTrigger("FoundWeapon");
     }
 
 }

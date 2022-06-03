@@ -108,6 +108,23 @@ public class ShooterWeaponController : Singleton<ShooterWeaponController>
 
     }
 
+    private void OnControllerColliderHit(ControllerColliderHit hit)
+    {
+        if(GunIsGrounded() && hit.collider.CompareTag("gun"))
+        {
+            FoundWeapon();
+        }
+    }
+
+    private void FoundWeapon()
+    {
+        OnWeaponFound();
+        lostWeapon = false;
+        gun.GetComponent<Rigidbody>().isKinematic = true;
+        gun.GetComponent<BoxCollider>().enabled = false;
+        gun.transform.parent = rightHand;
+        Destroy(gunParentInstance);
+    }
     private bool GunIsGrounded()
     {
         RaycastHit hit;
