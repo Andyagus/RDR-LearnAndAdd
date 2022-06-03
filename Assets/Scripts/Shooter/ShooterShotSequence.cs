@@ -25,6 +25,7 @@ public class ShooterShotSequence : Singleton<ShooterShotSequence>
 
     public Action OnSequenceStart = () => { };
     public Action OnSequenceComplete = () => { };
+    public Action OnSequenceStopped = () => { };
 
     private void Start()
     {
@@ -38,14 +39,15 @@ public class ShooterShotSequence : Singleton<ShooterShotSequence>
         ShooterAddTargets.instance.OnShooterTargets += UpdateTargetList;
         ShooterController.instance.OnPlayerShot += StartSequence;
         //ShooterController.instance.OnPlayerHit += OnPlayerHit;
-        ShooterController.instance.OnPlayerHit += OnPlayerAttack;
+        ShooterController.instance.OnPlayerHit += OnPlayerHit;
 
 
     }
 
-    private void OnPlayerAttack()
+    private void OnPlayerHit()
     {
         OnSequenceComplete();
+        //OnSequenceStopped();
         sequence.Kill();
     }
 

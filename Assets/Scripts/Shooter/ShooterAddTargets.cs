@@ -43,6 +43,8 @@ public class ShooterAddTargets : Singleton<ShooterAddTargets>
         ShooterController.instance.OnPlayerAiming += StartPositioningTargets;
         ShooterShotSequence.instance.OnSequenceComplete += StopPositioningTargets;
         ShooterShotSequence.instance.OnSequenceComplete += RemoveTargets;
+        ShooterShotSequence.instance.OnSequenceStopped += StopPositioningTargets;
+        ShooterShotSequence.instance.OnSequenceStopped += RemoveTargets;
 
     }
 
