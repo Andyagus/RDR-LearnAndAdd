@@ -58,8 +58,7 @@ public class ShooterAnimationController : MonoBehaviour
     }
 
     private void OnWeaponFound()
-    {
-        
+    {        
         animator.SetTrigger("FoundWeapon");
     }
 
