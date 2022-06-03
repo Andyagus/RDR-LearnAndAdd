@@ -17,9 +17,7 @@ public class UIController : Singleton<UIController>
         InitializeMembers();  
     }
 
-    private void Update()
-    {
-    }
+   
 
     private void InitializeMembers()
     {
@@ -30,12 +28,23 @@ public class UIController : Singleton<UIController>
         //TODO Ask SUNNY is this bad to have show and hide reticle methods vs bool 
         ShooterShotSequence.instance.OnSequenceStart += HideReticle;
         ShooterShotSequence.instance.OnSequenceComplete += ShowReticle;
-                
+
+        ShooterShotSequence.instance.OnSequenceComplete += OnSequenceComplete;
+
+
         ShooterShotSequence.instance.OnSequenceFired += ClearIndiciator;
         ShooterShotSequence.instance.OnSequenceComplete += DestroyIndicators;
 
         ShooterController.instance.OnPlayerDeath += HideReticle;
+
+        ShooterWeaponController.instance.OnLostWeapon += HideReticle;
+        ShooterWeaponController.instance.OnLostWeapon += ShowReticle;
         
+    }
+
+    private void OnSequenceComplete()
+    {
+        Debug.Log("On sequence Complete called");
     }
 
     private void CreateIndicator(Transform hitTransform)
@@ -68,6 +77,7 @@ public class UIController : Singleton<UIController>
 
     private void HideReticle()
     {
+        Debug.Log(reticle.color.r);
         reticle.color = Color.clear;
     }
 

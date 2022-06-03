@@ -105,7 +105,6 @@ public class ShooterWeaponController : Singleton<ShooterWeaponController>
             gun.GetComponent<BoxCollider>().enabled = true;
 
         }
-
     }
 
     private void OnControllerColliderHit(ControllerColliderHit hit)
@@ -125,6 +124,7 @@ public class ShooterWeaponController : Singleton<ShooterWeaponController>
         gun.transform.parent = rightHand;
         Destroy(gunParentInstance);
     }
+
     private bool GunIsGrounded()
     {
         RaycastHit hit;

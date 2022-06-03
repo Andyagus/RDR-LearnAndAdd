@@ -38,7 +38,7 @@ public class ShooterShotSequence : Singleton<ShooterShotSequence>
         ShooterAddTargets.instance.OnShooterTargets += UpdateTargetList;
         ShooterController.instance.OnPlayerShot += StartSequence;
         //ShooterController.instance.OnPlayerHit += OnPlayerHit;
-        ShooterEnemyController.instance.OnPlayerAttack += OnPlayerAttack;
+        ShooterController.instance.OnPlayerHit += OnPlayerAttack;
 
 
     }
