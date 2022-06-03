@@ -45,7 +45,6 @@ public class ShooterShotSequence : Singleton<ShooterShotSequence>
 
     private void OnPlayerAttack()
     {
-        Debug.Log("On Sequence Complete 46");
         OnSequenceComplete();
         sequence.Kill();
     }

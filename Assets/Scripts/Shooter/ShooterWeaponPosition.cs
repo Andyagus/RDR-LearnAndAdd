@@ -46,15 +46,6 @@ public class ShooterWeaponPosition : Singleton<ShooterWeaponPosition>
         input = GetComponent<MovementInput>();
     }
 
-    private void WeaponPosition()
-    {
-        //bool state = input.speed > 0;
-        //var pos = state ? gunAimPosition : gunIdlePosition;
-        //var rot = state ? gunAimRotation : gunAimRotation;
-        //gun.transform.DOLocalMove(pos, .3f);
-        //gun.transform.DOLocalRotate(rot, .3f);
-    }
-
     //private void LoseGun()
     //{
     //    OnLostWeapon();
@@ -85,15 +76,10 @@ public class ShooterWeaponPosition : Singleton<ShooterWeaponPosition>
     //{
     //    if (GunIsGrounded() && hit.collider.CompareTag("gun"))
     //    {
-    //        FoundGun();
+    //        //FoundGun();
     //    }
     //}
 
-    //private bool GunIsGrounded()
-    //{
-    //    RaycastHit hit;
-    //    Physics.Raycast(gun.transform.position, -Vector3.up, out hit, 0.2f, platformLayerMask);
-    //    return hit.collider != null;
-    //}
+
 
 }

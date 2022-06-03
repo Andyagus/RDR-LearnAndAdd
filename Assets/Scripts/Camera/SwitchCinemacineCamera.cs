@@ -37,8 +37,8 @@ public class SwitchCinemacineCamera : Singleton<SwitchCinemacineCamera>
 
     private void InitializeEvents()
     {        
-        ShooterController.instance.OnLostWeapon += OnLostWeaponCamera;
-        ShooterController.instance.OnWeaponFound += OnWeaponFound;
+        ShooterWeaponController.instance.OnLostWeapon += OnLostWeaponCamera;
+        ShooterWeaponController.instance.OnWeaponFound += OnWeaponFound;
         ShooterHealth.instance.OnPlayerDeath += OnPlayerDeathCamera;
     }
 

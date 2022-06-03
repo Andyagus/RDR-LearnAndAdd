@@ -23,7 +23,7 @@ public class ShooterAnimationController : MonoBehaviour
         ShooterController.instance.OnPlayerDoneAim += OnPlayerAimed;
         ShooterController.instance.OnPlayerDeath += OnPlayerDeath;
         ShooterEnemyController.instance.OnPlayerAttack += ShooterAttackAnimation;
-
+        ShooterWeaponController.instance.OnLostWeapon += OnLostWeapon;
     }
   
     private void MovementSpeed(float speed)
@@ -49,6 +49,11 @@ public class ShooterAnimationController : MonoBehaviour
     private void OnPlayerDeath()
     {
         animator.enabled = false;
+    }
+
+    private void OnLostWeapon()
+    {
+        animator.SetBool("LostWeapon", true);
     }
 
 }
