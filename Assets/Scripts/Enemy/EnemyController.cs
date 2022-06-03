@@ -88,7 +88,7 @@ public class EnemyController : MonoBehaviour
             }
         }
 
-        Debug.Log(aimed);
+        //Debug.Log(aimed);
     }
 
 

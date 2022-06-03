@@ -69,6 +69,7 @@ public class PostEffects : Singleton<PostEffects>
     private void OnPlayerAttack()
     {
         IncreaseVignette();
+        TurnOffAimingEffects();
     }
 
     private void IncreaseVignette()

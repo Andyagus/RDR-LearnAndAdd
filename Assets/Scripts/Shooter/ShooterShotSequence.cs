@@ -37,14 +37,16 @@ public class ShooterShotSequence : Singleton<ShooterShotSequence>
         anim = GetComponent<Animator>();
         ShooterAddTargets.instance.OnShooterTargets += UpdateTargetList;
         ShooterController.instance.OnPlayerShot += StartSequence;
+        //ShooterController.instance.OnPlayerHit += OnPlayerHit;
         ShooterEnemyController.instance.OnPlayerAttack += OnPlayerAttack;
+
 
     }
 
     private void OnPlayerAttack()
     {
-        OnSequenceComplete();
         Debug.Log("On Sequence Complete 46");
+        OnSequenceComplete();
         sequence.Kill();
     }
 
