@@ -112,6 +112,7 @@ public class ZombieSpawner : MonoBehaviour
 
     private void OnEnemyInstantiated(EnemyController enemy)
     {
+        Debug.Log("Enemy Spawned");
         EnemyManager.instance.OnEnemyInstantiated -= OnEnemyInstantiated;
         enemy.transform.position = ZombieSpawnPosition();
         enemy.transform.rotation = particleSystemTransform.rotation;
