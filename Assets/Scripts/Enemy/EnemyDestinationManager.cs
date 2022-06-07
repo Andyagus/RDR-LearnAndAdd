@@ -24,7 +24,7 @@ public class EnemyDestinationManager : Singleton<EnemyDestinationManager>
     private void Update()
     {
         //MoveToPlayerSwitch();
-        SetEnemyToDestination();
+        //SetEnemyToDestination();
 
     }
 
@@ -55,21 +55,22 @@ public class EnemyDestinationManager : Singleton<EnemyDestinationManager>
         SetInitialDestination(enemy, destinationPosition);
     }
 
-    private void SetEnemyToDestination()
-    {
+    //private void SetEnemyToDestination()
+    //{
 
-    }
+    //}
 
     private void SetInitialDestination(EnemyController enemy, Vector3 destPos)
     {
         enemy.GetComponent<NavMeshAgent>().destination = destPos;
-        initialDestination = true;
-        //OnInitialDestination();
-        if (initialDestination == true)
-        {
-            //OnInitialDestination();
-            initialDestination = false;
-        }
+        Debug.Log(destPos);
+        //initialDestination = true;
+        ////OnInitialDestination();
+        //if (initialDestination == true)
+        //{
+        //    //OnInitialDestination();
+        //    initialDestination = false;
+        //}
     }
 
     private void MoveEnemyTowardsPlayer(EnemyController enemy)
