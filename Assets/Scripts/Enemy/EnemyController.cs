@@ -22,14 +22,13 @@ public class EnemyController : MonoBehaviour
     private bool playerHit = false;
     public int attackStrength = 2;
 
-    //public bool _initialLocation = false;
+    public bool _initialLocation = false;
 
     public bool moveTowardsInitialLocationTrigger = false;
     public bool movingTowardsInitial;
     public bool moveTowardsPlayer = false;
     public Vector3 walkToLocation;
 
-    //public bool 
     public bool aimed = false;
     public bool shot;
     public bool inRange;
@@ -38,7 +37,7 @@ public class EnemyController : MonoBehaviour
     public Action OnEnemyAttack = () => {};
     public Action<EnemyController> OnMoveTowardsPlayer = (EnemyController enemy) => { };
     public Action<EnemyController> OnMoveToInitialPosition = (EnemyController enemy) => { };
-    
+
 
 
     private void Awake()
@@ -87,7 +86,8 @@ public class EnemyController : MonoBehaviour
         EnemyProximityManager.instance.OnWalk += WalkToPlayer;
         EnemyProximityManager.instance.OnAttack += AttackPlayer;
         //EnemyDestinationManager.instance.OnInitialDestination += OnInitialDestination;
-        EnemyProximityManager.instance.OnInitialDestinationReached += OnInitialDestinationReached;
+        //EnemyProximityManager.instance.OnInitialDestinationReached += OnInitialDestinationReached;
+        EnemyDestinationManager.instance.OnPlayerDestination += OnPlayerDestination;
     }
 
 
@@ -105,8 +105,11 @@ public class EnemyController : MonoBehaviour
 
     private void SetDestination()
     {
-        if(moveTowardsInitialLocationTrigger == true)
+
+        if (moveTowardsInitialLocationTrigger == true)
         {
+            //Debug.Log("OnMoveToInitialPosition called");
+
             movingTowardsInitial = true;
             OnMoveToInitialPosition(this);
             moveTowardsInitialLocationTrigger = false;
@@ -115,11 +118,18 @@ public class EnemyController : MonoBehaviour
 
     private void OnInitialDestinationReached(EnemyController enemy)
     {
-        movingTowardsInitial = false;
-        OnMoveTowardsPlayer(enemy);
+        //movingTowardsInitial = false;
+        //OnMoveTowardsPlayer(enemy);
     }
 
-   
+    private void OnPlayerDestination(List<EnemyController> enemies)
+    {
+        foreach (var enemy in enemies)
+        {
+
+        }
+    }
+
     private void OnDrawGizmosSelected()
     {
         Gizmos.DrawWireSphere(attackPoint.position, attackRange);

@@ -29,7 +29,6 @@ public class EnemyProximityManager : Singleton<EnemyProximityManager>
 
     public Vector3 walkToLocation;
 
-    public Action<EnemyController> OnInitialDestinationReached = (EnemyController enemy) => { };
 
 
 
@@ -40,6 +39,10 @@ public class EnemyProximityManager : Singleton<EnemyProximityManager>
     public Action OnAttack = () => { };
 
     public EnemyState enemyState;
+
+    public List<EnemyController> enemyInitialPosition = new List<EnemyController>();
+
+    public Action<EnemyController> OnInitialDestinationReached = (EnemyController enemy) => { };
 
 
     private void Awake()
@@ -54,7 +57,8 @@ public class EnemyProximityManager : Singleton<EnemyProximityManager>
 
     private void Update()
     {
-        EnemyPlayerDistanceCheck();
+        CheckEnemyPositions();
+        //EnemyPlayerDistanceCheck();
         //CheckEnemyDistance();
     }
 
@@ -63,15 +67,10 @@ public class EnemyProximityManager : Singleton<EnemyProximityManager>
         EnemyManager.instance.OnEnemiesInScene += AddEnemyTransformToList;
         ShooterController.instance.OnPlayerPosition += SetPlayerPosition;
         EnemyManager.instance.OnEnemyRegistered += OnEnemyRegistered;
-        
-        //EnemyDestinationManager.instance.OnInitialDestination += OnInitialDestination;
-        //EnemyManager.instance.OnEnemyRegistered += OnEnemyMoveTowardsPlayer;
-    }
 
-    //private void OnEnemyMoveTowardsPlayer(EnemyController enemy)
-    //{
-    //    enemy.OnMoveTowardsPlayer += 
-    //}
+        //EnemyDestinationManager.instance.OnInitialDestination += OnInitialDestination;
+        EnemyManager.instance.OnEnemyRegistered += OnEnemyRegistered;
+    }
 
     private void OnEnemyRegistered(EnemyController enemy)
     {
@@ -79,21 +78,43 @@ public class EnemyProximityManager : Singleton<EnemyProximityManager>
         //enemy.GetComponent<NavMeshAgent>().destination = enemy.walkToLocation;
     }
 
+    private void OnMoveToInitialPosition(EnemyController enemy)
+    {
+        enemyInitialPosition.Add(enemy);
+        //if (enemyNavMesh.remainingDistance <= 0.9f && enemyNavMesh.remainingDistance != 0)
+        //{
+        //    //Debug.Log("Hit initial position");
+        //}
+    }
+
+
+    private void CheckEnemyPositions()
+    {
+        foreach(var enemy in enemyInitialPosition)
+        {
+            var enemyNavMesh = enemy.GetComponent<NavMeshAgent>();
+
+            if (enemyNavMesh.remainingDistance <= 1f && enemyNavMesh.remainingDistance != 0)
+            {
+                Debug.Log("initial destination reached");
+                OnInitialDestinationReached(enemy);
+            }
+        }
+    }
+
+
+    //private void OnEnemyMoveTowardsPlayer(EnemyController enemy)
+    //{
+    //    enemy.OnMoveTowardsPlayer += 
+    //}
+
+
+
+
     //private void OnInitialDestination()
     //{
     //    moveTowardsInitialLocation = true;
     //}
-
-    private void OnMoveToInitialPosition(EnemyController enemy)
-    {
-        //moveTowardsInitialLocation = true;
-        //if(enemy.)
-    }
-
-    private void CheckEnemyPositions()
-    {
-
-    }
 
     private void CheckEn()
     {
