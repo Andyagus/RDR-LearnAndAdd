@@ -22,29 +22,33 @@ public class EnemyController : MonoBehaviour
     private bool playerHit = false;
     public int attackStrength = 2;
 
-    public bool setInitialLocation = false;
+    //public bool _initialLocation = false;
+
+    public bool moveTowardsInitialLocationTrigger = false;
+    public bool movingTowardsInitial;
     public bool moveTowardsPlayer = false;
-    private Vector3 walkToLocation;
+    public Vector3 walkToLocation;
 
-
+    //public bool 
     public bool aimed = false;
     public bool shot;
     public bool inRange;
 
     public Action<EnemyController> OnEnemyShot = (EnemyController enemy) => {};   
     public Action OnEnemyAttack = () => {};
-    public Action OnEnemyMoveTowardsPlayer = () => { };
+    public Action<EnemyController> OnMoveTowardsPlayer = (EnemyController enemy) => { };
+    public Action<EnemyController> OnMoveToInitialPosition = (EnemyController enemy) => { };
     
 
 
     private void Awake()
     {
         InitializeEvents();
+        enemyNavMesh = GetComponent<NavMeshAgent>();        
     }
 
     void Start()
     {
-        enemyNavMesh = GetComponent<NavMeshAgent>();
         anim = GetComponent<Animator>();
         shooter = FindObjectOfType<ShooterController>();
         rbs = GetComponentsInChildren<Rigidbody>();
@@ -58,9 +62,12 @@ public class EnemyController : MonoBehaviour
         //    FollowPlayer();
         //}
 
-        SetDestinations();
+        if (!shot)
+        {
+            SetDestination();
+        }
 
-        if(shot == true)
+        if (shot == true)
         {
             DestroyEnemy();
         }
@@ -69,17 +76,20 @@ public class EnemyController : MonoBehaviour
         {
             OnEnemyAttack();
         }
+
+
     }
 
     private void InitializeEvents()
     {
         ShooterShotSequence.instance.OnSequenceComplete += OnSequenceComplete;
-        FindZombieSpawner();
-        EnemyProximityManager.instance.OnInitialDestination += OnInitialDestination;
         EnemyProximityManager.instance.OnRun += RunToPlayer;
         EnemyProximityManager.instance.OnWalk += WalkToPlayer;
         EnemyProximityManager.instance.OnAttack += AttackPlayer;
+        //EnemyDestinationManager.instance.OnInitialDestination += OnInitialDestination;
+        EnemyProximityManager.instance.OnInitialDestinationReached += OnInitialDestinationReached;
     }
+
 
     private void OnSequenceComplete()
     {
@@ -93,95 +103,23 @@ public class EnemyController : MonoBehaviour
     }
 
 
-    private void FindZombieSpawner()
+    private void SetDestination()
     {
-        var zombieSpawners = GameObject.FindObjectsOfType<ZombieSpawner>();
-        foreach (var spawner in zombieSpawners)
+        if(moveTowardsInitialLocationTrigger == true)
         {
-            spawner.OnZombieRelease += SetEnemyInitialLocation;
+            movingTowardsInitial = true;
+            OnMoveToInitialPosition(this);
+            moveTowardsInitialLocationTrigger = false;
         }
     }
 
-
-    private void SetEnemyInitialLocation(Vector3 spawnPos, Vector3 walkToLocation)
+    private void OnInitialDestinationReached(EnemyController enemy)
     {
-        
-        if (setInitialLocation == false)
-        {
-            this.walkToLocation = walkToLocation;
-            //enemyNavMesh.destination = walkToLocation;
-        }
-            setInitialLocation = true;
+        movingTowardsInitial = false;
+        OnMoveTowardsPlayer(enemy);
     }
-
-    private void OnInitialDestination()
-    {
-        setInitialLocation = false;
-
-        moveTowardsPlayer = true;
-
-
-    }
-
-    private void SetDestinations()
-    {
-        if(setInitialLocation == true)
-        {
-            enemyNavMesh.destination = walkToLocation;            
-        }else if(moveTowardsPlayer == true)
-        {
-            enemyNavMesh.destination = shooter.transform.position;
-            OnEnemyMoveTowardsPlayer();
-            enemyNavMesh.destination = shooter.transform.position;
-            var lookRotation = Quaternion.LookRotation(shooter.transform.position - transform.position, Vector3.up);
-            transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime);
-
-        }
-    }
-
-    //private void SetEnemyInitialLocation()
-    //{
-
-    //}
 
    
-    //private void FollowPlayer()
-    //{
-    //    CheckDestinationPosition();
-    //    var enemyWalkingDistance = 3;
-
-    //    if (enemyNavMesh.remainingDistance > enemyWalkingDistance)
-    //    {
-    //        enemyState = EnemyState.running;
-    //    }
-
-    //    if (enemyNavMesh.remainingDistance > enemyNavMesh.stoppingDistance && enemyNavMesh.remainingDistance < enemyWalkingDistance)
-    //    {
-    //        enemyState = EnemyState.walking;
-    //    }
-
-    //    if (enemyNavMesh.remainingDistance != 0 && moveTowardsPlayer)
-    //    {
-    //        if (enemyNavMesh.remainingDistance <= enemyNavMesh.stoppingDistance)
-    //        {
-    //            if (!enemyNavMesh.hasPath || enemyNavMesh.velocity.sqrMagnitude == 0)
-    //            {
-    //                enemyState = EnemyState.attacking;
-    //            }
-    //        }
-    //    }
-
-    //    if (LevelManager.instance.gameOver)
-    //    {
-    //        enemyState = EnemyState.gameOver;
-    //    }
-
-    //    AdjustEnemyBehavior(enemyState);
-
-    //}  
-
- 
-
     private void OnDrawGizmosSelected()
     {
         Gizmos.DrawWireSphere(attackPoint.position, attackRange);

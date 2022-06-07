@@ -11,20 +11,27 @@ public class EnemyProximityManager : Singleton<EnemyProximityManager>
 
     private Transform playerTransform;
 
+    private int enemyWalkingDistance = 3;
+
     private List<Transform> enemyPositions = new List<Transform>();
     private List<Vector3> destinationPositions;
     public HashSet<int> enemySet;
 
     public bool EnemyInRange;
     public bool NoEnemyInRange;
+    public bool initialReachedTrigger = true;
+
+    private bool moveTowardsPlayer;
+    private bool moveTowardsInitialLocation;
 
     public Vector3 startPosition;
     public GameObject cylinderPrefab;
 
     public Vector3 walkToLocation;
-    public bool setInitialLocation;
 
-    public Action OnInitialDestination = () => { };
+    public Action<EnemyController> OnInitialDestinationReached = (EnemyController enemy) => { };
+
+
 
     public Action OnEnemyInRange = () => { };
     public Action OnNoEnemyInRange = () => { };
@@ -47,16 +54,135 @@ public class EnemyProximityManager : Singleton<EnemyProximityManager>
 
     private void Update()
     {
-        //if (Input.GetKeyDown(KeyCode.L))
+        EnemyPlayerDistanceCheck();
+        //CheckEnemyDistance();
+    }
+
+    private void InitializeEvents()
+    {
+        EnemyManager.instance.OnEnemiesInScene += AddEnemyTransformToList;
+        ShooterController.instance.OnPlayerPosition += SetPlayerPosition;
+        EnemyManager.instance.OnEnemyRegistered += OnEnemyRegistered;
+        
+        //EnemyDestinationManager.instance.OnInitialDestination += OnInitialDestination;
+        //EnemyManager.instance.OnEnemyRegistered += OnEnemyMoveTowardsPlayer;
+    }
+
+    //private void OnEnemyMoveTowardsPlayer(EnemyController enemy)
+    //{
+    //    enemy.OnMoveTowardsPlayer += 
+    //}
+
+    private void OnEnemyRegistered(EnemyController enemy)
+    {
+        enemy.OnMoveToInitialPosition += OnMoveToInitialPosition;
+        //enemy.GetComponent<NavMeshAgent>().destination = enemy.walkToLocation;
+    }
+
+    //private void OnInitialDestination()
+    //{
+    //    moveTowardsInitialLocation = true;
+    //}
+
+    private void OnMoveToInitialPosition(EnemyController enemy)
+    {
+        //moveTowardsInitialLocation = true;
+        //if(enemy.)
+    }
+
+    private void CheckEnemyPositions()
+    {
+
+    }
+
+    private void CheckEn()
+    {
+        //if)
+
+        //foreach(var enemy in enemyPositions)
         //{
-        //    EnemyDistanceFromDestination();
+        //    var enemyInstance = enemy.GetComponent<EnemyController>();
+        //    var enemyNm = enemyInstance.GetComponent<NavMeshAgent>();
+
+        //    if (enemyInstance.movingTowardsInitial)
+        //    {
+        //        if(enemyNm.remainingDistance <= 1f)
+        //        {
+        //            //if(initialReachedTrigger == true)
+        //            //{
+        //            Debug.Log(enemyInstance.name  + " Reached the end of first path");
+        //            OnInitialDestinationReached(enemyInstance);
+
+        //            //}
+        //        }
+        //    }
         //}
 
-        CheckProximity();
+        //if (enemyPositions != null)
+        //{
+        //    foreach (var enemy in enemyPositions)
+        //    {
+        //        var enemyInstance = enemy.GetComponent<EnemyController>();
+        //        var enemyNm = enemyInstance.GetComponent<NavMeshAgent>();
 
-        CheckEnemyPosition();
+        //        //if (enemyNm.remainingDistance )
+        //        if (enemyInstance.moveTowardsInitialLocation == true && enemyNm.remainingDistance <= 1f && enemyNm.remainingDistance != 0)
+        //        {
+        //            OnInitialDestinationReached();
+        //            Debug.Log(enemy.name + " has reached " + enemyNm.remainingDistance);
+        //        }
 
-        //DistanceCheck();        
+
+        //Debug.Log(enemyNm.destination);
+
+        //Debug.Log(enemy + " " + enemyNm);
+        //if (!enemyInstance.moveTowardsInitialLocation)
+        //{
+        //    Debug.Log(enemy.name + " Original Destination Called");
+        //    enemyNm.destination = Vector3.forward;
+
+        //}
+
+
+        //if (enemyInstance.moveTowardsInitialLocation)
+        //{
+        //    Debug.Log("proximity manager: " + enemyInstance.name);
+        //    enemyNm.destination = new Vector3(10000, 1000, 10000);
+        //}
+
+        //enemyNm.destination = enemyInstance.walkToLocation;
+        //enemyInstance.moveTowardsInitialLocation = true;
+
+        //if(enemyInstance.moveTowardsInitialLocation == true && enemyNm.remainingDistance <= 0.7f && enemyNm.remainingDistance != 0)
+        //{
+        //    Debug.Log("Enemy Reached initial destination");
+        //}
+        //if (enemyInstance.setInitialLocation && enemyNm.remainingDistance <= 0.7f && enemyNm.remainingDistance != 0)
+        //{
+        //    //Debug.Log("Initial Destination Reached");
+        //    OnInitialDestination();
+        //}
+
+        //if(enemyInstance.moveTowardsPlayer)
+        //{
+        //    if (enemyNm.remainingDistance > enemyWalkingDistance)                    
+        //    {
+        //        Debug.Log("enemy is running");
+        //    }
+
+        //    else if(enemyNm.remainingDistance > enemyNm.stoppingDistance && enemyNm.remainingDistance < enemyWalkingDistance)
+        //    {
+        //        Debug.Log("enemy is walking");
+        //    }
+
+        //    else if(enemyNm.remainingDistance <= enemyNm.stoppingDistance)
+        //    {
+        //        Debug.Log("enemy is attacking");
+        //    }
+
+        //}
+        //        }
+        //    }
     }
 
     private void AddEnemyTransformToList(List<EnemyController> enemies)
@@ -68,63 +194,59 @@ public class EnemyProximityManager : Singleton<EnemyProximityManager>
         }
     }
 
-    private void InitializeEvents()
+    private void OnGoToInitialLocation(EnemyController enemy)
     {
-        EnemyManager.instance.OnEnemiesInScene += AddEnemyTransformToList;
-        ShooterController.instance.OnPlayerPosition += SetPlayerPosition;
-
-
+        Debug.Log(enemy.name + " Going to initial location");
+        
     }
 
-    private void CheckProximity()
-    {
-        foreach(var enemy in enemyPositions)
-        {
-            var enemyNavMesh = enemy.gameObject.GetComponent<NavMeshAgent>();
-            var enemyController = enemy.gameObject.GetComponent<EnemyController>();
-            //Debug.Log(enemyNavMesh.remainingDistance);
+    //private void CheckProximity()
+    //{
 
-            //get rid of hard reference;;;can fix by passing in a boolean or an enum
-            if (enemyNavMesh.remainingDistance <= 1.4f && enemyNavMesh.remainingDistance != 0 && enemy.GetComponent<EnemyController>().setInitialLocation)
-            {
-                OnInitialDestination();
-            }
+    //    foreach (var enemy in enemyPositions)
+    //    {
+    //        var enemyNavMesh = enemy.gameObject.GetComponent<NavMeshAgent>();
+    //        var enemyController = enemy.gameObject.GetComponent<EnemyController>();
 
-            if (enemyController.moveTowardsPlayer)
-            {
-                var enemyWalkingDistance = 3;
+    //        if (enemyNavMesh.remainingDistance <= 0.5 && enemyNavMesh.remainingDistance != 0 && enemy.GetComponent<EnemyController>().setInitialLocation)
+    //        {
+    //            OnInitialDestination();
+    //        }
+
+    //        if (enemyController.moveTowardsPlayer)
+    //        {
 
 
-                if (enemyNavMesh.remainingDistance > enemyWalkingDistance)
-                {
-                    Debug.Log("Running");
-                    OnRun();
-                    //enemyState = EnemyState.running;
-                }
+    //            if (enemyNavMesh.remainingDistance > enemyWalkingDistance)
+    //            {
+    //                Debug.Log("Running");
+    //                OnRun();
+    //                //enemyState = EnemyState.running;
+    //            }
 
-                if (enemyNavMesh.remainingDistance > enemyNavMesh.stoppingDistance && enemyNavMesh.remainingDistance < enemyWalkingDistance)
-                {
-                    Debug.Log("Walking");
-                    OnWalk();
-                    //enemyState = EnemyState.walking;
-                }
+    //            if (enemyNavMesh.remainingDistance > enemyNavMesh.stoppingDistance && enemyNavMesh.remainingDistance < enemyWalkingDistance)
+    //            {
+    //                Debug.Log("Walking");
+    //                OnWalk();
+    //                //enemyState = EnemyState.walking;
+    //            }
 
-                if (enemyNavMesh.remainingDistance != 0 )
-                {
-                    if (enemyNavMesh.remainingDistance <= enemyNavMesh.stoppingDistance)
-                    {
-                        if (!enemyNavMesh.hasPath || enemyNavMesh.velocity.sqrMagnitude == 0)
-                        {
-                            OnAttack();
-                            Debug.Log("Attacking");
-                            //enemyState = EnemyState.attacking;
-                        }
-                    }
-                }
+    //            if (enemyNavMesh.remainingDistance != 0)
+    //            {
+    //                if (enemyNavMesh.remainingDistance <= enemyNavMesh.stoppingDistance)
+    //                {
+    //                    if (!enemyNavMesh.hasPath || enemyNavMesh.velocity.sqrMagnitude == 0)
+    //                    {
+    //                        OnAttack();
+    //                        Debug.Log("Attacking");
+    //                        //enemyState = EnemyState.attacking;
+    //                    }
+    //                }
+    //            }
 
-            }
-        }
-    }
+    //        }
+    //    }
+    //}
 
     //private void AdjustEnemyBehavior(EnemyState state)
     //{
@@ -230,36 +352,36 @@ public class EnemyProximityManager : Singleton<EnemyProximityManager>
 
     //this could be combined;;;
 
-    private void DistanceCheck()
+    private void EnemyPlayerDistanceCheck()
     {
-      //foreach(var enemy in enemyPositions)
-      //  {            
-      //      var distanceCheck = Vector3.Distance(enemy.position, playerTransform.position);
+        foreach (var enemy in enemyPositions)
+        {
+            var distanceCheck = Vector3.Distance(enemy.position, playerTransform.position);
 
-      //      if(enemy.position != null && playerTransform.position != null)
-      //      {
-      //          if(distanceCheck <= 1.4)
-      //          {
-      //              enemySet.Add(enemy.GetInstanceID());
-      //              OnEnemyInRange();
-      //              EnemyInRange = true;
-      //              NoEnemyInRange = false;
-      //          }
-      //          else
-      //          {
-      //              if (enemySet.Contains(enemy.GetInstanceID()))
-      //              {
-      //                  enemySet.Remove(enemy.GetInstanceID());
-      //                  if(enemySet.Count <= 0)
-      //                  {
-      //                      OnNoEnemyInRange();
-      //                      NoEnemyInRange = true;
-      //                      EnemyInRange = false;
-      //                  }
-      //              }
-      //          }
-      //      }
-      //  }
+            if (enemy.position != null && playerTransform.position != null)
+            {
+                if (distanceCheck <= 1.4)
+                {
+                    enemySet.Add(enemy.GetInstanceID());
+                    OnEnemyInRange();
+                    EnemyInRange = true;
+                    NoEnemyInRange = false;
+                }
+                else
+                {
+                    if (enemySet.Contains(enemy.GetInstanceID()))
+                    {
+                        enemySet.Remove(enemy.GetInstanceID());
+                        if (enemySet.Count <= 0)
+                        {
+                            OnNoEnemyInRange();
+                            NoEnemyInRange = true;
+                            EnemyInRange = false;
+                        }
+                    }
+                }
+            }
+        }
     }
 
 
