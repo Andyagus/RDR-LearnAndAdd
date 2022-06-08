@@ -126,7 +126,6 @@ public class PostEffects : Singleton<PostEffects>
 
     private void GameOverColorFilter()
     {
-        Debug.Log(colorGrading.colorFilter.value);        
         DOVirtual.Color(colorGrading.colorFilter.value, Color.red, aimTime, GameOverRedTween);
     }
 
