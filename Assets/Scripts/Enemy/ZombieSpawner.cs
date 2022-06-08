@@ -24,8 +24,8 @@ public class ZombieSpawner : MonoBehaviour
 
     [Header("Events")]
     public Action<int> OnSpawnComplete = (int x) => {};
-    public Action<EnemyController> OnEnemySpawn = (EnemyController enemy) => {};
-    public Action<Vector3, Vector3> OnZombieRelease = (Vector3 spawnPos, Vector3 WalkToLocation) => { };
+    public Action<EnemyController, Vector3> OnEnemySpawn = (EnemyController enemy, Vector3 walkToLocation) => {};
+    //public Action<Vector3, Vector3> OnZombieRelease = (Vector3 spawnPos, Vector3 WalkToLocation) => { };
     public Action<int> OnRequestZombieForSpawn = (int spawnNumber) => { };
 
 
@@ -103,7 +103,7 @@ public class ZombieSpawner : MonoBehaviour
             EnemyManager.instance.OnEnemyInstantiated += OnEnemyInstantiated;
             OnRequestZombieForSpawn(spawnNumber); //pass in zombie spawner? 
 
-            OnZombieRelease(ZombieSpawnPosition(), WalkToLocation());
+            //OnZombieRelease(ZombieSpawnPosition(), WalkToLocation());
 
         }
         OnSpawnComplete(limit);
@@ -115,7 +115,7 @@ public class ZombieSpawner : MonoBehaviour
         EnemyManager.instance.OnEnemyInstantiated -= OnEnemyInstantiated;
         enemy.transform.position = ZombieSpawnPosition();
         enemy.transform.rotation = particleSystemTransform.rotation;
-        OnEnemySpawn(enemy);
+        OnEnemySpawn(enemy, WalkToLocation());
 
     }
 }

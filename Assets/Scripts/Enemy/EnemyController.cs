@@ -25,9 +25,11 @@ public class EnemyController : MonoBehaviour
 
     public Vector3 startPosition;
     public GameObject cylinderPrefab;
-    public bool setInitialLocation;
-    public Vector3 walkToLocation;   
-    public bool moveTowardsPlayer;
+    //public bool setInitialLocation;
+    //public Vector3 walkToLocation;   
+    //public bool moveTowardsPlayer;
+    public bool hasReachedInitialLocation = false;
+
 
     public bool aimed = false;
     public bool shot;
@@ -55,8 +57,8 @@ public class EnemyController : MonoBehaviour
     private void Update()
     {
         if (!shot)
-        {            
-            FollowPlayer();
+        {
+            MoveEnemyTowardsPlayer();
         }
 
         if(shot == true)
@@ -75,6 +77,10 @@ public class EnemyController : MonoBehaviour
 
         FindZombieSpawner();
         ShooterShotSequence.instance.OnSequenceComplete += OnSequenceComplete;
+        EnemyProximityManager.instance.OnEnemyReachedInitialLocation += OnEnemyReachedInitialLocation;
+        EnemyProximityManager.instance.OnEnemyWalking += EnemyWalking;
+        EnemyProximityManager.instance.OnEnemyRunning += EnemyRunning;
+        EnemyProximityManager.instance.OnEnemyAttacking += EnemyAttacking;
     }
 
 
@@ -95,97 +101,27 @@ public class EnemyController : MonoBehaviour
         var zombieSpawners = GameObject.FindObjectsOfType<ZombieSpawner>();
         foreach (var spawner in zombieSpawners)
         {
-            spawner.OnZombieRelease += SetEnemyInitialLocation;
+            //spawner.OnZombieRelease += SetEnemyInitialLocation;
         }
     }
 
-    private void SetEnemyInitialLocation(Vector3 spawnPos, Vector3 walkToLocation)
-    {        
-        if(setInitialLocation == false)
-        {
-            this.walkToLocation = walkToLocation;
-        }
-
-        setInitialLocation = true;
-    }
-
-    private void CheckDestinationPosition()
+    private void OnEnemyReachedInitialLocation()
     {
-        if(setInitialLocation == true)
-        {
-            enemyNavMesh.destination = walkToLocation;
-        }
+        hasReachedInitialLocation = true;
+    }
 
-        if (enemyNavMesh.remainingDistance <= 1.4f && enemyNavMesh.remainingDistance != 0)
-        {
-            moveTowardsPlayer = true;            
-        }
-
-        if (moveTowardsPlayer)
+    private void MoveEnemyTowardsPlayer()
+    {
+        if (hasReachedInitialLocation)
         {
             enemyNavMesh.destination = shooter.transform.position;
             var lookRotation = Quaternion.LookRotation(shooter.transform.position - transform.position, Vector3.up);
             transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime);
+
         }
     }
 
-    private void FollowPlayer()
-    {
-        CheckDestinationPosition();
-        var enemyWalkingDistance = 3;
-
-        if (enemyNavMesh.remainingDistance > enemyWalkingDistance)
-        {
-            enemyState = EnemyState.running;
-        }
-
-        if (enemyNavMesh.remainingDistance > enemyNavMesh.stoppingDistance && enemyNavMesh.remainingDistance < enemyWalkingDistance)
-        {
-            enemyState = EnemyState.walking;
-        }
-
-        if (enemyNavMesh.remainingDistance != 0 && moveTowardsPlayer)
-        {
-            if (enemyNavMesh.remainingDistance <= enemyNavMesh.stoppingDistance)
-            {
-                if (!enemyNavMesh.hasPath || enemyNavMesh.velocity.sqrMagnitude == 0)
-                {
-                    enemyState = EnemyState.attacking;
-                }
-            }
-        }
-
-        if (LevelManager.instance.gameOver)
-        {
-            enemyState = EnemyState.gameOver;
-        }
-
-        AdjustEnemyBehavior(enemyState);
-
-    }  
-
-    private void AdjustEnemyBehavior(EnemyState state)
-    {
-        switch (state)
-        {
-            case EnemyState.attacking:
-                AttackPlayer();
-                break;
-            case EnemyState.running:
-                RunToPlayer();
-                break;
-            case EnemyState.walking:
-                WalkToPlayer();
-                break;
-            case EnemyState.gameOver:
-                GameOver();
-                break;
-            default:
-                Console.Write("No action");
-                break;
-        }
-    }
-
+  
     private void OnDrawGizmosSelected()
     {
         Gizmos.DrawWireSphere(attackPoint.position, attackRange);
@@ -209,7 +145,9 @@ public class EnemyController : MonoBehaviour
         }
     } 
 
-    private void AttackPlayer()
+
+
+    private void EnemyAttacking()
     {
         enemyNavMesh.isStopped = true;
         anim.SetBool("attack", true);
@@ -228,7 +166,7 @@ public class EnemyController : MonoBehaviour
         }
     }
 
-    private void WalkToPlayer()
+    private void EnemyWalking()
     {
         anim.SetBool("attack", false);
         enemyNavMesh.speed = 0.5f;
@@ -239,7 +177,7 @@ public class EnemyController : MonoBehaviour
         }
     }
 
-    private void RunToPlayer()
+    private void EnemyRunning()
     {
         anim.SetBool("attack", false);
         enemyNavMesh.speed = 1f;
