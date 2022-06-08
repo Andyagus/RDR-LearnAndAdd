@@ -21,32 +21,30 @@ public class UIController : Singleton<UIController>
 
     private void InitializeMembers()
     {
-        mainCamera = CameraController.instance.mainCamera; 
+        mainCamera = CameraController.instance.mainCamera;
+
+        ShooterController.instance.OnPlayerAim += OnPlayerAim ;
+
+
         ShooterAddTargets.instance.OnAddTarget += CreateIndicator;
         ShooterAddTargets.instance.OnPositionTarget += PositionTargets;
 
         //TODO Ask SUNNY is this bad to have show and hide reticle methods vs bool 
+
         ShooterShotSequence.instance.OnSequenceStart += HideReticle;
         ShooterShotSequence.instance.OnSequenceComplete += ShowReticle;
-
-        ShooterShotSequence.instance.OnSequenceComplete += OnSequenceComplete;
-
 
         ShooterShotSequence.instance.OnSequenceFired += ClearIndiciator;
         ShooterShotSequence.instance.OnSequenceComplete += DestroyIndicators;
 
         ShooterController.instance.OnPlayerDeath += HideReticle;
 
-        ShooterWeaponController.instance.OnLostWeapon += HideReticle;
-        ShooterWeaponController.instance.OnLostWeapon += ShowReticle;
-        
+        //ShooterWeaponController.instance.OnLostWeapon += HideReticle;
+        ShooterWeaponController.instance.OnWeaponFound += ShowReticleOnPickup;
+
     }
 
-    private void OnSequenceComplete()
-    {
-        Debug.Log("On sequence Complete called");
-    }
-
+    
     private void CreateIndicator(Transform hitTransform)
     {
         Vector3 worldToScreenPointPos = mainCamera.WorldToScreenPoint(hitTransform.position);
@@ -66,13 +64,16 @@ public class UIController : Singleton<UIController>
         indicatorList[index].gameObject.GetComponent<Image>().color = Color.clear;        
     }
 
-    private void DestroyIndicators()
+    private void DestroyIndicators(bool calledOnAttack)
     {
-        foreach (GameObject indicator in indicatorList)
+        if(calledOnAttack || !calledOnAttack)
         {
-            Destroy(indicator);
+            foreach (GameObject indicator in indicatorList)
+            {
+                Destroy(indicator);
+            }
+            indicatorList.Clear();
         }
-        indicatorList.Clear();
     }
 
     private void HideReticle()
@@ -80,7 +81,23 @@ public class UIController : Singleton<UIController>
         reticle.color = Color.clear;
     }
 
-    private void ShowReticle()
+    private void ShowReticle(bool calledOnAttack)
+    {
+        if (!calledOnAttack)
+        {
+            reticle.color = Color.white;
+        }else if (calledOnAttack)
+        {
+            reticle.color = Color.clear;
+        }
+    }
+
+    private void ShowReticleOnPickup()
+    {
+        reticle.color = Color.white;
+    }
+
+    private void OnPlayerAim()
     {
         reticle.color = Color.white;
     }

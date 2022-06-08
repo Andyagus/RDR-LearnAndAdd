@@ -43,8 +43,6 @@ public class ShooterAddTargets : Singleton<ShooterAddTargets>
         ShooterController.instance.OnPlayerAiming += StartPositioningTargets;
         ShooterShotSequence.instance.OnSequenceComplete += StopPositioningTargets;
         ShooterShotSequence.instance.OnSequenceComplete += RemoveTargets;
-        ShooterShotSequence.instance.OnSequenceStopped += StopPositioningTargets;
-        ShooterShotSequence.instance.OnSequenceStopped += RemoveTargets;
 
     }
 
@@ -53,9 +51,12 @@ public class ShooterAddTargets : Singleton<ShooterAddTargets>
         positionTargets = true;
     }
 
-    private void StopPositioningTargets()
+    private void StopPositioningTargets(bool calledOnAttack)
     {
-        positionTargets = false;
+        if(calledOnAttack || !calledOnAttack)
+        {
+            positionTargets = false;
+        }
     }
 
   
@@ -94,9 +95,12 @@ public class ShooterAddTargets : Singleton<ShooterAddTargets>
         }        
     }
 
-    private void RemoveTargets()
+    private void RemoveTargets(bool calledOnAttack)
     {
-        targets.Clear();
+        if (calledOnAttack || !calledOnAttack)
+        {
+            targets.Clear();
+        }
     }
 
 }

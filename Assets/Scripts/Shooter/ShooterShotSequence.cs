@@ -24,7 +24,9 @@ public class ShooterShotSequence : Singleton<ShooterShotSequence>
     //public Action<EnemyController> OnEnemyShot = (EnemyController EnemyController) => { };
 
     public Action OnSequenceStart = () => { };
-    public Action OnSequenceComplete = () => { };
+
+    //TODO boolean here is the right direction - start with UI controller to continue refactoring
+    public Action<bool> OnSequenceComplete = (bool calledOnAttack) => { };
     public Action OnSequenceStopped = () => { };
 
     private void Start()
@@ -46,7 +48,7 @@ public class ShooterShotSequence : Singleton<ShooterShotSequence>
 
     private void OnPlayerHit()
     {
-        OnSequenceComplete();
+        OnSequenceComplete(true);
         //OnSequenceStopped();
         sequence.Kill();
     }
@@ -83,12 +85,12 @@ public class ShooterShotSequence : Singleton<ShooterShotSequence>
                 sequence.AppendInterval(1.75f);
             }
 
-            sequence.AppendCallback(() => OnSequenceComplete());
+            sequence.AppendCallback(() => OnSequenceComplete(false));
 
         }
         else
         {
-            OnSequenceComplete();
+            OnSequenceComplete(false);
         }
     }
 

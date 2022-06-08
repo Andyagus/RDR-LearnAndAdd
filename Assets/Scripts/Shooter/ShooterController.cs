@@ -104,11 +104,14 @@ public class ShooterController : Singleton<ShooterController>
         input.enabled = false;
     }
 
-    private void OnSequenceComplete()
+    private void OnSequenceComplete(bool calledOnAttack)
     {
-        Aim(false);
-        sequence = false;
-        input.enabled = true;
+        if(calledOnAttack || !calledOnAttack)
+        {
+            Aim(false);
+            sequence = false;
+            input.enabled = true;
+        }
     }
 
     private void Aim(bool state)

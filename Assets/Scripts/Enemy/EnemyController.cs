@@ -57,14 +57,10 @@ public class EnemyController : MonoBehaviour
 
     private void Update()
     {
-        //if (!shot)
-        //{            
-        //    FollowPlayer();
-        //}
 
         if (!shot)
         {
-            SetDestination();
+            MoveEnemyTowardsPlayer();
         }
 
         if (shot == true)
@@ -90,13 +86,17 @@ public class EnemyController : MonoBehaviour
     }
 
 
-    private void OnSequenceComplete()
+    private void OnSequenceComplete(bool calledOnAttack)
     {
-        if (aimed == true)
+        if (calledOnAttack)
         {
-            if (shot == false)
+
+            if (aimed == true)
             {
-                aimed = false;
+                if (shot == false)
+                {
+                    aimed = false;
+                }
             }
         }
     }
