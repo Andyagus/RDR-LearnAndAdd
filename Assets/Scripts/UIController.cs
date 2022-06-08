@@ -77,7 +77,6 @@ public class UIController : Singleton<UIController>
 
     private void HideReticle()
     {
-        Debug.Log(reticle.color.r);
         reticle.color = Color.clear;
     }
 

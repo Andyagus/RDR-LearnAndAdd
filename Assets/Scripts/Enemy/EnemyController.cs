@@ -7,7 +7,6 @@ using Cinemachine;
 using DG.Tweening;
 using UnityEngine.Rendering.PostProcessing;
 
-public enum EnemyState { running, walking, attacking, gameOver };
 
 public class EnemyController : MonoBehaviour
 {
@@ -37,17 +36,19 @@ public class EnemyController : MonoBehaviour
 
     public Action<EnemyController> OnEnemyShot = (EnemyController enemy) => {};   
     public Action OnEnemyAttack = () => {};
+    public Action<EnemyController> OnMoveTowardsPlayer = (EnemyController enemy) => { };
+    public Action<EnemyController> OnMoveToInitialPosition = (EnemyController enemy) => { };
 
-    public EnemyState enemyState;
+
 
     private void Awake()
     {
         InitializeEvents();
+        enemyNavMesh = GetComponent<NavMeshAgent>();        
     }
 
     void Start()
     {
-        enemyNavMesh = GetComponent<NavMeshAgent>();
         anim = GetComponent<Animator>();
         shooter = FindObjectOfType<ShooterController>();
         rbs = GetComponentsInChildren<Rigidbody>();
@@ -56,12 +57,17 @@ public class EnemyController : MonoBehaviour
 
     private void Update()
     {
+        //if (!shot)
+        //{            
+        //    FollowPlayer();
+        //}
+
         if (!shot)
         {
-            MoveEnemyTowardsPlayer();
+            SetDestination();
         }
 
-        if(shot == true)
+        if (shot == true)
         {
             DestroyEnemy();
         }
@@ -70,12 +76,12 @@ public class EnemyController : MonoBehaviour
         {
             OnEnemyAttack();
         }
+
+
     }
 
     private void InitializeEvents()
     {
-
-        FindZombieSpawner();
         ShooterShotSequence.instance.OnSequenceComplete += OnSequenceComplete;
         EnemyProximityManager.instance.OnEnemyReachedInitialLocation += OnEnemyReachedInitialLocation;
         EnemyProximityManager.instance.OnEnemyWalking += EnemyWalking;
@@ -88,9 +94,9 @@ public class EnemyController : MonoBehaviour
     {
         if (aimed == true)
         {
-            if(shot == false)
+            if (shot == false)
             {
-                aimed = false;                
+                aimed = false;
             }
         }
     }
